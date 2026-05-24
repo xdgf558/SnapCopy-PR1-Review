@@ -1,0 +1,20 @@
+# Keep training images and exported models out of source control by default.
+# Store private or large image files locally or on an external drive, then track
+# their paths and labels in ml-dataset/manifests/*.csv.
+v1_raw/**
+v1_clean/**
+v2_dataset/train/*/*
+v2_dataset/validation/*/*
+v2_dataset/test/*/*
+synthetic_pilot/images/**
+exports/*.mlmodel
+exports/*.mlpackage
+exports/*.mlmodelc
+
+!v1_raw/README.md
+!v1_clean/README.md
+!v2_dataset/README.md
+!synthetic_pilot/README.md
+!manifests/*.csv
+!generation_prompts/*.md
+!README.md

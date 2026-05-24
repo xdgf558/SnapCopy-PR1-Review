@@ -1,0 +1,4 @@
+reviewed_rows=245
+deleted=245
+missing=0
+failed=0

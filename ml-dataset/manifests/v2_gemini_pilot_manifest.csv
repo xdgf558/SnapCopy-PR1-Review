@@ -1,0 +1,481 @@
+image_id,file_path,source_type,generator,model,prompt,primary_scene,secondary_scenes,quality_tags,split,source_image_id,notes
+breakfast_gemini_normal_0001,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_normal_0001.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: clear realistic smartphone photo, natural lighting, no text overlay, no watermark. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: normal.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,normal,pilot_review,breakfast_flux_normal_0001,Gemini pilot variant. 精品正常样本，优先看是否像真实手机照片
+breakfast_gemini_low_light_0002,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_low_light_0002.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: low light indoor or evening photo, visible but dim, realistic phone noise, not too dark. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: low_light.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,low_light,pilot_review,breakfast_sd35_low_light_0002,Gemini pilot variant. 低光困难样本
+breakfast_gemini_blurry_compressed_0003,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_blurry_compressed_0003.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: slightly shaky handheld photo, mild motion blur and compression artifacts, still recognizable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: blurry,compressed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,"blurry,compressed",pilot_review,breakfast_sd35_blurry_compressed_0003,Gemini pilot variant. 轻微手抖和压缩，不要极端糊
+breakfast_gemini_cluttered_0004,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_cluttered_0004.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: messy real-life background, extra objects and visual clutter, still understandable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: cluttered.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,cluttered,pilot_review,breakfast_sd35_cluttered_0004,Gemini pilot variant. 杂物背景，保留主体
+breakfast_gemini_weird_angle_0005,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_weird_angle_0005.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: awkward tilted or top-down smartphone angle, casual composition, not a studio shot. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: weird_angle.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,weird_angle,pilot_review,breakfast_sd35_weird_angle_0005,Gemini pilot variant. 奇怪角度，模拟随手拍
+breakfast_gemini_partial_subject_0006,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_partial_subject_0006.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: main subject partly cropped or partially visible, realistic accidental framing. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: partial_subject.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,partial_subject,pilot_review,breakfast_sd35_partial_subject_0006,Gemini pilot variant. 主体部分裁切
+breakfast_gemini_screenshot_text_overlay_0007,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_screenshot_text_overlay_0007.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: phone screenshot-like image containing a photo with small UI bars or subtle text overlay, realistic but not a clean camera photo. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: screenshot,text_overlay.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,"screenshot,text_overlay",pilot_review,breakfast_sd35_screenshot_text_overlay_0007,Gemini pilot variant. 特殊来源样本，审核后再决定是否训练
+breakfast_gemini_collage_0008,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_collage_0008.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: simple two-photo or three-photo collage layout, real phone album style, no decorative design. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: collage.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,collage,pilot_review,breakfast_sd35_collage_0008,Gemini pilot variant. 拼图样本，审核后再决定是否训练
+breakfast_gemini_backlight_0009,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_backlight_0009.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: strong window or sunset backlight, subject slightly shadowed but recognizable. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: backlight.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,backlight,pilot_review,breakfast_flux_backlight_0009,Gemini pilot variant. 精品逆光样本，控制真实感
+breakfast_gemini_overexposed_0010,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/breakfast/breakfast_gemini_overexposed_0010.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: breakfast. Visual anchor: a casual morning breakfast table with eggs, toast, fruit, coffee or tea, ordinary home light. Quality condition: slightly overexposed bright area, washed highlights, still realistic and usable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: breakfast.
+Quality tags: overexposed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",breakfast,,overexposed,pilot_review,breakfast_sd35_overexposed_0010,Gemini pilot variant. 轻微过曝，不能完全丢失主体
+cafe_gemini_normal_0001,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_normal_0001.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: clear realistic smartphone photo, natural lighting, no text overlay, no watermark. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: normal.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,normal,pilot_review,cafe_flux_normal_0001,Gemini pilot variant. 精品正常样本，优先看是否像真实手机照片
+cafe_gemini_low_light_0002,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_low_light_0002.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: low light indoor or evening photo, visible but dim, realistic phone noise, not too dark. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: low_light.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,low_light,pilot_review,cafe_sd35_low_light_0002,Gemini pilot variant. 低光困难样本
+cafe_gemini_blurry_compressed_0003,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_blurry_compressed_0003.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: slightly shaky handheld photo, mild motion blur and compression artifacts, still recognizable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: blurry,compressed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,"blurry,compressed",pilot_review,cafe_sd35_blurry_compressed_0003,Gemini pilot variant. 轻微手抖和压缩，不要极端糊
+cafe_gemini_cluttered_0004,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_cluttered_0004.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: messy real-life background, extra objects and visual clutter, still understandable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: cluttered.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,cluttered,pilot_review,cafe_sd35_cluttered_0004,Gemini pilot variant. 杂物背景，保留主体
+cafe_gemini_weird_angle_0005,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_weird_angle_0005.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: awkward tilted or top-down smartphone angle, casual composition, not a studio shot. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: weird_angle.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,weird_angle,pilot_review,cafe_sd35_weird_angle_0005,Gemini pilot variant. 奇怪角度，模拟随手拍
+cafe_gemini_partial_subject_0006,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_partial_subject_0006.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: main subject partly cropped or partially visible, realistic accidental framing. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: partial_subject.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,partial_subject,pilot_review,cafe_sd35_partial_subject_0006,Gemini pilot variant. 主体部分裁切
+cafe_gemini_screenshot_text_overlay_0007,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_screenshot_text_overlay_0007.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: phone screenshot-like image containing a photo with small UI bars or subtle text overlay, realistic but not a clean camera photo. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: screenshot,text_overlay.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,"screenshot,text_overlay",pilot_review,cafe_sd35_screenshot_text_overlay_0007,Gemini pilot variant. 特殊来源样本，审核后再决定是否训练
+cafe_gemini_collage_0008,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_collage_0008.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: simple two-photo or three-photo collage layout, real phone album style, no decorative design. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: collage.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,collage,pilot_review,cafe_sd35_collage_0008,Gemini pilot variant. 拼图样本，审核后再决定是否训练
+cafe_gemini_backlight_0009,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_backlight_0009.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: strong window or sunset backlight, subject slightly shadowed but recognizable. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: backlight.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,backlight,pilot_review,cafe_flux_backlight_0009,Gemini pilot variant. 精品逆光样本，控制真实感
+cafe_gemini_overexposed_0010,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/cafe/cafe_gemini_overexposed_0010.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: cafe. Visual anchor: a realistic coffee shop moment with coffee cup, small table, warm interior, people nearby but not posed. Quality condition: slightly overexposed bright area, washed highlights, still realistic and usable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: cafe.
+Quality tags: overexposed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",cafe,,overexposed,pilot_review,cafe_sd35_overexposed_0010,Gemini pilot variant. 轻微过曝，不能完全丢失主体
+walking_gemini_normal_0001,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_normal_0001.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: clear realistic smartphone photo, natural lighting, no text overlay, no watermark. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: normal.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,normal,pilot_review,walking_flux_normal_0001,Gemini pilot variant. 精品正常样本，优先看是否像真实手机照片
+walking_gemini_low_light_0002,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_low_light_0002.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: low light indoor or evening photo, visible but dim, realistic phone noise, not too dark. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: low_light.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,low_light,pilot_review,walking_sd35_low_light_0002,Gemini pilot variant. 低光困难样本
+walking_gemini_blurry_compressed_0003,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_blurry_compressed_0003.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: slightly shaky handheld photo, mild motion blur and compression artifacts, still recognizable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: blurry,compressed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,"blurry,compressed",pilot_review,walking_sd35_blurry_compressed_0003,Gemini pilot variant. 轻微手抖和压缩，不要极端糊
+walking_gemini_cluttered_0004,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_cluttered_0004.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: messy real-life background, extra objects and visual clutter, still understandable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: cluttered.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,cluttered,pilot_review,walking_sd35_cluttered_0004,Gemini pilot variant. 杂物背景，保留主体
+walking_gemini_weird_angle_0005,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_weird_angle_0005.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: awkward tilted or top-down smartphone angle, casual composition, not a studio shot. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: weird_angle.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,weird_angle,pilot_review,walking_sd35_weird_angle_0005,Gemini pilot variant. 奇怪角度，模拟随手拍
+walking_gemini_partial_subject_0006,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_partial_subject_0006.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: main subject partly cropped or partially visible, realistic accidental framing. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: partial_subject.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,partial_subject,pilot_review,walking_sd35_partial_subject_0006,Gemini pilot variant. 主体部分裁切
+walking_gemini_screenshot_text_overlay_0007,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_screenshot_text_overlay_0007.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: phone screenshot-like image containing a photo with small UI bars or subtle text overlay, realistic but not a clean camera photo. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: screenshot,text_overlay.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,"screenshot,text_overlay",pilot_review,walking_sd35_screenshot_text_overlay_0007,Gemini pilot variant. 特殊来源样本，审核后再决定是否训练
+walking_gemini_collage_0008,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_collage_0008.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: simple two-photo or three-photo collage layout, real phone album style, no decorative design. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: collage.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,collage,pilot_review,walking_sd35_collage_0008,Gemini pilot variant. 拼图样本，审核后再决定是否训练
+walking_gemini_backlight_0009,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_backlight_0009.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: strong window or sunset backlight, subject slightly shadowed but recognizable. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: backlight.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,backlight,pilot_review,walking_flux_backlight_0009,Gemini pilot variant. 精品逆光样本，控制真实感
+walking_gemini_overexposed_0010,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/walking/walking_gemini_overexposed_0010.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: walking. Visual anchor: a first-person or over-the-shoulder daily walking snapshot with sidewalk, trees, path, shoes or hand details. Quality condition: slightly overexposed bright area, washed highlights, still realistic and usable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: walking.
+Quality tags: overexposed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",walking,,overexposed,pilot_review,walking_sd35_overexposed_0010,Gemini pilot variant. 轻微过曝，不能完全丢失主体
+street_gemini_normal_0001,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_normal_0001.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: clear realistic smartphone photo, natural lighting, no text overlay, no watermark. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: normal.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,normal,pilot_review,street_flux_normal_0001,Gemini pilot variant. 精品正常样本，优先看是否像真实手机照片
+street_gemini_low_light_0002,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_low_light_0002.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: low light indoor or evening photo, visible but dim, realistic phone noise, not too dark. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: low_light.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,low_light,pilot_review,street_sd35_low_light_0002,Gemini pilot variant. 低光困难样本
+street_gemini_blurry_compressed_0003,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_blurry_compressed_0003.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: slightly shaky handheld photo, mild motion blur and compression artifacts, still recognizable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: blurry,compressed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,"blurry,compressed",pilot_review,street_sd35_blurry_compressed_0003,Gemini pilot variant. 轻微手抖和压缩，不要极端糊
+street_gemini_cluttered_0004,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_cluttered_0004.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: messy real-life background, extra objects and visual clutter, still understandable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: cluttered.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,cluttered,pilot_review,street_sd35_cluttered_0004,Gemini pilot variant. 杂物背景，保留主体
+street_gemini_weird_angle_0005,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_weird_angle_0005.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: awkward tilted or top-down smartphone angle, casual composition, not a studio shot. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: weird_angle.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,weird_angle,pilot_review,street_sd35_weird_angle_0005,Gemini pilot variant. 奇怪角度，模拟随手拍
+street_gemini_partial_subject_0006,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_partial_subject_0006.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: main subject partly cropped or partially visible, realistic accidental framing. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: partial_subject.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,partial_subject,pilot_review,street_sd35_partial_subject_0006,Gemini pilot variant. 主体部分裁切
+street_gemini_screenshot_text_overlay_0007,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_screenshot_text_overlay_0007.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: phone screenshot-like image containing a photo with small UI bars or subtle text overlay, realistic but not a clean camera photo. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: screenshot,text_overlay.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,"screenshot,text_overlay",pilot_review,street_sd35_screenshot_text_overlay_0007,Gemini pilot variant. 特殊来源样本，审核后再决定是否训练
+street_gemini_collage_0008,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_collage_0008.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: simple two-photo or three-photo collage layout, real phone album style, no decorative design. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: collage.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,collage,pilot_review,street_sd35_collage_0008,Gemini pilot variant. 拼图样本，审核后再决定是否训练
+street_gemini_backlight_0009,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_backlight_0009.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: strong window or sunset backlight, subject slightly shadowed but recognizable. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: backlight.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,backlight,pilot_review,street_flux_backlight_0009,Gemini pilot variant. 精品逆光样本，控制真实感
+street_gemini_overexposed_0010,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/street/street_gemini_overexposed_0010.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: street. Visual anchor: a city street scene with road, buildings, crosswalks, parked cars, storefronts or urban space as the subject. Quality condition: slightly overexposed bright area, washed highlights, still realistic and usable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: street.
+Quality tags: overexposed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",street,,overexposed,pilot_review,street_sd35_overexposed_0010,Gemini pilot variant. 轻微过曝，不能完全丢失主体
+travel_gemini_normal_0001,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_normal_0001.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: clear realistic smartphone photo, natural lighting, no text overlay, no watermark. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: normal.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,normal,pilot_review,travel_flux_normal_0001,Gemini pilot variant. 精品正常样本，优先看是否像真实手机照片
+travel_gemini_low_light_0002,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_low_light_0002.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: low light indoor or evening photo, visible but dim, realistic phone noise, not too dark. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: low_light.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,low_light,pilot_review,travel_sd35_low_light_0002,Gemini pilot variant. 低光困难样本
+travel_gemini_blurry_compressed_0003,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_blurry_compressed_0003.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: slightly shaky handheld photo, mild motion blur and compression artifacts, still recognizable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: blurry,compressed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,"blurry,compressed",pilot_review,travel_sd35_blurry_compressed_0003,Gemini pilot variant. 轻微手抖和压缩，不要极端糊
+travel_gemini_cluttered_0004,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_cluttered_0004.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: messy real-life background, extra objects and visual clutter, still understandable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: cluttered.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,cluttered,pilot_review,travel_sd35_cluttered_0004,Gemini pilot variant. 杂物背景，保留主体
+travel_gemini_weird_angle_0005,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_weird_angle_0005.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: awkward tilted or top-down smartphone angle, casual composition, not a studio shot. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: weird_angle.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,weird_angle,pilot_review,travel_sd35_weird_angle_0005,Gemini pilot variant. 奇怪角度，模拟随手拍
+travel_gemini_partial_subject_0006,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_partial_subject_0006.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: main subject partly cropped or partially visible, realistic accidental framing. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: partial_subject.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,partial_subject,pilot_review,travel_sd35_partial_subject_0006,Gemini pilot variant. 主体部分裁切
+travel_gemini_screenshot_text_overlay_0007,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_screenshot_text_overlay_0007.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: phone screenshot-like image containing a photo with small UI bars or subtle text overlay, realistic but not a clean camera photo. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: screenshot,text_overlay.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,"screenshot,text_overlay",pilot_review,travel_sd35_screenshot_text_overlay_0007,Gemini pilot variant. 特殊来源样本，审核后再决定是否训练
+travel_gemini_collage_0008,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_collage_0008.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: simple two-photo or three-photo collage layout, real phone album style, no decorative design. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: collage.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,collage,pilot_review,travel_sd35_collage_0008,Gemini pilot variant. 拼图样本，审核后再决定是否训练
+travel_gemini_backlight_0009,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_backlight_0009.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: strong window or sunset backlight, subject slightly shadowed but recognizable. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: backlight.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,backlight,pilot_review,travel_flux_backlight_0009,Gemini pilot variant. 精品逆光样本，控制真实感
+travel_gemini_overexposed_0010,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/travel/travel_gemini_overexposed_0010.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: travel. Visual anchor: a travel moment with station, airport, hotel room, landmark, scenic overlook, luggage, ticket or tourist viewpoint. Quality condition: slightly overexposed bright area, washed highlights, still realistic and usable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: travel.
+Quality tags: overexposed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",travel,,overexposed,pilot_review,travel_sd35_overexposed_0010,Gemini pilot variant. 轻微过曝，不能完全丢失主体
+pet_gemini_normal_0001,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_normal_0001.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: clear realistic smartphone photo, natural lighting, no text overlay, no watermark. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: normal.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,normal,pilot_review,pet_flux_normal_0001,Gemini pilot variant. 精品正常样本，优先看是否像真实手机照片
+pet_gemini_low_light_0002,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_low_light_0002.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: low light indoor or evening photo, visible but dim, realistic phone noise, not too dark. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: low_light.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,low_light,pilot_review,pet_sd35_low_light_0002,Gemini pilot variant. 低光困难样本
+pet_gemini_blurry_compressed_0003,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_blurry_compressed_0003.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: slightly shaky handheld photo, mild motion blur and compression artifacts, still recognizable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: blurry,compressed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,"blurry,compressed",pilot_review,pet_sd35_blurry_compressed_0003,Gemini pilot variant. 轻微手抖和压缩，不要极端糊
+pet_gemini_cluttered_0004,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_cluttered_0004.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: messy real-life background, extra objects and visual clutter, still understandable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: cluttered.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,cluttered,pilot_review,pet_sd35_cluttered_0004,Gemini pilot variant. 杂物背景，保留主体
+pet_gemini_weird_angle_0005,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_weird_angle_0005.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: awkward tilted or top-down smartphone angle, casual composition, not a studio shot. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: weird_angle.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,weird_angle,pilot_review,pet_sd35_weird_angle_0005,Gemini pilot variant. 奇怪角度，模拟随手拍
+pet_gemini_partial_subject_0006,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_partial_subject_0006.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: main subject partly cropped or partially visible, realistic accidental framing. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: partial_subject.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,partial_subject,pilot_review,pet_sd35_partial_subject_0006,Gemini pilot variant. 主体部分裁切
+pet_gemini_screenshot_text_overlay_0007,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_screenshot_text_overlay_0007.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: phone screenshot-like image containing a photo with small UI bars or subtle text overlay, realistic but not a clean camera photo. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: screenshot,text_overlay.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,"screenshot,text_overlay",pilot_review,pet_sd35_screenshot_text_overlay_0007,Gemini pilot variant. 特殊来源样本，审核后再决定是否训练
+pet_gemini_collage_0008,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_collage_0008.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: simple two-photo or three-photo collage layout, real phone album style, no decorative design. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: collage.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,collage,pilot_review,pet_sd35_collage_0008,Gemini pilot variant. 拼图样本，审核后再决定是否训练
+pet_gemini_backlight_0009,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_backlight_0009.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: strong window or sunset backlight, subject slightly shadowed but recognizable. prioritize beautiful but still realistic phone-photo aesthetics. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: backlight.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,backlight,pilot_review,pet_flux_backlight_0009,Gemini pilot variant. 精品逆光样本，控制真实感
+pet_gemini_overexposed_0010,/Volumes/AI作品素材/SnapCopy_ML_Dataset/synthetic_pilot/gemini_images/pet/pet_gemini_overexposed_0010.jpg,synthetic,gemini_imagen,imagen-4.0-fast-generate-001,"Realistic smartphone lifestyle photo for SnapCopy scene classification. Primary scene: pet. Visual anchor: a cat or dog as the clear subject in a real home or outdoor daily setting. Quality condition: slightly overexposed bright area, washed highlights, still realistic and usable. prioritize natural phone realism and diverse casual details. Shot should look like a real user photo, not stock photography. Use natural imperfections, plausible lighting, and ordinary objects. Negative prompt: commercial studio photo, perfect advertising composition, glossy render, 3d render, cartoon, anime, illustration, fake UI, unreadable gibberish text, watermark, logo, distorted hands, extra limbs, duplicate faces, unnatural skin, extreme blur, extreme noise.
+
+Generator: Gemini Imagen.
+Scene label: pet.
+Quality tags: overexposed.
+Dataset purpose: lightweight iOS scene classifier training for real-life social caption photos.
+Important style rule: make it look like an ordinary phone camera roll photo, not a stock image, poster, render, or advertisement.
+Keep the scene visually clear enough for classification, but allow natural imperfections.",pet,,overexposed,pilot_review,pet_sd35_overexposed_0010,Gemini pilot variant. 轻微过曝，不能完全丢失主体

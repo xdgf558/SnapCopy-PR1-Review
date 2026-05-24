@@ -1,0 +1,261 @@
+image_id,old_file_path,new_file_path,original_label,correct_label,keep_or_remove,remove_reason,quality_tags,secondary_scenes,split,notes
+breakfast_0018,模型训练相关/generated_scene_dataset/dataset/test/breakfast/breakfast_0018.jpg,ml-dataset/v1_clean/test/breakfast/breakfast_0018.jpg,breakfast,breakfast,keep,,normal,,test,first-pass quality check passed
+breakfast_0019,模型训练相关/generated_scene_dataset/dataset/test/breakfast/breakfast_0019.jpg,ml-dataset/v1_clean/test/breakfast/breakfast_0019.jpg,breakfast,breakfast,keep,,normal,,test,first-pass quality check passed
+breakfast_0020,模型训练相关/generated_scene_dataset/dataset/test/breakfast/breakfast_0020.jpg,ml-dataset/v1_clean/test/breakfast/breakfast_0020.jpg,breakfast,breakfast,keep,,normal,,test,first-pass quality check passed
+cafe_0018,模型训练相关/generated_scene_dataset/dataset/test/cafe/cafe_0018.jpg,ml-dataset/v1_clean/test/cafe/cafe_0018.jpg,cafe,cafe,keep,,compressed,,test,manual review: kept as compressed cafe hard case
+cafe_0019,模型训练相关/generated_scene_dataset/dataset/test/cafe/cafe_0019.jpg,ml-dataset/v1_clean/test/cafe/cafe_0019.jpg,cafe,cafe,keep,,normal,,test,first-pass quality check passed
+cafe_0020,模型训练相关/generated_scene_dataset/dataset/test/cafe/cafe_0020.jpg,ml-dataset/v1_clean/test/cafe/cafe_0020.jpg,cafe,cafe,keep,,normal,,test,first-pass quality check passed
+fitness_0018,模型训练相关/generated_scene_dataset/dataset/test/fitness/fitness_0018.jpg,ml-dataset/v1_clean/test/fitness/fitness_0018.jpg,fitness,fitness,keep,,normal,,test,first-pass quality check passed
+fitness_0019,模型训练相关/generated_scene_dataset/dataset/test/fitness/fitness_0019.jpg,ml-dataset/v1_clean/test/fitness/fitness_0019.jpg,fitness,fitness,keep,,normal,,test,first-pass quality check passed
+fitness_0020,模型训练相关/generated_scene_dataset/dataset/test/fitness/fitness_0020.jpg,ml-dataset/v1_clean/test/fitness/fitness_0020.jpg,fitness,fitness,keep,,normal,,test,first-pass quality check passed
+food_0018,模型训练相关/generated_scene_dataset/dataset/test/food/food_0018.jpg,ml-dataset/v1_clean/test/food/food_0018.jpg,food,food,keep,,normal,,test,first-pass quality check passed
+food_0019,模型训练相关/generated_scene_dataset/dataset/test/food/food_0019.jpg,ml-dataset/v1_clean/test/food/food_0019.jpg,food,food,keep,,normal,,test,first-pass quality check passed
+food_0020,模型训练相关/generated_scene_dataset/dataset/test/food/food_0020.jpg,ml-dataset/v1_clean/test/food/food_0020.jpg,food,food,keep,,normal,,test,first-pass quality check passed
+home_0018,模型训练相关/generated_scene_dataset/dataset/test/home/home_0018.jpg,ml-dataset/v1_clean/test/home/home_0018.jpg,home,home,keep,,normal,,test,first-pass quality check passed
+home_0019,模型训练相关/generated_scene_dataset/dataset/test/home/home_0019.jpg,ml-dataset/v1_clean/test/home/home_0019.jpg,home,home,keep,,normal,,test,first-pass quality check passed
+home_0020,模型训练相关/generated_scene_dataset/dataset/test/home/home_0020.jpg,ml-dataset/v1_clean/test/home/home_0020.jpg,home,home,keep,,normal,,test,first-pass quality check passed
+outfit_0018,模型训练相关/generated_scene_dataset/dataset/test/outfit/outfit_0018.jpg,ml-dataset/v1_clean/test/outfit/outfit_0018.jpg,outfit,outfit,keep,,normal,,test,first-pass quality check passed
+outfit_0019,模型训练相关/generated_scene_dataset/dataset/test/outfit/outfit_0019.jpg,ml-dataset/v1_clean/test/outfit/outfit_0019.jpg,outfit,outfit,keep,,normal,,test,first-pass quality check passed
+outfit_0020,模型训练相关/generated_scene_dataset/dataset/test/outfit/outfit_0020.jpg,ml-dataset/v1_clean/test/outfit/outfit_0020.jpg,outfit,outfit,keep,,normal,,test,first-pass quality check passed
+pet_0018,模型训练相关/generated_scene_dataset/dataset/test/pet/pet_0018.jpg,ml-dataset/v1_clean/test/pet/pet_0018.jpg,pet,pet,keep,,normal,,test,first-pass quality check passed
+pet_0019,模型训练相关/generated_scene_dataset/dataset/test/pet/pet_0019.jpg,ml-dataset/v1_clean/test/pet/pet_0019.jpg,pet,pet,keep,,normal,,test,first-pass quality check passed
+pet_0020,模型训练相关/generated_scene_dataset/dataset/test/pet/pet_0020.jpg,ml-dataset/v1_clean/test/pet/pet_0020.jpg,pet,pet,keep,,normal,,test,first-pass quality check passed
+street_0018,模型训练相关/generated_scene_dataset/dataset/test/street/street_0018.jpg,ml-dataset/v1_clean/test/street/street_0018.jpg,street,street,keep,,normal,,test,first-pass quality check passed
+street_0019,模型训练相关/generated_scene_dataset/dataset/test/street/street_0019.jpg,ml-dataset/v1_clean/test/street/street_0019.jpg,street,street,keep,,normal,,test,first-pass quality check passed
+street_0020,模型训练相关/generated_scene_dataset/dataset/test/street/street_0020.jpg,ml-dataset/v1_clean/test/street/street_0020.jpg,street,street,keep,,normal,,test,first-pass quality check passed
+sunset_0018,模型训练相关/generated_scene_dataset/dataset/test/sunset/sunset_0018.jpg,ml-dataset/v1_clean/test/sunset/sunset_0018.jpg,sunset,sunset,keep,,normal,,test,first-pass quality check passed
+sunset_0019,模型训练相关/generated_scene_dataset/dataset/test/sunset/sunset_0019.jpg,ml-dataset/v1_clean/test/sunset/sunset_0019.jpg,sunset,sunset,keep,,normal,,test,first-pass quality check passed
+sunset_0020,模型训练相关/generated_scene_dataset/dataset/test/sunset/sunset_0020.jpg,ml-dataset/v1_clean/test/sunset/sunset_0020.jpg,sunset,sunset,keep,,normal,,test,first-pass quality check passed
+travel_0018,模型训练相关/generated_scene_dataset/dataset/test/travel/travel_0018.jpg,ml-dataset/v1_clean/test/travel/travel_0018.jpg,travel,travel,keep,,normal,,test,first-pass quality check passed
+travel_0019,模型训练相关/generated_scene_dataset/dataset/test/travel/travel_0019.jpg,ml-dataset/v1_clean/test/travel/travel_0019.jpg,travel,travel,keep,,normal,,test,first-pass quality check passed
+travel_0020,模型训练相关/generated_scene_dataset/dataset/test/travel/travel_0020.jpg,ml-dataset/v1_clean/test/travel/travel_0020.jpg,travel,travel,keep,,normal,,test,manual review: near-duplicate flag is a false positive; keep road-trip travel scene
+unknown_0018,模型训练相关/generated_scene_dataset/dataset/test/unknown/unknown_0018.jpg,ml-dataset/v1_clean/test/unknown/unknown_0018.jpg,unknown,unknown,keep,,normal,,test,first-pass quality check passed
+unknown_0019,模型训练相关/generated_scene_dataset/dataset/test/unknown/unknown_0019.jpg,ml-dataset/v1_clean/test/unknown/unknown_0019.jpg,unknown,unknown,keep,,normal,,test,first-pass quality check passed
+unknown_0020,模型训练相关/generated_scene_dataset/dataset/test/unknown/unknown_0020.jpg,ml-dataset/v1_clean/test/unknown/unknown_0020.jpg,unknown,unknown,keep,,normal,,test,first-pass quality check passed
+walking_0018,模型训练相关/generated_scene_dataset/dataset/test/walking/walking_0018.jpg,ml-dataset/v1_clean/test/walking/walking_0018.jpg,walking,walking,keep,,normal,,test,first-pass quality check passed
+walking_0019,模型训练相关/generated_scene_dataset/dataset/test/walking/walking_0019.jpg,ml-dataset/v1_clean/test/walking/walking_0019.jpg,walking,walking,keep,,normal,,test,first-pass quality check passed
+walking_0020,模型训练相关/generated_scene_dataset/dataset/test/walking/walking_0020.jpg,ml-dataset/v1_clean/test/walking/walking_0020.jpg,walking,walking,keep,,normal,,test,first-pass quality check passed
+work_0018,模型训练相关/generated_scene_dataset/dataset/test/work/work_0018.jpg,ml-dataset/v1_clean/test/work/work_0018.jpg,work,work,keep,,normal,,test,first-pass quality check passed
+work_0019,模型训练相关/generated_scene_dataset/dataset/test/work/work_0019.jpg,ml-dataset/v1_clean/test/work/work_0019.jpg,work,work,keep,,normal,,test,first-pass quality check passed
+work_0020,模型训练相关/generated_scene_dataset/dataset/test/work/work_0020.jpg,ml-dataset/v1_clean/test/work/work_0020.jpg,work,work,keep,,normal,,test,first-pass quality check passed
+breakfast_0001,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0001.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0001.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0002,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0002.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0002.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0003,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0003.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0003.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0004,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0004.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0004.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0005,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0005.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0005.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0006,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0006.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0006.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0007,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0007.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0007.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0008,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0008.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0008.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0009,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0009.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0009.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0010,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0010.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0010.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0011,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0011.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0011.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+breakfast_0012,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0012.jpg,,breakfast,unknown,remove,not_relevant,"screenshot,text_overlay",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+breakfast_0013,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0013.jpg,,breakfast,unknown,remove,not_relevant,"screenshot,text_overlay,collage",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+breakfast_0014,模型训练相关/generated_scene_dataset/dataset/train/breakfast/breakfast_0014.jpg,ml-dataset/v1_clean/train/breakfast/breakfast_0014.jpg,breakfast,breakfast,keep,,normal,,train,first-pass quality check passed
+cafe_0001,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0001.jpg,,cafe,unknown,remove,not_relevant,"screenshot,text_overlay",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+cafe_0002,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0002.jpg,ml-dataset/v1_clean/train/cafe/cafe_0002.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0003,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0003.jpg,ml-dataset/v1_clean/train/cafe/cafe_0003.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0004,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0004.jpg,ml-dataset/v1_clean/train/cafe/cafe_0004.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0005,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0005.jpg,ml-dataset/v1_clean/train/cafe/cafe_0005.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0006,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0006.jpg,ml-dataset/v1_clean/train/cafe/cafe_0006.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0007,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0007.jpg,,cafe,unknown,remove,not_relevant,"screenshot,text_overlay,collage",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+cafe_0008,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0008.jpg,ml-dataset/v1_clean/train/cafe/cafe_0008.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0009,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0009.jpg,ml-dataset/v1_clean/train/cafe/cafe_0009.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0010,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0010.jpg,ml-dataset/v1_clean/train/cafe/cafe_0010.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0011,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0011.jpg,ml-dataset/v1_clean/train/cafe/cafe_0011.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0012,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0012.jpg,ml-dataset/v1_clean/train/cafe/cafe_0012.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+cafe_0013,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0013.jpg,ml-dataset/v1_clean/train/cafe/cafe_0013.jpg,cafe,cafe,keep,,low_light,,train,manual review: kept as low-light cafe hard case
+cafe_0014,模型训练相关/generated_scene_dataset/dataset/train/cafe/cafe_0014.jpg,ml-dataset/v1_clean/train/cafe/cafe_0014.jpg,cafe,cafe,keep,,normal,,train,first-pass quality check passed
+fitness_0001,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0001.jpg,ml-dataset/v1_clean/train/fitness/fitness_0001.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0002,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0002.jpg,ml-dataset/v1_clean/train/fitness/fitness_0002.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0003,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0003.jpg,ml-dataset/v1_clean/train/fitness/fitness_0003.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0004,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0004.jpg,ml-dataset/v1_clean/train/fitness/fitness_0004.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0005,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0005.jpg,ml-dataset/v1_clean/train/fitness/fitness_0005.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0006,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0006.jpg,ml-dataset/v1_clean/train/fitness/fitness_0006.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0007,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0007.jpg,ml-dataset/v1_clean/train/fitness/fitness_0007.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0008,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0008.jpg,ml-dataset/v1_clean/train/fitness/fitness_0008.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0009,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0009.jpg,ml-dataset/v1_clean/train/fitness/fitness_0009.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0010,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0010.jpg,ml-dataset/v1_clean/train/fitness/fitness_0010.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0011,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0011.jpg,ml-dataset/v1_clean/train/fitness/fitness_0011.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0012,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0012.jpg,ml-dataset/v1_clean/train/fitness/fitness_0012.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0013,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0013.jpg,ml-dataset/v1_clean/train/fitness/fitness_0013.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+fitness_0014,模型训练相关/generated_scene_dataset/dataset/train/fitness/fitness_0014.jpg,ml-dataset/v1_clean/train/fitness/fitness_0014.jpg,fitness,fitness,keep,,normal,,train,first-pass quality check passed
+food_0001,模型训练相关/generated_scene_dataset/dataset/train/food/food_0001.jpg,ml-dataset/v1_clean/train/food/food_0001.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0002,模型训练相关/generated_scene_dataset/dataset/train/food/food_0002.jpg,ml-dataset/v1_clean/train/food/food_0002.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0003,模型训练相关/generated_scene_dataset/dataset/train/food/food_0003.jpg,ml-dataset/v1_clean/train/food/food_0003.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0004,模型训练相关/generated_scene_dataset/dataset/train/food/food_0004.jpg,ml-dataset/v1_clean/train/food/food_0004.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0005,模型训练相关/generated_scene_dataset/dataset/train/food/food_0005.jpg,ml-dataset/v1_clean/train/food/food_0005.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0006,模型训练相关/generated_scene_dataset/dataset/train/food/food_0006.jpg,ml-dataset/v1_clean/train/food/food_0006.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0007,模型训练相关/generated_scene_dataset/dataset/train/food/food_0007.jpg,ml-dataset/v1_clean/train/food/food_0007.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0008,模型训练相关/generated_scene_dataset/dataset/train/food/food_0008.jpg,ml-dataset/v1_clean/train/food/food_0008.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0009,模型训练相关/generated_scene_dataset/dataset/train/food/food_0009.jpg,ml-dataset/v1_clean/train/food/food_0009.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0010,模型训练相关/generated_scene_dataset/dataset/train/food/food_0010.jpg,ml-dataset/v1_clean/train/food/food_0010.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0011,模型训练相关/generated_scene_dataset/dataset/train/food/food_0011.jpg,ml-dataset/v1_clean/train/food/food_0011.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0012,模型训练相关/generated_scene_dataset/dataset/train/food/food_0012.jpg,ml-dataset/v1_clean/train/food/food_0012.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0013,模型训练相关/generated_scene_dataset/dataset/train/food/food_0013.jpg,ml-dataset/v1_clean/train/food/food_0013.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+food_0014,模型训练相关/generated_scene_dataset/dataset/train/food/food_0014.jpg,ml-dataset/v1_clean/train/food/food_0014.jpg,food,food,keep,,normal,,train,first-pass quality check passed
+home_0001,模型训练相关/generated_scene_dataset/dataset/train/home/home_0001.jpg,ml-dataset/v1_clean/train/home/home_0001.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0002,模型训练相关/generated_scene_dataset/dataset/train/home/home_0002.jpg,ml-dataset/v1_clean/train/home/home_0002.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0003,模型训练相关/generated_scene_dataset/dataset/train/home/home_0003.jpg,ml-dataset/v1_clean/train/home/home_0003.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0004,模型训练相关/generated_scene_dataset/dataset/train/home/home_0004.jpg,ml-dataset/v1_clean/train/home/home_0004.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0005,模型训练相关/generated_scene_dataset/dataset/train/home/home_0005.jpg,ml-dataset/v1_clean/train/home/home_0005.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0006,模型训练相关/generated_scene_dataset/dataset/train/home/home_0006.jpg,ml-dataset/v1_clean/train/home/home_0006.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0007,模型训练相关/generated_scene_dataset/dataset/train/home/home_0007.jpg,ml-dataset/v1_clean/train/home/home_0007.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0008,模型训练相关/generated_scene_dataset/dataset/train/home/home_0008.jpg,ml-dataset/v1_clean/train/home/home_0008.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0009,模型训练相关/generated_scene_dataset/dataset/train/home/home_0009.jpg,ml-dataset/v1_clean/train/home/home_0009.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0010,模型训练相关/generated_scene_dataset/dataset/train/home/home_0010.jpg,ml-dataset/v1_clean/train/home/home_0010.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0011,模型训练相关/generated_scene_dataset/dataset/train/home/home_0011.jpg,ml-dataset/v1_clean/train/home/home_0011.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0012,模型训练相关/generated_scene_dataset/dataset/train/home/home_0012.jpg,ml-dataset/v1_clean/train/home/home_0012.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0013,模型训练相关/generated_scene_dataset/dataset/train/home/home_0013.jpg,ml-dataset/v1_clean/train/home/home_0013.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+home_0014,模型训练相关/generated_scene_dataset/dataset/train/home/home_0014.jpg,ml-dataset/v1_clean/train/home/home_0014.jpg,home,home,keep,,normal,,train,first-pass quality check passed
+outfit_0001,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0001.jpg,ml-dataset/v1_clean/train/outfit/outfit_0001.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0002,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0002.jpg,ml-dataset/v1_clean/train/outfit/outfit_0002.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0003,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0003.jpg,ml-dataset/v1_clean/train/outfit/outfit_0003.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0004,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0004.jpg,ml-dataset/v1_clean/train/outfit/outfit_0004.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0005,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0005.jpg,ml-dataset/v1_clean/train/outfit/outfit_0005.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0006,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0006.jpg,ml-dataset/v1_clean/train/outfit/outfit_0006.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0007,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0007.jpg,ml-dataset/v1_clean/train/outfit/outfit_0007.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0008,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0008.jpg,ml-dataset/v1_clean/train/outfit/outfit_0008.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0009,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0009.jpg,ml-dataset/v1_clean/train/outfit/outfit_0009.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0010,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0010.jpg,ml-dataset/v1_clean/train/outfit/outfit_0010.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0011,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0011.jpg,ml-dataset/v1_clean/train/outfit/outfit_0011.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0012,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0012.jpg,ml-dataset/v1_clean/train/outfit/outfit_0012.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0013,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0013.jpg,ml-dataset/v1_clean/train/outfit/outfit_0013.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+outfit_0014,模型训练相关/generated_scene_dataset/dataset/train/outfit/outfit_0014.jpg,ml-dataset/v1_clean/train/outfit/outfit_0014.jpg,outfit,outfit,keep,,normal,,train,first-pass quality check passed
+pet_0001,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0001.jpg,ml-dataset/v1_clean/train/pet/pet_0001.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0002,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0002.jpg,ml-dataset/v1_clean/train/pet/pet_0002.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0003,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0003.jpg,ml-dataset/v1_clean/train/pet/pet_0003.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0004,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0004.jpg,ml-dataset/v1_clean/train/pet/pet_0004.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0005,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0005.jpg,ml-dataset/v1_clean/train/pet/pet_0005.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0006,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0006.jpg,ml-dataset/v1_clean/train/pet/pet_0006.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0007,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0007.jpg,ml-dataset/v1_clean/train/pet/pet_0007.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0008,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0008.jpg,ml-dataset/v1_clean/train/pet/pet_0008.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0009,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0009.jpg,ml-dataset/v1_clean/train/pet/pet_0009.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0010,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0010.jpg,ml-dataset/v1_clean/train/pet/pet_0010.jpg,pet,pet,keep,,"low_light,compressed",,train,manual review: kept as low-light pet hard case
+pet_0011,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0011.jpg,ml-dataset/v1_clean/train/pet/pet_0011.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0012,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0012.jpg,ml-dataset/v1_clean/train/pet/pet_0012.jpg,pet,pet,keep,,low_light,,train,manual review: kept as low-light pet silhouette hard case
+pet_0013,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0013.jpg,ml-dataset/v1_clean/train/pet/pet_0013.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+pet_0014,模型训练相关/generated_scene_dataset/dataset/train/pet/pet_0014.jpg,ml-dataset/v1_clean/train/pet/pet_0014.jpg,pet,pet,keep,,normal,,train,first-pass quality check passed
+street_0001,模型训练相关/generated_scene_dataset/dataset/train/street/street_0001.jpg,ml-dataset/v1_clean/train/street/street_0001.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0002,模型训练相关/generated_scene_dataset/dataset/train/street/street_0002.jpg,ml-dataset/v1_clean/train/street/street_0002.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0003,模型训练相关/generated_scene_dataset/dataset/train/street/street_0003.jpg,ml-dataset/v1_clean/train/street/street_0003.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0004,模型训练相关/generated_scene_dataset/dataset/train/street/street_0004.jpg,ml-dataset/v1_clean/train/unknown/street_0004.jpg,street,unknown,keep,,"partial_subject,cluttered",street,train,manual review: phone dominates; street context is too weak for street training
+street_0005,模型训练相关/generated_scene_dataset/dataset/train/street/street_0005.jpg,ml-dataset/v1_clean/train/street/street_0005.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0006,模型训练相关/generated_scene_dataset/dataset/train/street/street_0006.jpg,ml-dataset/v1_clean/train/street/street_0006.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0007,模型训练相关/generated_scene_dataset/dataset/train/street/street_0007.jpg,ml-dataset/v1_clean/train/street/street_0007.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0008,模型训练相关/generated_scene_dataset/dataset/train/street/street_0008.jpg,ml-dataset/v1_clean/train/street/street_0008.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0009,模型训练相关/generated_scene_dataset/dataset/train/street/street_0009.jpg,ml-dataset/v1_clean/train/street/street_0009.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0010,模型训练相关/generated_scene_dataset/dataset/train/street/street_0010.jpg,ml-dataset/v1_clean/train/street/street_0010.jpg,street,street,keep,,low_light,,train,manual review: kept as low-light street hard case
+street_0011,模型训练相关/generated_scene_dataset/dataset/train/street/street_0011.jpg,ml-dataset/v1_clean/train/street/street_0011.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0012,模型训练相关/generated_scene_dataset/dataset/train/street/street_0012.jpg,ml-dataset/v1_clean/train/street/street_0012.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0013,模型训练相关/generated_scene_dataset/dataset/train/street/street_0013.jpg,ml-dataset/v1_clean/train/street/street_0013.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+street_0014,模型训练相关/generated_scene_dataset/dataset/train/street/street_0014.jpg,ml-dataset/v1_clean/train/street/street_0014.jpg,street,street,keep,,normal,,train,first-pass quality check passed
+sunset_0001,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0001.jpg,ml-dataset/v1_clean/train/sunset/sunset_0001.jpg,sunset,sunset,keep,,normal,,train,manual review: near-duplicate flag is a false positive; keep phone-at-sunset hard case
+sunset_0002,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0002.jpg,ml-dataset/v1_clean/train/sunset/sunset_0002.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0003,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0003.jpg,ml-dataset/v1_clean/train/sunset/sunset_0003.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0004,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0004.jpg,ml-dataset/v1_clean/train/sunset/sunset_0004.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0005,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0005.jpg,ml-dataset/v1_clean/train/sunset/sunset_0005.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0006,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0006.jpg,ml-dataset/v1_clean/train/sunset/sunset_0006.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0007,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0007.jpg,ml-dataset/v1_clean/train/sunset/sunset_0007.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0008,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0008.jpg,ml-dataset/v1_clean/train/sunset/sunset_0008.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0009,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0009.jpg,ml-dataset/v1_clean/train/sunset/sunset_0009.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0010,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0010.jpg,ml-dataset/v1_clean/train/sunset/sunset_0010.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0011,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0011.jpg,ml-dataset/v1_clean/train/sunset/sunset_0011.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0012,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0012.jpg,ml-dataset/v1_clean/train/sunset/sunset_0012.jpg,sunset,sunset,keep,,normal,,train,first-pass quality check passed
+sunset_0013,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0013.jpg,ml-dataset/v1_clean/train/sunset/sunset_0013.jpg,sunset,sunset,keep,,normal,,train,manual review: near-duplicate flag is a false positive; keep beach sunset travel-adjacent scene
+sunset_0014,模型训练相关/generated_scene_dataset/dataset/train/sunset/sunset_0014.jpg,ml-dataset/v1_clean/train/sunset/sunset_0014.jpg,sunset,sunset,keep,,normal,,train,manual review: near-duplicate flag is a false positive; keep city skyline sunset scene
+travel_0001,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0001.jpg,,travel,unknown,remove,not_relevant,"screenshot,text_overlay",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+travel_0002,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0002.jpg,ml-dataset/v1_clean/train/travel/travel_0002.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0003,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0003.jpg,ml-dataset/v1_clean/train/travel/travel_0003.jpg,travel,travel,keep,,normal,,train,manual review: near-duplicate flag is a false positive; keep airport travel scene
+travel_0004,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0004.jpg,ml-dataset/v1_clean/train/travel/travel_0004.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0005,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0005.jpg,ml-dataset/v1_clean/train/travel/travel_0005.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0006,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0006.jpg,ml-dataset/v1_clean/train/travel/travel_0006.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0007,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0007.jpg,ml-dataset/v1_clean/train/travel/travel_0007.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0008,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0008.jpg,ml-dataset/v1_clean/train/travel/travel_0008.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0009,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0009.jpg,ml-dataset/v1_clean/train/travel/travel_0009.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0010,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0010.jpg,ml-dataset/v1_clean/train/travel/travel_0010.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+travel_0011,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0011.jpg,ml-dataset/v1_clean/train/travel/travel_0011.jpg,travel,travel,keep,,normal,,train,manual review: near-duplicate flag is a false positive; keep road-trip travel scene
+travel_0012,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0012.jpg,ml-dataset/v1_clean/train/street/travel_0012.jpg,travel,street,keep,,normal,travel,train,manual review: looks like ordinary street/alley rather than a clear travel scene
+travel_0013,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0013.jpg,ml-dataset/v1_clean/train/travel/travel_0013.jpg,travel,travel,keep,,normal,,train,manual review: near-duplicate flag is a false positive; keep beach travel scene
+travel_0014,模型训练相关/generated_scene_dataset/dataset/train/travel/travel_0014.jpg,ml-dataset/v1_clean/train/travel/travel_0014.jpg,travel,travel,keep,,normal,,train,first-pass quality check passed
+unknown_0001,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0001.jpg,ml-dataset/v1_clean/train/unknown/unknown_0001.jpg,unknown,unknown,keep,,compressed,,train,manual review: kept as motion-blur unknown hard case
+unknown_0002,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0002.jpg,ml-dataset/v1_clean/train/unknown/unknown_0002.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0003,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0003.jpg,ml-dataset/v1_clean/train/unknown/unknown_0003.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0004,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0004.jpg,ml-dataset/v1_clean/train/unknown/unknown_0004.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0005,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0005.jpg,ml-dataset/v1_clean/train/unknown/unknown_0005.jpg,unknown,unknown,keep,,"low_light,blurry",,train,manual review: kept as low-light blurry unknown hard case
+unknown_0006,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0006.jpg,ml-dataset/v1_clean/train/unknown/unknown_0006.jpg,unknown,unknown,keep,,compressed,,train,manual review: kept as screenshot-like unknown hard case
+unknown_0007,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0007.jpg,ml-dataset/v1_clean/train/unknown/unknown_0007.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0008,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0008.jpg,ml-dataset/v1_clean/train/unknown/unknown_0008.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0009,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0009.jpg,ml-dataset/v1_clean/train/unknown/unknown_0009.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0010,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0010.jpg,ml-dataset/v1_clean/train/unknown/unknown_0010.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0011,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0011.jpg,ml-dataset/v1_clean/train/unknown/unknown_0011.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0012,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0012.jpg,ml-dataset/v1_clean/train/unknown/unknown_0012.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0013,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0013.jpg,ml-dataset/v1_clean/train/unknown/unknown_0013.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+unknown_0014,模型训练相关/generated_scene_dataset/dataset/train/unknown/unknown_0014.jpg,ml-dataset/v1_clean/train/unknown/unknown_0014.jpg,unknown,unknown,keep,,normal,,train,first-pass quality check passed
+walking_0001,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0001.jpg,,walking,unknown,remove,not_relevant,"screenshot,text_overlay",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+walking_0002,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0002.jpg,ml-dataset/v1_clean/train/walking/walking_0002.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0003,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0003.jpg,ml-dataset/v1_clean/train/walking/walking_0003.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0004,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0004.jpg,ml-dataset/v1_clean/train/walking/walking_0004.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0005,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0005.jpg,ml-dataset/v1_clean/train/walking/walking_0005.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0006,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0006.jpg,ml-dataset/v1_clean/train/walking/walking_0006.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0007,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0007.jpg,,walking,unknown,remove,not_relevant,"screenshot,text_overlay",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+walking_0008,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0008.jpg,ml-dataset/v1_clean/train/pet/walking_0008.jpg,walking,pet,keep,,normal,walking,train,"manual review: dog is the primary subject, not walking"
+walking_0009,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0009.jpg,ml-dataset/v1_clean/train/walking/walking_0009.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0010,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0010.jpg,,walking,unknown,remove,not_relevant,"screenshot,text_overlay",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+walking_0011,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0011.jpg,ml-dataset/v1_clean/train/walking/walking_0011.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0012,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0012.jpg,ml-dataset/v1_clean/train/walking/walking_0012.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0013,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0013.jpg,ml-dataset/v1_clean/train/walking/walking_0013.jpg,walking,walking,keep,,normal,,train,first-pass quality check passed
+walking_0014,模型训练相关/generated_scene_dataset/dataset/train/walking/walking_0014.jpg,,walking,unknown,remove,not_relevant,"screenshot,text_overlay,collage",,train,"manual review: prompt/data-card screenshot artifact, not a user photo"
+work_0001,模型训练相关/generated_scene_dataset/dataset/train/work/work_0001.jpg,ml-dataset/v1_clean/train/work/work_0001.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0002,模型训练相关/generated_scene_dataset/dataset/train/work/work_0002.jpg,ml-dataset/v1_clean/train/work/work_0002.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0003,模型训练相关/generated_scene_dataset/dataset/train/work/work_0003.jpg,ml-dataset/v1_clean/train/work/work_0003.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0004,模型训练相关/generated_scene_dataset/dataset/train/work/work_0004.jpg,ml-dataset/v1_clean/train/work/work_0004.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0005,模型训练相关/generated_scene_dataset/dataset/train/work/work_0005.jpg,ml-dataset/v1_clean/train/work/work_0005.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0006,模型训练相关/generated_scene_dataset/dataset/train/work/work_0006.jpg,ml-dataset/v1_clean/train/work/work_0006.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0007,模型训练相关/generated_scene_dataset/dataset/train/work/work_0007.jpg,ml-dataset/v1_clean/train/work/work_0007.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0008,模型训练相关/generated_scene_dataset/dataset/train/work/work_0008.jpg,ml-dataset/v1_clean/train/work/work_0008.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0009,模型训练相关/generated_scene_dataset/dataset/train/work/work_0009.jpg,ml-dataset/v1_clean/train/work/work_0009.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0010,模型训练相关/generated_scene_dataset/dataset/train/work/work_0010.jpg,ml-dataset/v1_clean/train/work/work_0010.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0011,模型训练相关/generated_scene_dataset/dataset/train/work/work_0011.jpg,ml-dataset/v1_clean/train/work/work_0011.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0012,模型训练相关/generated_scene_dataset/dataset/train/work/work_0012.jpg,ml-dataset/v1_clean/train/work/work_0012.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0013,模型训练相关/generated_scene_dataset/dataset/train/work/work_0013.jpg,ml-dataset/v1_clean/train/work/work_0013.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+work_0014,模型训练相关/generated_scene_dataset/dataset/train/work/work_0014.jpg,ml-dataset/v1_clean/train/work/work_0014.jpg,work,work,keep,,normal,,train,first-pass quality check passed
+breakfast_0015,模型训练相关/generated_scene_dataset/dataset/validation/breakfast/breakfast_0015.jpg,ml-dataset/v1_clean/validation/breakfast/breakfast_0015.jpg,breakfast,breakfast,keep,,normal,,validation,first-pass quality check passed
+breakfast_0016,模型训练相关/generated_scene_dataset/dataset/validation/breakfast/breakfast_0016.jpg,ml-dataset/v1_clean/validation/breakfast/breakfast_0016.jpg,breakfast,breakfast,keep,,normal,,validation,first-pass quality check passed
+breakfast_0017,模型训练相关/generated_scene_dataset/dataset/validation/breakfast/breakfast_0017.jpg,,breakfast,unknown,remove,not_relevant,"screenshot,text_overlay,collage",,validation,"manual review: prompt/data-card screenshot artifact, not a user photo"
+cafe_0015,模型训练相关/generated_scene_dataset/dataset/validation/cafe/cafe_0015.jpg,,cafe,unknown,remove,not_relevant,"screenshot,text_overlay,collage",,validation,"manual review: prompt/data-card screenshot artifact, not a user photo"
+cafe_0016,模型训练相关/generated_scene_dataset/dataset/validation/cafe/cafe_0016.jpg,ml-dataset/v1_clean/validation/cafe/cafe_0016.jpg,cafe,cafe,keep,,normal,,validation,first-pass quality check passed
+cafe_0017,模型训练相关/generated_scene_dataset/dataset/validation/cafe/cafe_0017.jpg,ml-dataset/v1_clean/validation/cafe/cafe_0017.jpg,cafe,cafe,keep,,normal,,validation,first-pass quality check passed
+fitness_0015,模型训练相关/generated_scene_dataset/dataset/validation/fitness/fitness_0015.jpg,ml-dataset/v1_clean/validation/fitness/fitness_0015.jpg,fitness,fitness,keep,,normal,,validation,first-pass quality check passed
+fitness_0016,模型训练相关/generated_scene_dataset/dataset/validation/fitness/fitness_0016.jpg,ml-dataset/v1_clean/validation/fitness/fitness_0016.jpg,fitness,fitness,keep,,normal,,validation,first-pass quality check passed
+fitness_0017,模型训练相关/generated_scene_dataset/dataset/validation/fitness/fitness_0017.jpg,ml-dataset/v1_clean/validation/fitness/fitness_0017.jpg,fitness,fitness,keep,,normal,,validation,first-pass quality check passed
+food_0015,模型训练相关/generated_scene_dataset/dataset/validation/food/food_0015.jpg,ml-dataset/v1_clean/validation/food/food_0015.jpg,food,food,keep,,normal,,validation,first-pass quality check passed
+food_0016,模型训练相关/generated_scene_dataset/dataset/validation/food/food_0016.jpg,ml-dataset/v1_clean/validation/food/food_0016.jpg,food,food,keep,,normal,,validation,first-pass quality check passed
+food_0017,模型训练相关/generated_scene_dataset/dataset/validation/food/food_0017.jpg,ml-dataset/v1_clean/validation/food/food_0017.jpg,food,food,keep,,normal,,validation,first-pass quality check passed
+home_0015,模型训练相关/generated_scene_dataset/dataset/validation/home/home_0015.jpg,ml-dataset/v1_clean/validation/home/home_0015.jpg,home,home,keep,,normal,,validation,first-pass quality check passed
+home_0016,模型训练相关/generated_scene_dataset/dataset/validation/home/home_0016.jpg,ml-dataset/v1_clean/validation/home/home_0016.jpg,home,home,keep,,normal,,validation,first-pass quality check passed
+home_0017,模型训练相关/generated_scene_dataset/dataset/validation/home/home_0017.jpg,ml-dataset/v1_clean/validation/home/home_0017.jpg,home,home,keep,,normal,,validation,first-pass quality check passed
+outfit_0015,模型训练相关/generated_scene_dataset/dataset/validation/outfit/outfit_0015.jpg,ml-dataset/v1_clean/validation/outfit/outfit_0015.jpg,outfit,outfit,keep,,normal,,validation,first-pass quality check passed
+outfit_0016,模型训练相关/generated_scene_dataset/dataset/validation/outfit/outfit_0016.jpg,ml-dataset/v1_clean/validation/outfit/outfit_0016.jpg,outfit,outfit,keep,,normal,,validation,first-pass quality check passed
+outfit_0017,模型训练相关/generated_scene_dataset/dataset/validation/outfit/outfit_0017.jpg,ml-dataset/v1_clean/validation/outfit/outfit_0017.jpg,outfit,outfit,keep,,normal,,validation,first-pass quality check passed
+pet_0015,模型训练相关/generated_scene_dataset/dataset/validation/pet/pet_0015.jpg,ml-dataset/v1_clean/validation/pet/pet_0015.jpg,pet,pet,keep,,normal,,validation,first-pass quality check passed
+pet_0016,模型训练相关/generated_scene_dataset/dataset/validation/pet/pet_0016.jpg,ml-dataset/v1_clean/validation/pet/pet_0016.jpg,pet,pet,keep,,normal,,validation,first-pass quality check passed
+pet_0017,模型训练相关/generated_scene_dataset/dataset/validation/pet/pet_0017.jpg,ml-dataset/v1_clean/validation/pet/pet_0017.jpg,pet,pet,keep,,normal,,validation,first-pass quality check passed
+street_0015,模型训练相关/generated_scene_dataset/dataset/validation/street/street_0015.jpg,ml-dataset/v1_clean/validation/street/street_0015.jpg,street,street,keep,,normal,,validation,first-pass quality check passed
+street_0016,模型训练相关/generated_scene_dataset/dataset/validation/street/street_0016.jpg,ml-dataset/v1_clean/validation/street/street_0016.jpg,street,street,keep,,normal,,validation,first-pass quality check passed
+street_0017,模型训练相关/generated_scene_dataset/dataset/validation/street/street_0017.jpg,ml-dataset/v1_clean/validation/street/street_0017.jpg,street,street,keep,,normal,,validation,first-pass quality check passed
+sunset_0015,模型训练相关/generated_scene_dataset/dataset/validation/sunset/sunset_0015.jpg,ml-dataset/v1_clean/validation/sunset/sunset_0015.jpg,sunset,sunset,keep,,normal,,validation,first-pass quality check passed
+sunset_0016,模型训练相关/generated_scene_dataset/dataset/validation/sunset/sunset_0016.jpg,ml-dataset/v1_clean/validation/sunset/sunset_0016.jpg,sunset,sunset,keep,,normal,,validation,first-pass quality check passed
+sunset_0017,模型训练相关/generated_scene_dataset/dataset/validation/sunset/sunset_0017.jpg,ml-dataset/v1_clean/validation/sunset/sunset_0017.jpg,sunset,sunset,keep,,normal,,validation,first-pass quality check passed
+travel_0015,模型训练相关/generated_scene_dataset/dataset/validation/travel/travel_0015.jpg,ml-dataset/v1_clean/validation/travel/travel_0015.jpg,travel,travel,keep,,normal,,validation,first-pass quality check passed
+travel_0016,模型训练相关/generated_scene_dataset/dataset/validation/travel/travel_0016.jpg,ml-dataset/v1_clean/validation/travel/travel_0016.jpg,travel,travel,keep,,normal,,validation,first-pass quality check passed
+travel_0017,模型训练相关/generated_scene_dataset/dataset/validation/travel/travel_0017.jpg,ml-dataset/v1_clean/validation/travel/travel_0017.jpg,travel,travel,keep,,normal,,validation,first-pass quality check passed
+unknown_0015,模型训练相关/generated_scene_dataset/dataset/validation/unknown/unknown_0015.jpg,ml-dataset/v1_clean/validation/unknown/unknown_0015.jpg,unknown,unknown,keep,,normal,,validation,first-pass quality check passed
+unknown_0016,模型训练相关/generated_scene_dataset/dataset/validation/unknown/unknown_0016.jpg,ml-dataset/v1_clean/validation/unknown/unknown_0016.jpg,unknown,unknown,keep,,normal,,validation,first-pass quality check passed
+unknown_0017,模型训练相关/generated_scene_dataset/dataset/validation/unknown/unknown_0017.jpg,ml-dataset/v1_clean/validation/unknown/unknown_0017.jpg,unknown,unknown,keep,,low_light,,validation,manual review: kept as low-light unknown hard case
+walking_0015,模型训练相关/generated_scene_dataset/dataset/validation/walking/walking_0015.jpg,ml-dataset/v1_clean/validation/walking/walking_0015.jpg,walking,walking,keep,,normal,,validation,first-pass quality check passed
+walking_0016,模型训练相关/generated_scene_dataset/dataset/validation/walking/walking_0016.jpg,ml-dataset/v1_clean/validation/walking/walking_0016.jpg,walking,walking,keep,,low_light,,validation,manual review: kept as low-light walking hard case
+walking_0017,模型训练相关/generated_scene_dataset/dataset/validation/walking/walking_0017.jpg,ml-dataset/v1_clean/validation/walking/walking_0017.jpg,walking,walking,keep,,normal,,validation,first-pass quality check passed
+work_0015,模型训练相关/generated_scene_dataset/dataset/validation/work/work_0015.jpg,ml-dataset/v1_clean/validation/work/work_0015.jpg,work,work,keep,,normal,,validation,first-pass quality check passed
+work_0016,模型训练相关/generated_scene_dataset/dataset/validation/work/work_0016.jpg,ml-dataset/v1_clean/validation/work/work_0016.jpg,work,work,keep,,normal,,validation,first-pass quality check passed
+work_0017,模型训练相关/generated_scene_dataset/dataset/validation/work/work_0017.jpg,ml-dataset/v1_clean/validation/work/work_0017.jpg,work,work,keep,,normal,,validation,first-pass quality check passed

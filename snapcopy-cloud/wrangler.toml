@@ -1,0 +1,7 @@
+name = "snapcopy-cloud-api"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+
+[vars]
+DEFAULT_PLAN = "beta"
+DEFAULT_PROVIDER = "mock"

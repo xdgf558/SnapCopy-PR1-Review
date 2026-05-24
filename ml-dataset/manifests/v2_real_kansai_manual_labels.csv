@@ -1,0 +1,85 @@
+image_id,final_scene,keep_or_remove,notes
+kansai_real_0001,food,keep,ramen meal
+kansai_real_0002,travel,keep,museum exhibit tourism context
+kansai_real_0003,travel,keep,shrine entrance
+kansai_real_0004,unknown,keep,text-heavy sign board
+kansai_real_0005,food,keep,restaurant dish
+kansai_real_0006,unknown,keep,text-heavy menu
+kansai_real_0007,street,keep,night street scene
+kansai_real_0008,unknown,keep,ticket/order machine
+kansai_real_0009,travel,keep,shrine detail
+kansai_real_0010,street,keep,market street
+kansai_real_0011,food,keep,restaurant meal set
+kansai_real_0012,travel,keep,harbor sightseeing
+kansai_real_0013,travel,keep,bridge and harbor
+kansai_real_0014,walking,keep,waterfront walk
+kansai_real_0015,travel,keep,waterfront view
+kansai_real_0016,walking,keep,harbor promenade
+kansai_real_0017,sunset,keep,city sunset
+kansai_real_0018,travel,keep,night city view
+kansai_real_0019,street,keep,station/city pedestrian area
+kansai_real_0020,food,keep,supermarket meat pack
+kansai_real_0021,food,keep,ramen and beer
+kansai_real_0022,food,keep,ramen storefront
+kansai_real_0023,food,keep,sashimi pack
+kansai_real_0024,unknown,keep,text-heavy coin display
+kansai_real_0025,travel,keep,tourist landmark object
+kansai_real_0026,unknown,keep,text-heavy document
+kansai_real_0027,travel,keep,aquarium penguins
+kansai_real_0028,travel,keep,aquarium penguins
+kansai_real_0029,travel,keep,waterfront sightseeing
+kansai_real_0030,travel,keep,station platform during trip
+kansai_real_0031,walking,keep,park riverside walk
+kansai_real_0032,travel,keep,shrine path
+kansai_real_0033,travel,keep,museum sign
+kansai_real_0034,unknown,keep,receipt only
+kansai_real_0035,unknown,keep,coins exhibit close-up
+kansai_real_0036,cafe,keep,coffee vending machine
+kansai_real_0037,travel,keep,bridge sightseeing
+kansai_real_0038,travel,keep,castle view
+kansai_real_0039,travel,keep,boat sightseeing
+kansai_real_0040,street,keep,city street
+kansai_real_0041,travel,keep,nara park sign
+kansai_real_0042,travel,keep,nara park marker
+kansai_real_0043,street,keep,bus/ad on street
+kansai_real_0044,food,keep,milk cartons
+kansai_real_0045,food,keep,sake bottle
+kansai_real_0046,unknown,keep,text-heavy museum map
+kansai_real_0047,travel,keep,nara deer
+kansai_real_0048,food,keep,beer in restaurant
+kansai_real_0049,travel,keep,ferris wheel
+kansai_real_0050,unknown,keep,coin display close-up
+kansai_real_0051,unknown,keep,coin close-up
+kansai_real_0052,unknown,keep,text-heavy paper display
+kansai_real_0053,unknown,keep,text-heavy paper display
+kansai_real_0054,travel,keep,museum folding screen
+kansai_real_0055,street,keep,shopfront street
+kansai_real_0056,street,keep,market street
+kansai_real_0057,food,keep,market food
+kansai_real_0058,street,keep,market entrance
+kansai_real_0059,travel,keep,market shrine
+kansai_real_0060,unknown,keep,public restroom interior
+kansai_real_0061,unknown,keep,museum object display
+kansai_real_0062,street,keep,hotel roadside street
+kansai_real_0063,unknown,keep,order paper only
+kansai_real_0064,travel,keep,aquarium fish
+kansai_real_0065,travel,keep,aquarium coral
+kansai_real_0066,travel,keep,shrine lanterns
+kansai_real_0067,unknown,keep,map sign
+kansai_real_0068,unknown,keep,museum scale object
+kansai_real_0069,street,keep,vending machines on street
+kansai_real_0070,unknown,keep,coin display
+kansai_real_0071,food,keep,gyoza dish
+kansai_real_0072,food,keep,drink shelf
+kansai_real_0073,food,keep,drink shelf
+kansai_real_0074,food,keep,sushi shelf
+kansai_real_0075,food,keep,beef packs
+kansai_real_0076,travel,keep,harbor view
+kansai_real_0077,street,keep,rainy shopping street
+kansai_real_0078,travel,keep,tourist interior
+kansai_real_0079,unknown,keep,text-heavy coin history
+kansai_real_0080,street,keep,rainy street
+kansai_real_0081,travel,keep,aquarium fish
+kansai_real_0082,travel,keep,whale shark aquarium
+kansai_real_0083,travel,keep,torii gate
+kansai_real_0084,travel,keep,nara deer tourism

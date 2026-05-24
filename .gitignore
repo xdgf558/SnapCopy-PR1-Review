@@ -1,0 +1,28 @@
+.DS_Store
+
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcarchive
+*.ipa
+
+# Swift build cache
+.build/
+
+# Node / Cloudflare Worker
+node_modules/
+snapcopy-cloud/node_modules/
+.wrangler/
+.dev.vars
+*.log
+
+# Local secrets and generated files
+*.env
+*.local
+
+# Training data and bulky generated assets are governed by ml-dataset/.gitignore.
+模型训练相关/generated_scene_dataset/
+模型训练相关/models/*.mlmodel

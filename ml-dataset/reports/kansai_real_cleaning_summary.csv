@@ -1,0 +1,8 @@
+scene,train,validation,test,total
+cafe,1,0,0,1
+food,11,2,3,16
+street,8,2,2,12
+sunset,1,0,0,1
+travel,22,5,5,32
+unknown,13,3,3,19
+walking,2,1,0,3
