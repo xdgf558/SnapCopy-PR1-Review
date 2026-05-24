@@ -46,24 +46,14 @@ struct CloudEnhancementConfig: Codable, Equatable {
 }
 
 enum CloudFeatureFlags {
-    static var cloudEnhancedCaptions: Bool {
-        #if DEBUG
-        true
-        #else
-        false
-        #endif
-    }
+    // Keep cloud enhancement available in TestFlight beta builds. Before public App Store release,
+    // move this behind remote config or StoreKit entitlement checks.
+    static let cloudEnhancedCaptions = true
 
     static let cloudImageUnderstanding = false
     static let cloudEnhancedDebugMode = false
 
-    static var betaCloudTestUser: Bool {
-        #if DEBUG
-        true
-        #else
-        false
-        #endif
-    }
+    static let betaCloudTestUser = true
 }
 
 struct CloudEnhancementRequest: Codable, Equatable {
