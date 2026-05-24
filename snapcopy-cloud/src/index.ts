@@ -9,6 +9,7 @@ import type { Plan } from "./types/api";
 type Env = {
   DEFAULT_PLAN?: Plan;
   DEFAULT_PROVIDER?: string;
+  DB?: D1Database;
 };
 
 export default {
@@ -40,11 +41,11 @@ export default {
     }
 
     if (url.pathname === "/api/contributions/consent" && request.method === "POST") {
-      return handleContributionConsent(request);
+      return handleContributionConsent(request, env);
     }
 
     if (url.pathname === "/api/contributions/sample" && request.method === "POST") {
-      return handleContributionSample(request);
+      return handleContributionSample(request, env);
     }
 
     return errorResponse("not_found", "Route not found.", 404);

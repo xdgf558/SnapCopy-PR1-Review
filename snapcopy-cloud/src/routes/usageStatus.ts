@@ -1,10 +1,11 @@
-import { dailyLimitForPlan, getUsage } from "../lib/quota";
 import { jsonResponse, errorResponse } from "../lib/response";
 import { resolveEffectivePlan } from "../lib/validators";
+import { getUsageStatusFromStore } from "../lib/d1Store";
 import type { Plan, UsageStatusResponse } from "../types/api";
 
 type Env = {
   DEFAULT_PLAN?: Plan;
+  DB?: D1Database;
 };
 
 export async function handleUsageStatus(request: Request, env: Env): Promise<Response> {
@@ -15,14 +16,7 @@ export async function handleUsageStatus(request: Request, env: Env): Promise<Res
   }
 
   const plan = resolveEffectivePlan(url.searchParams.get("plan"), env.DEFAULT_PLAN ?? "beta");
-  const usage = getUsage(appUserId);
-  const dailyLimit = dailyLimitForPlan(plan);
-  const response: UsageStatusResponse = {
-    plan,
-    dailyLimit,
-    usedToday: usage.usedToday,
-    remainingQuota: Math.max(0, dailyLimit - usage.usedToday)
-  };
+  const response: UsageStatusResponse = await getUsageStatusFromStore(env, appUserId, plan);
 
   return jsonResponse(response);
 }

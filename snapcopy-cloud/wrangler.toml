@@ -5,3 +5,9 @@ compatibility_date = "2025-05-01"
 [vars]
 DEFAULT_PLAN = "beta"
 DEFAULT_PROVIDER = "mock"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "snapcopy-cloud-db"
+database_id = "f40872c4-3d90-40f5-9c5e-fc337a76d7a2"
+migrations_dir = "migrations"

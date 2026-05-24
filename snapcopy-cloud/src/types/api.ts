@@ -73,11 +73,13 @@ export type TrainingContributionSampleRequest = {
   notes?: string | null;
 };
 
+export type ContributionStorageMode = "metadata-only-mock" | "d1-metadata-only";
+
 export type TrainingContributionResponse = {
   accepted: boolean;
   consentId: string;
   sampleId?: string;
-  storageMode: "metadata-only-mock";
+  storageMode: ContributionStorageMode;
   retentionPolicy: string;
   message: string;
 };

@@ -10,14 +10,19 @@ import type {
   TrainingContributionResponse,
   TrainingContributionSampleRequest
 } from "../types/api";
+import { recordContributionConsent, recordContributionSample } from "../lib/d1Store";
 
-const storageMode = "metadata-only-mock";
 const retentionPolicy = "This beta build accepts consent and metadata only. Original photos are not uploaded.";
 
-export async function handleContributionConsent(request: Request): Promise<Response> {
+type Env = {
+  DB?: D1Database;
+};
+
+export async function handleContributionConsent(request: Request, env: Env): Promise<Response> {
   try {
     const body = await parseJsonBody<TrainingContributionConsentRequest>(request, 64_000);
     const input = validateContributionConsentRequest(body);
+    const storageMode = await recordContributionConsent(env, input);
 
     const response: TrainingContributionResponse = {
       accepted: true,
@@ -37,10 +42,11 @@ export async function handleContributionConsent(request: Request): Promise<Respo
   }
 }
 
-export async function handleContributionSample(request: Request): Promise<Response> {
+export async function handleContributionSample(request: Request, env: Env): Promise<Response> {
   try {
     const body = await parseJsonBody<TrainingContributionSampleRequest>(request, 320_000);
     const input = validateContributionSampleRequest(body);
+    const storageMode = await recordContributionSample(env, input);
 
     const response: TrainingContributionResponse = {
       accepted: true,
