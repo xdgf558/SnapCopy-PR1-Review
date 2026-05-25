@@ -30,9 +30,17 @@ npm run deploy
 
 ```bash
 wrangler secret put GEMINI_API_KEY
+wrangler secret put DEEPSEEK_API_KEY
 wrangler secret put QWEN_API_KEY
 ```
 
-Current build uses mock responses only. Do not add provider API keys to source files.
+Use `DEFAULT_PROVIDER` to switch the active caption provider:
+
+- `mock`
+- `gemini`
+- `deepseek`
+- `qwen`
+
+Current default is `mock`. Do not add provider API keys to source files.
 
 Current build uses Cloudflare D1 for metadata-only quota and contribution records. Original photos are not uploaded.

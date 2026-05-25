@@ -35,5 +35,8 @@ Future provider keys must be stored with Cloudflare secrets, never in iOS or Git
 
 ```bash
 wrangler secret put GEMINI_API_KEY
+wrangler secret put DEEPSEEK_API_KEY
 wrangler secret put QWEN_API_KEY
 ```
+
+Set `DEFAULT_PROVIDER` in `wrangler.toml` to `gemini`, `deepseek`, or `qwen` to use a real text provider. Caption enhancement still sends only scene JSON, user preference JSON, locale, and target platform. Original photos are not uploaded.

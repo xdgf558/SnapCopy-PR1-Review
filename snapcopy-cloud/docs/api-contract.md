@@ -22,11 +22,11 @@ Response body:
 ```json
 {
   "captions": ["..."],
-  "provider": "mock",
-  "model": "mock-v1",
-  "inputTokens": 0,
-  "outputTokens": 0,
-  "estimatedCost": 0,
+  "provider": "deepseek",
+  "model": "deepseek-v4-flash",
+  "inputTokens": 860,
+  "outputTokens": 240,
+  "estimatedCost": null,
   "remainingQuota": 2
 }
 ```
@@ -39,6 +39,15 @@ Rules:
 - `imageUploadEnabled` must be false for this endpoint.
 - Reused request IDs do not double count quota.
 - When D1 is configured, quota is persisted in the backend database.
+- Real text providers receive only `sceneJson`, `userPreferenceJson`, `targetPlatform`, and `locale`.
+- Original photos are not uploaded.
+
+Supported provider values:
+
+- `mock`
+- `gemini`
+- `deepseek`
+- `qwen`
 
 ## POST /api/cloud-enhance/vision
 

@@ -9,6 +9,15 @@ import type { Plan } from "./types/api";
 type Env = {
   DEFAULT_PLAN?: Plan;
   DEFAULT_PROVIDER?: string;
+  GEMINI_API_KEY?: string;
+  GEMINI_MODEL?: string;
+  DEEPSEEK_API_KEY?: string;
+  DEEPSEEK_MODEL?: string;
+  DEEPSEEK_BASE_URL?: string;
+  DASHSCOPE_API_KEY?: string;
+  QWEN_API_KEY?: string;
+  QWEN_MODEL?: string;
+  QWEN_BASE_URL?: string;
   DB?: D1Database;
 };
 

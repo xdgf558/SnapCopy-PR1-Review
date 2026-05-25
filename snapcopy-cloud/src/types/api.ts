@@ -18,7 +18,7 @@ export type CloudCaptionResponse = {
   model: string;
   inputTokens: number;
   outputTokens: number;
-  estimatedCost: number;
+  estimatedCost: number | null;
   remainingQuota: number;
 };
 
