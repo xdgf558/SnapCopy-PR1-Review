@@ -3,7 +3,9 @@ import { errorResponse, jsonResponse } from "./lib/response";
 import { handleCloudEnhanceCaption } from "./routes/cloudEnhanceCaption";
 import { handleCloudEnhanceVision } from "./routes/cloudEnhanceVision";
 import { handleContributionConsent, handleContributionSample } from "./routes/contributions";
+import { handleOptimizationRun } from "./routes/optimization";
 import { handleUsageStatus } from "./routes/usageStatus";
+import { runContributionOptimization } from "./lib/contributionOptimizer";
 import type { Plan } from "./types/api";
 
 type Env = {
@@ -18,6 +20,10 @@ type Env = {
   QWEN_API_KEY?: string;
   QWEN_MODEL?: string;
   QWEN_BASE_URL?: string;
+  OPTIMIZATION_ADMIN_TOKEN?: string;
+  OPTIMIZATION_MIN_CAPTION_SAMPLES?: string;
+  OPTIMIZATION_COOLDOWN_HOURS?: string;
+  OPTIMIZATION_MAX_BUCKETS_PER_RUN?: string;
   DB?: D1Database;
 };
 
@@ -57,6 +63,14 @@ export default {
       return handleContributionSample(request, env);
     }
 
+    if (url.pathname === "/api/admin/optimization/run" && request.method === "POST") {
+      return handleOptimizationRun(request, env);
+    }
+
     return errorResponse("not_found", "Route not found.", 404);
+  },
+
+  async scheduled(_controller: ScheduledController, env: Env): Promise<void> {
+    await runContributionOptimization(env);
   }
 };

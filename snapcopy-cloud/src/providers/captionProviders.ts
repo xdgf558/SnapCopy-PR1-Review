@@ -1,6 +1,6 @@
 import { buildCaptionProviderPrompt } from "./captionPrompt";
 import { parseCaptionsFromProviderText } from "./captionParser";
-import type { CloudCaptionRequest, CloudCaptionResponse } from "../types/api";
+import type { ActiveCaptionStrategy, CloudCaptionRequest, CloudCaptionResponse } from "../types/api";
 
 export type CaptionProviderEnv = {
   DEFAULT_PROVIDER?: string;
@@ -87,19 +87,20 @@ export function assertCaptionProviderConfigured(provider: CaptionProviderName, e
 export async function generateRealCaptions(
   input: CloudCaptionRequest,
   provider: Exclude<CaptionProviderName, "mock">,
-  env: CaptionProviderEnv
+  env: CaptionProviderEnv,
+  activeStrategy?: ActiveCaptionStrategy
 ): Promise<CloudCaptionResponse> {
   assertCaptionProviderConfigured(provider, env);
 
   if (provider === "gemini") {
-    return generateGeminiCaptions(input, env);
+    return generateGeminiCaptions(input, env, activeStrategy);
   }
 
   if (provider === "deepseek") {
-    return generateDeepSeekCaptions(input, env);
+    return generateDeepSeekCaptions(input, env, activeStrategy);
   }
 
-  return generateQwenCaptions(input, env);
+  return generateQwenCaptions(input, env, activeStrategy);
 }
 
 export function modelForProvider(provider: CaptionProviderName, env: CaptionProviderEnv): string {
@@ -117,10 +118,11 @@ export function modelForProvider(provider: CaptionProviderName, env: CaptionProv
 
 async function generateGeminiCaptions(
   input: CloudCaptionRequest,
-  env: CaptionProviderEnv
+  env: CaptionProviderEnv,
+  activeStrategy?: ActiveCaptionStrategy
 ): Promise<CloudCaptionResponse> {
   const model = modelForProvider("gemini", env).replace(/^models\//, "");
-  const prompt = buildCaptionProviderPrompt(input);
+  const prompt = buildCaptionProviderPrompt(input, activeStrategy);
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: {
@@ -163,11 +165,12 @@ async function generateGeminiCaptions(
 
 async function generateDeepSeekCaptions(
   input: CloudCaptionRequest,
-  env: CaptionProviderEnv
+  env: CaptionProviderEnv,
+  activeStrategy?: ActiveCaptionStrategy
 ): Promise<CloudCaptionResponse> {
   const model = modelForProvider("deepseek", env);
   const baseUrl = (env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com").replace(/\/+$/, "");
-  const prompt = buildCaptionProviderPrompt(input);
+  const prompt = buildCaptionProviderPrompt(input, activeStrategy);
   const response = await fetch(`${baseUrl}/v1/chat/completions`, {
     method: "POST",
     headers: {
@@ -215,11 +218,12 @@ async function generateDeepSeekCaptions(
 
 async function generateQwenCaptions(
   input: CloudCaptionRequest,
-  env: CaptionProviderEnv
+  env: CaptionProviderEnv,
+  activeStrategy?: ActiveCaptionStrategy
 ): Promise<CloudCaptionResponse> {
   const model = modelForProvider("qwen", env);
   const baseUrl = (env.QWEN_BASE_URL ?? "https://dashscope-intl.aliyuncs.com/compatible-mode/v1").replace(/\/+$/, "");
-  const prompt = buildCaptionProviderPrompt(input);
+  const prompt = buildCaptionProviderPrompt(input, activeStrategy);
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: {

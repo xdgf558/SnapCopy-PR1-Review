@@ -22,6 +22,18 @@ export type CloudCaptionResponse = {
   remainingQuota: number;
 };
 
+export type ActiveCaptionStrategy = {
+  version: string;
+  scope?: {
+    scene?: string;
+    locale?: string;
+    targetPlatform?: string;
+  };
+  signals?: Record<string, unknown>;
+  promptGuidance?: string[];
+  guardrails?: string[];
+};
+
 export type UsageStatusResponse = {
   plan: Plan;
   dailyLimit: number;

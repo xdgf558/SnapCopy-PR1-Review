@@ -12,9 +12,11 @@ struct SettingsView: View {
     @State private var feedbackConfirmationMessage: String?
     @State private var recognitionLogConfirmationMessage: String?
     @State private var recognitionLogSharePayload: SettingsSharePayload?
+    @State private var contributionDecision: TrainingContributionDecision?
 
     private let preferenceStore = UserPreferenceStore()
     private let recognitionMetricsLogger = ImageRecognitionMetricsLogger()
+    private let trainingContributionStore = TrainingContributionStore()
     private let feedbackEmail = "yehao1105@gmail.com"
 
     var body: some View {
@@ -99,6 +101,22 @@ struct SettingsView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
+            Section(localizedContributionSettingsTitle) {
+                LabeledContent(localizedContributionDecisionTitle, value: localizedContributionDecisionValue)
+
+                Text(localizedContributionSettingsNote)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Button {
+                    resetContributionDecision()
+                } label: {
+                    Label(localizedContributionResetTitle, systemImage: "arrow.counterclockwise")
+                }
+                .disabled(contributionDecision == nil)
+            }
+
             Section(uiLanguage.text(.feedback)) {
                 Text(uiLanguage.text(.feedbackIntro))
                     .font(.footnote)
@@ -177,6 +195,7 @@ struct SettingsView: View {
             localAIStatus = LocalAIAvailabilityDetector.currentStatus()
             selectedCaptionLanguage = preferenceStore.load().preferredCaptionLanguage
             selectedInterfaceLanguage = appLanguageManager.language
+            contributionDecision = trainingContributionStore.loadGlobalDecision()
         }
         .onChange(of: selectedInterfaceLanguage) { language in
             feedbackConfirmationMessage = nil
@@ -252,6 +271,95 @@ struct SettingsView: View {
             recognitionLogConfirmationMessage = "识别日志文件已准备好。"
         } catch {
             recognitionLogConfirmationMessage = "识别日志文件创建失败。"
+        }
+    }
+
+    private func resetContributionDecision() {
+        trainingContributionStore.clearGlobalDecision()
+        contributionDecision = nil
+    }
+
+    private var localizedContributionSettingsTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "匿名贡献"
+        case .english:
+            "Anonymous contribution"
+        case .japanese:
+            "匿名提供"
+        case .traditionalChinese:
+            "匿名貢獻"
+        }
+    }
+
+    private var localizedContributionDecisionTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "当前选择"
+        case .english:
+            "Current choice"
+        case .japanese:
+            "現在の選択"
+        case .traditionalChinese:
+            "目前選擇"
+        }
+    }
+
+    private var localizedContributionDecisionValue: String {
+        switch (uiLanguage, contributionDecision) {
+        case (_, nil):
+            switch uiLanguage {
+            case .simplifiedChinese:
+                return "下次询问"
+            case .english:
+                return "Ask next time"
+            case .japanese:
+                return "次回確認"
+            case .traditionalChinese:
+                return "下次詢問"
+            }
+        case (.simplifiedChinese, .granted):
+            return "默认贡献"
+        case (.english, .granted):
+            return "Contribute by default"
+        case (.japanese, .granted):
+            return "既定で提供"
+        case (.traditionalChinese, .granted):
+            return "預設貢獻"
+        case (.simplifiedChinese, .declined):
+            return "默认不贡献"
+        case (.english, .declined):
+            return "Do not contribute by default"
+        case (.japanese, .declined):
+            return "既定で提供しない"
+        case (.traditionalChinese, .declined):
+            return "預設不貢獻"
+        }
+    }
+
+    private var localizedContributionSettingsNote: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "首次选择后，App 会按该选择自动处理后续照片 metadata 和最终文案样本。当前版本不上传原图。"
+        case .english:
+            "After your first choice, the app will automatically apply it to future photo metadata and final caption samples. This build does not upload original photos."
+        case .japanese:
+            "初回選択後、写真メタデータと最終文案サンプルには同じ選択を自動適用します。このバージョンでは元画像をアップロードしません。"
+        case .traditionalChinese:
+            "首次選擇後，App 會按該選擇自動處理後續照片 metadata 和最終文案樣本。目前版本不會上傳原圖。"
+        }
+    }
+
+    private var localizedContributionResetTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "重置选择"
+        case .english:
+            "Reset choice"
+        case .japanese:
+            "選択をリセット"
+        case .traditionalChinese:
+            "重置選擇"
         }
     }
 }

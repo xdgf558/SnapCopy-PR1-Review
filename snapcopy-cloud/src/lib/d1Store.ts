@@ -1,5 +1,6 @@
 import { canConsumeQuota, consumeQuota, dailyLimitForPlan, getUsage } from "./quota";
 import type {
+  ActiveCaptionStrategy,
   CloudCaptionRequest,
   ContributionStorageMode,
   Plan,
@@ -27,6 +28,10 @@ type ExistingRequestRow = {
 
 type UsageRow = {
   used_count: number;
+};
+
+type StrategyRow = {
+  strategy_json: string;
 };
 
 const cloudCaptionFeature = "captionDeepUnderstanding";
@@ -303,6 +308,45 @@ export async function recordContributionSample(
   return "d1-metadata-only";
 }
 
+export async function loadActiveCaptionStrategy(
+  env: D1Env,
+  input: CloudCaptionRequest
+): Promise<ActiveCaptionStrategy | undefined> {
+  if (!hasD1(env)) {
+    return undefined;
+  }
+
+  const scene = extractSceneFromSceneJson(input.sceneJson);
+  const locale = input.locale || "unknown";
+  const targetPlatform = input.targetPlatform || "general";
+  const row = await env.DB.prepare(
+    `SELECT strategy_json
+     FROM caption_strategy_candidates
+     WHERE status = 'active'
+       AND (scene = ? OR scene IS NULL)
+       AND (locale = ? OR locale IS NULL)
+       AND (target_platform = ? OR target_platform IS NULL)
+     ORDER BY
+       (CASE WHEN scene = ? THEN 1 ELSE 0 END) +
+       (CASE WHEN locale = ? THEN 1 ELSE 0 END) +
+       (CASE WHEN target_platform = ? THEN 1 ELSE 0 END) DESC,
+       created_at DESC
+     LIMIT 1`
+  )
+    .bind(scene, locale, targetPlatform, scene, locale, targetPlatform)
+    .first<StrategyRow>();
+
+  if (!row?.strategy_json) {
+    return undefined;
+  }
+
+  try {
+    return JSON.parse(row.strategy_json) as ActiveCaptionStrategy;
+  } catch {
+    return undefined;
+  }
+}
+
 async function upsertAppUser(
   db: D1Database,
   appUserId: string,
@@ -372,6 +416,33 @@ function usageDateString(date: Date): string {
 
 function byteLength(value: string): number {
   return new TextEncoder().encode(value).byteLength;
+}
+
+function extractSceneFromSceneJson(sceneJson: string): string {
+  try {
+    const parsed = JSON.parse(sceneJson) as Record<string, unknown>;
+    const resolvedScene = parsed.resolvedScene;
+    if (resolvedScene && typeof resolvedScene === "object") {
+      const scene = (resolvedScene as Record<string, unknown>).scene;
+      if (typeof scene === "string" && scene.trim()) {
+        return scene;
+      }
+    }
+
+    const primaryScene = parsed.primaryScene;
+    if (typeof primaryScene === "string" && primaryScene.trim()) {
+      return primaryScene;
+    }
+
+    const scene = parsed.scene;
+    if (typeof scene === "string" && scene.trim()) {
+      return scene;
+    }
+  } catch {
+    return "unknown";
+  }
+
+  return "unknown";
 }
 
 type CloudRequestLogMeta = {

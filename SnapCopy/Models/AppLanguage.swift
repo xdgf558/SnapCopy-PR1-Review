@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 云端增强已接入真实 DeepSeek 文案 provider，并继续只上传场景 JSON、偏好、平台和语言。
-            2. 云端额度改为以后端 D1 为准，生成成功后同步剩余次数，provider 失败不扣次数。
-            3. 后端新增基础成本保护：服务端计划兜底、分钟频率限制、异常请求记录和每日真实 provider 上限。
+            1. 云端增强主界面已隐藏开发调试明细，测试版和正式版只显示用户可读状态。
+            2. 匿名贡献改为首次询问后长期记住选择，后续自动按该选择执行，不再反复弹窗。
+            3. 后端新增贡献样本优化闭环，达到样本阈值后自动生成待审核文案策略候选。
             """
         case .english:
             return """
-            1. Cloud enhancement now uses the real DeepSeek caption provider while still sending only scene JSON, preferences, platform, and language.
-            2. Cloud quota now follows backend D1 state. Successful generations sync remaining quota, and provider failures do not consume quota.
-            3. Added basic backend cost guards: server-side plan fallback, per-minute rate limits, abnormal request logs, and a daily real-provider cap.
+            1. Cloud enhancement debug details are hidden from the main UI; beta and production builds show only user-readable status.
+            2. Anonymous contribution now asks once and remembers the choice, so future samples follow that decision without repeated prompts.
+            3. The backend now has a contribution optimization loop that creates reviewable caption strategy candidates after sample thresholds are reached.
             """
         case .japanese:
             return """
-            1. クラウド強化は実際の DeepSeek 文案 provider に接続しました。送信内容は引き続き scene JSON、好み、プラットフォーム、言語のみです。
-            2. クラウド残り回数はバックエンド D1 を基準に同期します。provider 失敗時は回数を消費しません。
-            3. 基本的なコスト保護を追加しました。サーバー側 plan、分単位の制限、異常リクエスト記録、実 provider の日次上限を含みます。
+            1. クラウド強化の開発用デバッグ詳細をメイン UI から非表示にし、テスト版と正式版ではユーザー向けの状態のみ表示します。
+            2. 匿名提供は初回だけ確認し、その選択を記憶します。以後は同じ選択で自動処理し、何度も表示しません。
+            3. バックエンドに提供サンプル最適化ループを追加し、しきい値到達後に確認用の文案戦略候補を自動生成します。
             """
         case .traditionalChinese:
             return """
-            1. 雲端增強已接入真實 DeepSeek 文案 provider，並繼續只上傳場景 JSON、偏好、平台和語言。
-            2. 雲端額度改為以後端 D1 為準，生成成功後同步剩餘次數，provider 失敗不扣次數。
-            3. 後端新增基礎成本保護：服務端計畫兜底、分鐘頻率限制、異常請求記錄和每日真實 provider 上限。
+            1. 雲端增強主介面已隱藏開發調試明細，測試版和正式版只顯示使用者可讀狀態。
+            2. 匿名貢獻改為首次詢問後長期記住選擇，後續自動按該選擇執行，不再反覆彈窗。
+            3. 後端新增貢獻樣本優化閉環，達到樣本門檻後自動生成待審核文案策略候選。
             """
         }
     }

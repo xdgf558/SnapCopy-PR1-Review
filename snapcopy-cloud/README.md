@@ -1,13 +1,15 @@
 # SnapCopy Cloud API
 
-Cloudflare Worker skeleton for SnapCopy cloud enhancement.
+Cloudflare Worker for SnapCopy cloud enhancement.
 
 Current scope:
 
-- `POST /api/cloud-enhance/caption` returns mock enhanced captions.
+- `POST /api/cloud-enhance/caption` returns cloud enhanced captions through the configured provider.
 - `POST /api/cloud-enhance/vision` returns disabled.
-- `GET /api/usage/status` returns mock daily quota.
-- No Gemini/Qwen API key is used.
+- `GET /api/usage/status` returns backend quota from D1 when available.
+- `POST /api/contributions/consent` records anonymous contribution consent.
+- `POST /api/contributions/sample` records metadata-only contribution samples.
+- A daily cron job creates pending caption strategy candidates after enough contributed samples accumulate.
 - No photo upload is accepted by the caption endpoint.
 
 ## Local Development
@@ -40,3 +42,14 @@ wrangler secret put QWEN_API_KEY
 ```
 
 Set `DEFAULT_PROVIDER` in `wrangler.toml` to `gemini`, `deepseek`, or `qwen` to use a real text provider. Caption enhancement still sends only scene JSON, user preference JSON, locale, and target platform. Original photos are not uploaded.
+
+## Contribution Optimization
+
+Contribution data does not automatically train a model. The Worker aggregates anonymous caption samples into reviewable strategy candidates once a bucket reaches the configured threshold:
+
+```toml
+OPTIMIZATION_MIN_CAPTION_SAMPLES = "200"
+OPTIMIZATION_COOLDOWN_HOURS = "72"
+```
+
+See `docs/contribution-optimization.md` for the review flow and manual trigger endpoint.

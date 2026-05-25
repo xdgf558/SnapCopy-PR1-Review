@@ -1,6 +1,9 @@
-import type { CloudCaptionRequest } from "../types/api";
+import type { ActiveCaptionStrategy, CloudCaptionRequest } from "../types/api";
 
-export function buildCaptionProviderPrompt(input: CloudCaptionRequest): string {
+export function buildCaptionProviderPrompt(
+  input: CloudCaptionRequest,
+  activeStrategy?: ActiveCaptionStrategy
+): string {
   const language = languageName(input.locale);
   const platform = platformGuidance(input.targetPlatform);
   const payload = {
@@ -9,7 +12,8 @@ export function buildCaptionProviderPrompt(input: CloudCaptionRequest): string {
     targetPlatform: input.targetPlatform,
     locale: input.locale,
     language,
-    platformGuidance: platform
+    platformGuidance: platform,
+    activeCaptionStrategy: activeStrategy ?? null
   };
 
   return [
@@ -28,6 +32,8 @@ export function buildCaptionProviderPrompt(input: CloudCaptionRequest): string {
     "- Avoid generic templates like 'ordinary day' unless the scene is truly unknown.",
     "- Vary the 5 options: at least one warm, one concise, one slightly playful, and one premium-polished caption.",
     "- Keep captions ready to share; no numbering inside the caption text.",
+    "- If activeCaptionStrategy is present, follow its promptGuidance unless it conflicts with photo evidence, privacy, or platform rules.",
+    "- Never copy contributed examples or reveal that a strategy came from user behavior.",
     "",
     `Platform guidance: ${platform}`,
     "",

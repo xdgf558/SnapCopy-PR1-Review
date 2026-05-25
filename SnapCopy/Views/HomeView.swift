@@ -1581,18 +1581,6 @@ struct HomeView: View {
         cloudEnhancementError = nil
         cloudEnhancementStatusMessage = nil
 
-        #if DEBUG
-        let payloadBytes = (try? JSONEncoder().encode(request).count) ?? -1
-        cloudEnhancementStatusMessage = """
-        Debug cloud request:
-        endpoint: \(cloudEnhancementService.endpointDescription)
-        requestId: \(request.requestId.uuidString)
-        plan: \(request.plan.rawValue), betaTest: \(CloudFeatureFlags.betaCloudTestUser)
-        payload: \(payloadBytes) bytes
-        provider: \(cloudEnhancementService.providerDescription)
-        """
-        #endif
-
         do {
             let response = try await cloudEnhancementService.enhanceCaptions(request: request)
             let cloudCandidates = makeCloudCandidates(from: response, context: generationContext)
@@ -2002,7 +1990,7 @@ struct HomeView: View {
             return
         }
 
-        pendingTrainingContributionPrompt = makeTrainingContributionPrompt(
+        let prompt = makeTrainingContributionPrompt(
             kind: .photo,
             source: source,
             scope: TrainingContributionConstants.photoContributionScope,
@@ -2012,6 +2000,7 @@ struct HomeView: View {
             context: context,
             preference: preference
         )
+        handleTrainingContributionPrompt(prompt)
     }
 
     @MainActor
@@ -2030,7 +2019,7 @@ struct HomeView: View {
             .makePrompt(context: context, preference: preference, detail: .compact)
             .contextJSON
 
-        pendingTrainingContributionPrompt = makeTrainingContributionPrompt(
+        let prompt = makeTrainingContributionPrompt(
             kind: .caption,
             source: source,
             scope: TrainingContributionConstants.captionContributionScope,
@@ -2040,6 +2029,21 @@ struct HomeView: View {
             context: context,
             preference: preference
         )
+        handleTrainingContributionPrompt(prompt)
+    }
+
+    @MainActor
+    private func handleTrainingContributionPrompt(_ prompt: TrainingContributionPrompt) {
+        switch trainingContributionStore.loadGlobalDecision() {
+        case .granted:
+            Task {
+                await submitTrainingContribution(prompt, rememberDecision: false, showStatus: false)
+            }
+        case .declined:
+            break
+        case nil:
+            pendingTrainingContributionPrompt = prompt
+        }
     }
 
     @MainActor
@@ -2103,8 +2107,15 @@ struct HomeView: View {
     }
 
     @MainActor
-    private func submitTrainingContribution(_ prompt: TrainingContributionPrompt) async {
+    private func submitTrainingContribution(
+        _ prompt: TrainingContributionPrompt,
+        rememberDecision: Bool = true,
+        showStatus: Bool = true
+    ) async {
         pendingTrainingContributionPrompt = nil
+        if rememberDecision {
+            trainingContributionStore.saveGlobalDecision(.granted)
+        }
 
         do {
             _ = try await trainingContributionService.submitConsent(prompt.consentRequest)
@@ -2125,15 +2136,20 @@ struct HomeView: View {
                     createdAt: Date()
                 )
             )
-            contributionStatusMessage = localizedContributionAcceptedText
+            if showStatus {
+                contributionStatusMessage = localizedContributionAcceptedText
+            }
         } catch {
-            contributionStatusMessage = localizedContributionFailedText
+            if showStatus {
+                contributionStatusMessage = localizedContributionFailedText
+            }
         }
     }
 
     @MainActor
     private func declineTrainingContribution(_ prompt: TrainingContributionPrompt) {
         pendingTrainingContributionPrompt = nil
+        trainingContributionStore.saveGlobalDecision(.declined)
         trainingContributionStore.record(
             TrainingContributionLocalRecord(
                 id: UUID(),

@@ -1,7 +1,7 @@
 import { jsonResponse, errorResponse } from "../lib/response";
 import { makeMockCaptions } from "../lib/mockCaptions";
 import { parseJsonBody, resolveEffectivePlan, validateCaptionRequest, ValidationError } from "../lib/validators";
-import { consumeCloudCaptionQuota, refundCloudCaptionQuota } from "../lib/d1Store";
+import { consumeCloudCaptionQuota, loadActiveCaptionStrategy, refundCloudCaptionQuota } from "../lib/d1Store";
 import { enforceCloudCaptionSecurity } from "../lib/securityGuards";
 import {
   CaptionProviderError,
@@ -58,6 +58,7 @@ export async function handleCloudEnhanceCaption(request: Request, env: Env): Pro
     }
     quotaRefundable = provider !== "mock" && !quota.duplicateRequest;
 
+    const activeStrategy = provider === "mock" ? undefined : await loadActiveCaptionStrategy(env, input);
     const response: CloudCaptionResponse =
       provider === "mock"
         ? {
@@ -70,7 +71,7 @@ export async function handleCloudEnhanceCaption(request: Request, env: Env): Pro
             remainingQuota: quota.remainingQuota
           }
         : {
-            ...(await generateRealCaptions(input, provider, env)),
+            ...(await generateRealCaptions(input, provider, env, activeStrategy)),
             remainingQuota: quota.remainingQuota
           };
 

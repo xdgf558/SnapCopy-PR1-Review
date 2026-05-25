@@ -2,6 +2,7 @@ import Foundation
 
 final class TrainingContributionStore {
     private let storageKey = "snapcopy.trainingContribution.records"
+    private let globalDecisionKey = "snapcopy.trainingContribution.globalDecision"
     private let maxRecords = 300
     private let userDefaults: UserDefaults
     private let encoder = JSONEncoder()
@@ -27,8 +28,25 @@ final class TrainingContributionStore {
         save(Array(records.prefix(maxRecords)))
     }
 
+    func loadGlobalDecision() -> TrainingContributionDecision? {
+        guard let rawValue = userDefaults.string(forKey: globalDecisionKey) else {
+            return nil
+        }
+
+        return TrainingContributionDecision(rawValue: rawValue)
+    }
+
+    func saveGlobalDecision(_ decision: TrainingContributionDecision) {
+        userDefaults.set(decision.rawValue, forKey: globalDecisionKey)
+    }
+
+    func clearGlobalDecision() {
+        userDefaults.removeObject(forKey: globalDecisionKey)
+    }
+
     func clear() {
         userDefaults.removeObject(forKey: storageKey)
+        userDefaults.removeObject(forKey: globalDecisionKey)
     }
 
     private func save(_ records: [TrainingContributionLocalRecord]) {
