@@ -15,7 +15,8 @@ export async function handleUsageStatus(request: Request, env: Env): Promise<Res
     return errorResponse("missing_app_user_id", "appUserId query parameter is required.", 400);
   }
 
-  const plan = resolveEffectivePlan(url.searchParams.get("plan"), env.DEFAULT_PLAN ?? "beta");
+  // Plan display also follows the server-side default until StoreKit validation is connected.
+  const plan = resolveEffectivePlan(undefined, env.DEFAULT_PLAN ?? "beta");
   const response: UsageStatusResponse = await getUsageStatusFromStore(env, appUserId, plan);
 
   return jsonResponse(response);

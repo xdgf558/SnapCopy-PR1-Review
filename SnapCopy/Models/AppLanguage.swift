@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 优化云端增强文案提示，额度显示改为以后端返回为准，避免本地和后端不同步。
-            2. 新增匿名贡献授权结构：云端增强后可贡献照片识别 metadata，分享后可贡献最终文案。
-            3. 训练样本记录结构已预留；当前不上传原图，只记录用户同意和样本 metadata。
+            1. 云端增强已接入真实 DeepSeek 文案 provider，并继续只上传场景 JSON、偏好、平台和语言。
+            2. 云端额度改为以后端 D1 为准，生成成功后同步剩余次数，provider 失败不扣次数。
+            3. 后端新增基础成本保护：服务端计划兜底、分钟频率限制、异常请求记录和每日真实 provider 上限。
             """
         case .english:
             return """
-            1. Improved cloud enhancement status copy and synced quota display from backend responses.
-            2. Added anonymous contribution consent: photo metadata after cloud enhancement and final captions after sharing.
-            3. Reserved the training sample record structure. Original photos are not uploaded in this build; only consent and metadata are recorded.
+            1. Cloud enhancement now uses the real DeepSeek caption provider while still sending only scene JSON, preferences, platform, and language.
+            2. Cloud quota now follows backend D1 state. Successful generations sync remaining quota, and provider failures do not consume quota.
+            3. Added basic backend cost guards: server-side plan fallback, per-minute rate limits, abnormal request logs, and a daily real-provider cap.
             """
         case .japanese:
             return """
-            1. クラウド強化の表示文言を改善し、残り回数はバックエンドの返却値に同期します。
-            2. 匿名提供の同意フローを追加しました。クラウド強化後の写真メタデータと共有後の最終文案を対象にできます。
-            3. 学習サンプル記録の構造を用意しました。このバージョンでは元画像をアップロードせず、同意とメタデータのみを記録します。
+            1. クラウド強化は実際の DeepSeek 文案 provider に接続しました。送信内容は引き続き scene JSON、好み、プラットフォーム、言語のみです。
+            2. クラウド残り回数はバックエンド D1 を基準に同期します。provider 失敗時は回数を消費しません。
+            3. 基本的なコスト保護を追加しました。サーバー側 plan、分単位の制限、異常リクエスト記録、実 provider の日次上限を含みます。
             """
         case .traditionalChinese:
             return """
-            1. 優化雲端增強文案提示，額度顯示改為以後端返回為準，避免本機和後端不同步。
-            2. 新增匿名貢獻授權結構：雲端增強後可貢獻照片識別 metadata，分享後可貢獻最終文案。
-            3. 訓練樣本記錄結構已預留；目前不會上傳原圖，只記錄使用者同意和樣本 metadata。
+            1. 雲端增強已接入真實 DeepSeek 文案 provider，並繼續只上傳場景 JSON、偏好、平台和語言。
+            2. 雲端額度改為以後端 D1 為準，生成成功後同步剩餘次數，provider 失敗不扣次數。
+            3. 後端新增基礎成本保護：服務端計畫兜底、分鐘頻率限制、異常請求記錄和每日真實 provider 上限。
             """
         }
     }

@@ -1,7 +1,8 @@
 import { jsonResponse, errorResponse } from "../lib/response";
 import { makeMockCaptions } from "../lib/mockCaptions";
 import { parseJsonBody, resolveEffectivePlan, validateCaptionRequest, ValidationError } from "../lib/validators";
-import { consumeCloudCaptionQuota } from "../lib/d1Store";
+import { consumeCloudCaptionQuota, refundCloudCaptionQuota } from "../lib/d1Store";
+import { enforceCloudCaptionSecurity } from "../lib/securityGuards";
 import {
   CaptionProviderError,
   generateRealCaptions,
@@ -22,22 +23,40 @@ type Env = {
   QWEN_API_KEY?: string;
   QWEN_MODEL?: string;
   QWEN_BASE_URL?: string;
+  RATE_LIMIT_USER_PER_MINUTE?: string;
+  RATE_LIMIT_IP_PER_MINUTE?: string;
+  MAX_NEW_USERS_PER_IP_PER_DAY?: string;
+  MAX_REAL_PROVIDER_REQUESTS_PER_DAY?: string;
+  SECURITY_HASH_SALT?: string;
   DB?: D1Database;
 };
 
 export async function handleCloudEnhanceCaption(request: Request, env: Env): Promise<Response> {
+  let quotaInput: CloudCaptionRequest | undefined;
+  let quotaRefundable = false;
+
   try {
     const body = await parseJsonBody<CloudCaptionRequest>(request, 512_000);
     const input = validateCaptionRequest(body);
-    const plan = resolveEffectivePlan(input.plan, env.DEFAULT_PLAN ?? "beta");
+    quotaInput = input;
+    // Until StoreKit server validation is connected, the server default is the source of truth.
+    // Do not trust a higher client-supplied plan.
+    const plan = resolveEffectivePlan(undefined, env.DEFAULT_PLAN ?? "beta");
     input.plan = plan;
-    const provider = resolveCaptionProvider(env);
+    const resolvedProvider = resolveCaptionProvider(env);
+    const security = await enforceCloudCaptionSecurity(request, env, input, plan, resolvedProvider);
+    if (!security.allowed) {
+      return errorResponse(security.code, security.message, security.statusCode);
+    }
+
+    const provider = security.provider;
     const model = modelForProvider(provider, env);
 
     const quota = await consumeCloudCaptionQuota(env, input, plan, provider, model);
     if (!quota.allowed) {
       return errorResponse("quota_exceeded", "Daily cloud enhancement quota has been used.", 429);
     }
+    quotaRefundable = provider !== "mock" && !quota.duplicateRequest;
 
     const response: CloudCaptionResponse =
       provider === "mock"
@@ -62,6 +81,9 @@ export async function handleCloudEnhanceCaption(request: Request, env: Env): Pro
     }
 
     if (error instanceof CaptionProviderError) {
+      if (quotaInput && quotaRefundable) {
+        await refundCloudCaptionQuota(env, quotaInput);
+      }
       return errorResponse("provider_error", error.message, error.statusCode);
     }
 

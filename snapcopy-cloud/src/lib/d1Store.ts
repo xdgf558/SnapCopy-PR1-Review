@@ -21,6 +21,8 @@ type CloudQuotaResult = {
 type ExistingRequestRow = {
   status: string;
   remaining_quota: number;
+  usage_date?: string;
+  feature_type?: string;
 };
 
 type UsageRow = {
@@ -28,6 +30,14 @@ type UsageRow = {
 };
 
 const cloudCaptionFeature = "captionDeepUnderstanding";
+
+function normalizeCloudCaptionFeature(featureType?: string): string {
+  if (!featureType || featureType === "cloudCaption") {
+    return cloudCaptionFeature;
+  }
+
+  return featureType;
+}
 
 export function hasD1(env: D1Env): env is { DB: D1Database } {
   return Boolean(env.DB);
@@ -95,7 +105,7 @@ export async function consumeCloudCaptionQuota(
 
   const now = new Date();
   const usageDate = usageDateString(now);
-  const featureType = input.featureType ?? cloudCaptionFeature;
+  const featureType = normalizeCloudCaptionFeature(input.featureType);
   const dailyLimit = dailyLimitForPlan(plan);
   await upsertAppUser(env.DB, input.appUserId, plan, now);
 
@@ -167,6 +177,43 @@ export async function consumeCloudCaptionQuota(
     remainingQuota,
     duplicateRequest: false
   };
+}
+
+export async function refundCloudCaptionQuota(
+  env: D1Env,
+  input: CloudCaptionRequest
+): Promise<void> {
+  if (!hasD1(env)) {
+    return;
+  }
+
+  const existing = await env.DB.prepare(
+    `SELECT status, remaining_quota, usage_date, feature_type
+     FROM cloud_request_logs
+     WHERE request_id = ?`
+  )
+    .bind(input.requestId)
+    .first<ExistingRequestRow>();
+
+  if (!existing || existing.status !== "accepted" || !existing.usage_date || !existing.feature_type) {
+    return;
+  }
+
+  const refundedRemainingQuota = existing.remaining_quota + 1;
+  await env.DB.batch([
+    env.DB.prepare(
+      `UPDATE daily_usage
+       SET
+         used_count = CASE WHEN used_count > 0 THEN used_count - 1 ELSE 0 END,
+         updated_at = ?
+       WHERE app_user_id = ? AND usage_date = ? AND feature_type = ?`
+    ).bind(new Date().toISOString(), input.appUserId, existing.usage_date, existing.feature_type),
+    env.DB.prepare(
+      `UPDATE cloud_request_logs
+       SET status = ?, remaining_quota = ?
+       WHERE request_id = ?`
+    ).bind("provider_error", refundedRemainingQuota, input.requestId)
+  ]);
 }
 
 export async function recordContributionConsent(
@@ -304,7 +351,7 @@ function cloudRequestLogStatement(
       input.requestId,
       input.appUserId,
       meta.usageDate,
-      input.featureType ?? cloudCaptionFeature,
+      normalizeCloudCaptionFeature(input.featureType),
       meta.plan,
       meta.provider,
       meta.model,
@@ -332,7 +379,7 @@ type CloudRequestLogMeta = {
   plan: Plan;
   provider: string;
   model: string;
-  status: "accepted" | "quota_exceeded";
+  status: "accepted" | "quota_exceeded" | "provider_error";
   remainingQuota: number;
   now: Date;
 };
