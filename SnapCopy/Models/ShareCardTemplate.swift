@@ -39,29 +39,29 @@ enum ShareCardTemplate: String, Codable, CaseIterable, Identifiable {
     func description(language: AppLanguage) -> String {
         switch (language, self) {
         case (.simplifiedChinese, .softBlush):
-            "圆润、温柔，适合朋友圈和日常分享。"
+            "柔和圆润的日常风格，让照片和文字看起来更温暖。"
         case (.simplifiedChinese, .cleanWhite):
-            "留白更多，照片和文案更清爽。"
+            "清爽留白，突出照片本身，适合干净自然的分享。"
         case (.simplifiedChinese, .editorial):
-            "更像封面卡片，适合小红书和 Instagram。"
+            "更有封面感的排版，让内容看起来更精致。"
         case (.english, .softBlush):
-            "Rounded and warm for daily sharing."
+            "A soft, rounded style that makes everyday moments feel warmer."
         case (.english, .cleanWhite):
-            "More whitespace with a cleaner caption layout."
+            "Clean spacing that keeps the photo clear and the caption easy to read."
         case (.english, .editorial):
-            "Cover-like composition for Xiaohongshu and Instagram."
+            "A polished cover-style layout for a more refined share card."
         case (.japanese, .softBlush):
-            "丸みのある温かい日常向けデザイン。"
+            "やわらかく丸みのある、日常の一枚を温かく見せるスタイル。"
         case (.japanese, .cleanWhite):
-            "余白を活かしたすっきりしたレイアウト。"
+            "すっきりした余白で、写真と文案を読みやすく整えます。"
         case (.japanese, .editorial):
-            "表紙のように見せる投稿向けカード。"
+            "表紙のような構成で、投稿をより上品に見せるカード。"
         case (.traditionalChinese, .softBlush):
-            "圓潤、溫柔，適合朋友圈和日常分享。"
+            "柔和圓潤的日常風格，讓照片和文字看起來更溫暖。"
         case (.traditionalChinese, .cleanWhite):
-            "留白更多，照片和文案更清爽。"
+            "清爽留白，突出照片本身，適合乾淨自然的分享。"
         case (.traditionalChinese, .editorial):
-            "更像封面卡片，適合小紅書和 Instagram。"
+            "更有封面感的排版，讓內容看起來更精緻。"
         }
     }
 }

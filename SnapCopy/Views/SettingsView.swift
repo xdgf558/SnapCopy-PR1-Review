@@ -309,39 +309,39 @@ struct SettingsView: View {
     private var localizedShareCardTemplateTitle: String {
         switch uiLanguage {
         case .simplifiedChinese:
-            "分享图模板"
+            "分享卡片样式"
         case .english:
-            "Share card template"
+            "Share card style"
         case .japanese:
-            "共有カードテンプレート"
+            "共有カードスタイル"
         case .traditionalChinese:
-            "分享圖模板"
+            "分享卡片樣式"
         }
     }
 
     private var localizedShareCardTemplatePickerTitle: String {
         switch uiLanguage {
         case .simplifiedChinese:
-            "当前模板"
+            "当前样式"
         case .english:
-            "Current template"
+            "Current style"
         case .japanese:
-            "現在のテンプレート"
+            "現在のスタイル"
         case .traditionalChinese:
-            "目前模板"
+            "目前樣式"
         }
     }
 
     private var localizedShareCardTemplateNote: String {
         switch uiLanguage {
         case .simplifiedChinese:
-            "分享为图文卡片时会使用该模板，并自动加入 SnapCopy 狗狗 Logo。后续可作为 Plus 模板库功能开放更多样式。"
+            "分享时会把照片和文案整理成一张完整卡片，并自动加入 SnapCopy 品牌标识。"
         case .english:
-            "Caption cards use this template and include the SnapCopy dog logo. More templates can later become a Plus template library."
+            "When you share, SnapCopy turns the photo and caption into a polished card with the SnapCopy mark."
         case .japanese:
-            "文案カードにはこのテンプレートと SnapCopy の犬ロゴを使用します。今後、Plus 向けテンプレートライブラリとして拡張できます。"
+            "共有時に、写真と文案を SnapCopy のブランドマーク入りカードとして整えます。"
         case .traditionalChinese:
-            "分享為圖文卡片時會使用該模板，並自動加入 SnapCopy 狗狗 Logo。後續可作為 Plus 模板庫功能開放更多樣式。"
+            "分享時會把照片和文案整理成一張完整卡片，並自動加入 SnapCopy 品牌標識。"
         }
     }
 

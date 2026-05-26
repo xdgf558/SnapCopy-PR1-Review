@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 云端文案增强等待时间延长，减少真实模型响应较慢时的误超时。
-            2. TestFlight 用户固定为测试额度，云端增强每个版本 3 次。
-            3. 分享图文卡片已加入 SnapCopy 狗狗 Logo 和模板库。
+            1. 分享卡片样式说明优化，表达更清晰自然。
+            2. 云端文案增强等待时间延长，提升生成成功率。
+            3. TestFlight 用户固定为测试额度，云端增强每个版本 3 次。
             """
         case .english:
             return """
-            1. Cloud caption enhancement now waits longer to avoid false timeouts from slower real-model responses.
-            2. TestFlight users use a fixed beta quota: 3 cloud enhancements per app version.
-            3. Caption share cards now include the SnapCopy dog logo and template library.
+            1. Share card style descriptions now feel clearer and more polished.
+            2. Cloud caption enhancement waits longer to improve completion reliability.
+            3. TestFlight users use a fixed beta quota: 3 cloud enhancements per app version.
             """
         case .japanese:
             return """
-            1. 実モデルの応答が遅い場合の誤タイムアウトを減らすため、クラウド文案強化の待機時間を延長しました。
-            2. TestFlight ユーザーは固定のテスト枠になり、クラウド強化は各バージョン 3 回です。
-            3. 文案共有カードに SnapCopy の犬ロゴとテンプレートライブラリを追加しました。
+            1. 共有カードスタイルの説明を、より自然でわかりやすい表現に調整しました。
+            2. クラウド文案強化の待機時間を延長し、生成の安定性を高めました。
+            3. TestFlight ユーザーは固定のテスト枠になり、クラウド強化は各バージョン 3 回です。
             """
         case .traditionalChinese:
             return """
-            1. 雲端文案增強等待時間延長，減少真實模型回應較慢時的誤超時。
-            2. TestFlight 用戶固定為測試額度，雲端增強每個版本 3 次。
-            3. 分享圖文卡片已加入 SnapCopy 狗狗 Logo 和模板庫。
+            1. 分享卡片樣式說明優化，表達更清晰自然。
+            2. 雲端文案增強等待時間延長，提升生成成功率。
+            3. TestFlight 用戶固定為測試額度，雲端增強每個版本 3 次。
             """
         }
     }
