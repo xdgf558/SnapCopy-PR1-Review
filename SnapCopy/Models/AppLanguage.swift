@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 云端增强主界面已隐藏开发调试明细，测试版和正式版只显示用户可读状态。
-            2. 匿名贡献改为首次询问后长期记住选择，后续自动按该选择执行，不再反复弹窗。
-            3. 后端新增贡献样本优化闭环，达到样本阈值后自动生成待审核文案策略候选。
+            1. 测试阶段云端增强会临时同步 App 内开发者会员等级，Pro 可按后端 Pro 额度验证。
+            2. 后端仍保留分钟频率、每日真实 provider 上限和异常请求保护。
+            3. 后续接入 StoreKit 后，会员状态将改由后端校验并同步到客户端 UI。
             """
         case .english:
             return """
-            1. Cloud enhancement debug details are hidden from the main UI; beta and production builds show only user-readable status.
-            2. Anonymous contribution now asks once and remembers the choice, so future samples follow that decision without repeated prompts.
-            3. The backend now has a contribution optimization loop that creates reviewable caption strategy candidates after sample thresholds are reached.
+            1. During beta testing, cloud enhancement temporarily mirrors the in-app developer entitlement so Pro can verify backend Pro quota.
+            2. Backend minute limits, daily real-provider caps, and abnormal request guards remain enabled.
+            3. After StoreKit is connected, entitlement state will be validated by the backend and synced back to the app UI.
             """
         case .japanese:
             return """
-            1. クラウド強化の開発用デバッグ詳細をメイン UI から非表示にし、テスト版と正式版ではユーザー向けの状態のみ表示します。
-            2. 匿名提供は初回だけ確認し、その選択を記憶します。以後は同じ選択で自動処理し、何度も表示しません。
-            3. バックエンドに提供サンプル最適化ループを追加し、しきい値到達後に確認用の文案戦略候補を自動生成します。
+            1. ベータテスト中は、クラウド強化が App 内の開発者向け会員状態を一時的に同期し、Pro のバックエンド回数を検証できます。
+            2. 分単位の制限、実 provider の日次上限、異常リクエスト保護は引き続き有効です。
+            3. StoreKit 接続後は、会員状態をバックエンドで検証し、App UI に同期します。
             """
         case .traditionalChinese:
             return """
-            1. 雲端增強主介面已隱藏開發調試明細，測試版和正式版只顯示使用者可讀狀態。
-            2. 匿名貢獻改為首次詢問後長期記住選擇，後續自動按該選擇執行，不再反覆彈窗。
-            3. 後端新增貢獻樣本優化閉環，達到樣本門檻後自動生成待審核文案策略候選。
+            1. 測試階段雲端增強會暫時同步 App 內開發者會員等級，Pro 可按後端 Pro 額度驗證。
+            2. 後端仍保留分鐘頻率、每日真實 provider 上限和異常請求保護。
+            3. 後續接入 StoreKit 後，會員狀態將改由後端驗證並同步到客戶端 UI。
             """
         }
     }

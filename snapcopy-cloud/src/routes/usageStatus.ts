@@ -5,6 +5,7 @@ import type { Plan, UsageStatusResponse } from "../types/api";
 
 type Env = {
   DEFAULT_PLAN?: Plan;
+  ALLOW_CLIENT_PLAN_OVERRIDE?: string;
   DB?: D1Database;
 };
 
@@ -15,8 +16,11 @@ export async function handleUsageStatus(request: Request, env: Env): Promise<Res
     return errorResponse("missing_app_user_id", "appUserId query parameter is required.", 400);
   }
 
-  // Plan display also follows the server-side default until StoreKit validation is connected.
-  const plan = resolveEffectivePlan(undefined, env.DEFAULT_PLAN ?? "beta");
+  const requestedPlan = url.searchParams.get("plan");
+  const plan = resolveEffectivePlan(
+    env.ALLOW_CLIENT_PLAN_OVERRIDE === "true" ? requestedPlan : undefined,
+    env.DEFAULT_PLAN ?? "beta"
+  );
   const response: UsageStatusResponse = await getUsageStatusFromStore(env, appUserId, plan);
 
   return jsonResponse(response);

@@ -28,6 +28,7 @@ type Env = {
   MAX_NEW_USERS_PER_IP_PER_DAY?: string;
   MAX_REAL_PROVIDER_REQUESTS_PER_DAY?: string;
   SECURITY_HASH_SALT?: string;
+  ALLOW_CLIENT_PLAN_OVERRIDE?: string;
   DB?: D1Database;
 };
 
@@ -39,9 +40,13 @@ export async function handleCloudEnhanceCaption(request: Request, env: Env): Pro
     const body = await parseJsonBody<CloudCaptionRequest>(request, 512_000);
     const input = validateCaptionRequest(body);
     quotaInput = input;
-    // Until StoreKit server validation is connected, the server default is the source of truth.
-    // Do not trust a higher client-supplied plan.
-    const plan = resolveEffectivePlan(undefined, env.DEFAULT_PLAN ?? "beta");
+    // Beta builds can temporarily mirror the app's mock entitlement so developer
+    // Pro/Plus testing matches the UI. Turn this off when StoreKit server
+    // validation becomes the source of truth.
+    const plan = resolveEffectivePlan(
+      env.ALLOW_CLIENT_PLAN_OVERRIDE === "true" ? input.plan : undefined,
+      env.DEFAULT_PLAN ?? "beta"
+    );
     input.plan = plan;
     const resolvedProvider = resolveCaptionProvider(env);
     const security = await enforceCloudCaptionSecurity(request, env, input, plan, resolvedProvider);
