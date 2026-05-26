@@ -20,6 +20,10 @@ type Env = {
   QWEN_API_KEY?: string;
   QWEN_MODEL?: string;
   QWEN_BASE_URL?: string;
+  VISION_PROVIDER?: string;
+  GLM_API_KEY?: string;
+  GLM_MODEL?: string;
+  GLM_BASE_URL?: string;
   OPTIMIZATION_ADMIN_TOKEN?: string;
   OPTIMIZATION_MIN_CAPTION_SAMPLES?: string;
   OPTIMIZATION_COOLDOWN_HOURS?: string;
@@ -49,7 +53,7 @@ export default {
     }
 
     if (url.pathname === "/api/cloud-enhance/vision" && request.method === "POST") {
-      return handleCloudEnhanceVision();
+      return handleCloudEnhanceVision(request, env);
     }
 
     if (url.pathname === "/api/usage/status" && request.method === "GET") {

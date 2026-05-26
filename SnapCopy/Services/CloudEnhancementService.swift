@@ -44,6 +44,26 @@ final class CloudEnhancementService {
         return try await postCaptionRequest(request, endpoint: endpoint)
     }
 
+    func enhanceImageUnderstanding(request: CloudImageUnderstandingRequest) async throws -> CloudImageUnderstandingResponse {
+        guard isEnabled else {
+            throw CloudEnhancementError.disabled
+        }
+
+        guard request.imageUploadEnabled else {
+            throw CloudEnhancementError.requestFailed("Image upload is required for cloud image understanding.")
+        }
+
+        guard request.imageBase64.utf8.count <= max(1, config.maxImageUploadBytes) || config.maxImageUploadBytes == 0 else {
+            throw CloudEnhancementError.requestFailed("Image payload is too large for cloud understanding.")
+        }
+
+        guard let endpoint = config.endpoint else {
+            throw CloudEnhancementError.disabled
+        }
+
+        return try await postVisionRequest(request, endpoint: endpoint)
+    }
+
     func usageStatus(appUserId: UUID, plan: EntitlementLevel, usedToday: Int, isTestUser: Bool) -> UsageStatus {
         let dailyLimit = plan.dailyCloudEnhancementLimit(isTestUser: isTestUser)
         return UsageStatus(
@@ -83,6 +103,46 @@ final class CloudEnhancementService {
 
             let cloudResponse = try decoder.decode(CloudEnhancementResponse.self, from: data)
             guard !cloudResponse.captions.isEmpty else {
+                throw CloudEnhancementError.invalidResponse
+            }
+
+            return cloudResponse
+        } catch let error as CloudEnhancementError {
+            throw error
+        } catch {
+            throw CloudEnhancementError.requestFailed(error.localizedDescription)
+        }
+    }
+
+    private func postVisionRequest(
+        _ request: CloudImageUnderstandingRequest,
+        endpoint: URL
+    ) async throws -> CloudImageUnderstandingResponse {
+        let url = endpoint.appendingPathComponent("api/cloud-enhance/vision")
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.timeoutInterval = config.timeoutSeconds
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("SnapCopy-iOS-Debug", forHTTPHeaderField: "X-SnapCopy-App")
+        urlRequest.httpBody = try encoder.encode(request)
+
+        do {
+            let (data, response) = try await session.data(for: urlRequest)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw CloudEnhancementError.invalidResponse
+            }
+
+            guard (200..<300).contains(httpResponse.statusCode) else {
+                let errorMessage = cloudErrorMessage(from: data) ?? "HTTP \(httpResponse.statusCode)"
+                if httpResponse.statusCode == 429 {
+                    throw CloudEnhancementError.quotaExceeded
+                }
+
+                throw CloudEnhancementError.requestFailed(errorMessage)
+            }
+
+            let cloudResponse = try decoder.decode(CloudImageUnderstandingResponse.self, from: data)
+            guard !cloudResponse.sceneJson.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 throw CloudEnhancementError.invalidResponse
             }
 

@@ -995,13 +995,13 @@ struct HomeView: View {
 
         switch uiLanguage {
         case .simplifiedChinese:
-            return "测试版云端增强：\(remaining.map { "后端剩余 \($0) 次" } ?? "额度将由后端同步")。当前只上传场景 JSON，不上传图片。"
+            return "测试版云端增强：\(remaining.map { "后端剩余 \($0) 次" } ?? "额度将由后端同步")。增强时会上传压缩照片做云端理解，不保存原图。"
         case .english:
-            return "Beta cloud enhancement: \(remaining.map { "\($0) left on backend" } ?? "quota syncs from backend"). Only scene JSON is sent; photos are not uploaded."
+            return "Beta cloud enhancement: \(remaining.map { "\($0) left on backend" } ?? "quota syncs from backend"). A compressed photo is sent for cloud understanding and the original is not stored."
         case .japanese:
-            return "ベータ版クラウド強化：\(remaining.map { "バックエンド残り \($0) 回" } ?? "回数はバックエンドから同期されます")。送信するのはシーン JSON のみで、写真はアップロードしません。"
+            return "ベータ版クラウド強化：\(remaining.map { "バックエンド残り \($0) 回" } ?? "回数はバックエンドから同期されます")。クラウド理解のため圧縮写真を送信し、元画像は保存しません。"
         case .traditionalChinese:
-            return "測試版雲端增強：\(remaining.map { "後端剩餘 \($0) 次" } ?? "額度將由後端同步")。目前只上傳場景 JSON，不上傳圖片。"
+            return "測試版雲端增強：\(remaining.map { "後端剩餘 \($0) 次" } ?? "額度將由後端同步")。增強時會上傳壓縮照片做雲端理解，不保存原圖。"
         }
     }
 
@@ -1021,13 +1021,13 @@ struct HomeView: View {
     private var localizedCloudEnhancingText: String {
         switch uiLanguage {
         case .simplifiedChinese:
-            return "正在生成增强文案…"
+            return "正在理解照片并增强文案…"
         case .english:
-            return "Enhancing captions..."
+            return "Understanding the photo and enhancing captions..."
         case .japanese:
-            return "文案を強化しています…"
+            return "写真を理解して文案を強化しています…"
         case .traditionalChinese:
-            return "正在生成增強文案…"
+            return "正在理解照片並增強文案…"
         }
     }
 
@@ -1567,11 +1567,19 @@ struct HomeView: View {
             data: (try? JSONEncoder().encode(preference.cloudPreferenceSnapshot)) ?? Data(),
             encoding: .utf8
         )
+        let cloudRequestID = UUID()
+        let cloudSceneEnhancement = await cloudEnhancedSceneJson(
+            baseSceneJson: sceneJson,
+            preferenceJson: preferenceJson,
+            requestID: cloudRequestID,
+            preference: preference
+        )
         let request = CloudEnhancementRequestBuilder().makeRequest(
             appUserId: userIdentityManager.appUserId,
+            requestId: cloudSceneEnhancement.captionRequestID,
             plan: entitlementManager.level,
             featureType: .captionDeepUnderstanding,
-            sceneJson: sceneJson,
+            sceneJson: cloudSceneEnhancement.sceneJson,
             userPreferenceJson: preferenceJson,
             imageUploadEnabled: false,
             locale: preference.preferredCaptionLanguage.rawValue,
@@ -1612,7 +1620,7 @@ struct HomeView: View {
             historyStore.saveGeneratedCandidates(captions, image: previewImage ?? selectedImage)
             refreshFavoriteState()
             queuePhotoTrainingContribution(
-                sceneJson: sceneJson,
+                sceneJson: cloudSceneEnhancement.sceneJson,
                 context: generationContext,
                 preference: preference,
                 source: .cloudEnhancement
@@ -1629,6 +1637,85 @@ struct HomeView: View {
         }
 
         isCloudEnhancingCaptions = false
+    }
+
+    @MainActor
+    private func cloudEnhancedSceneJson(
+        baseSceneJson: String,
+        preferenceJson: String?,
+        requestID: UUID,
+        preference: UserPreference
+    ) async -> CloudSceneEnhancementResult {
+        guard CloudFeatureFlags.cloudImageUnderstanding,
+              let selectedImage,
+              let imagePayload = makeCloudVisionImagePayload(from: selectedImage) else {
+            return CloudSceneEnhancementResult(sceneJson: baseSceneJson, captionRequestID: requestID)
+        }
+
+        let request = CloudEnhancementRequestBuilder().makeImageUnderstandingRequest(
+            appUserId: userIdentityManager.appUserId,
+            requestId: requestID,
+            plan: entitlementManager.level,
+            sceneJson: baseSceneJson,
+            userPreferenceJson: preferenceJson,
+            imageBase64: imagePayload.base64,
+            imageMimeType: imagePayload.mimeType,
+            locale: preference.preferredCaptionLanguage.rawValue,
+            targetPlatform: selectedPlatform
+        )
+
+        do {
+            let response = try await cloudEnhancementService.enhanceImageUnderstanding(request: request)
+            return CloudSceneEnhancementResult(sceneJson: response.sceneJson, captionRequestID: UUID())
+        } catch {
+            return CloudSceneEnhancementResult(sceneJson: baseSceneJson, captionRequestID: UUID())
+        }
+    }
+
+    private func makeCloudVisionImagePayload(from image: UIImage) -> CloudVisionImagePayload? {
+        let resizedImage = resizedForCloudVision(image, maxDimension: 1024)
+        var compression: CGFloat = 0.78
+
+        while compression >= 0.48 {
+            if let data = resizedImage.jpegData(compressionQuality: compression),
+               data.count <= 1_100_000 {
+                return CloudVisionImagePayload(
+                    base64: data.base64EncodedString(),
+                    mimeType: "image/jpeg"
+                )
+            }
+
+            compression -= 0.1
+        }
+
+        guard let fallbackData = resizedForCloudVision(image, maxDimension: 768).jpegData(compressionQuality: 0.48),
+              fallbackData.count <= 1_100_000 else {
+            return nil
+        }
+
+        return CloudVisionImagePayload(
+            base64: fallbackData.base64EncodedString(),
+            mimeType: "image/jpeg"
+        )
+    }
+
+    private func resizedForCloudVision(_ image: UIImage, maxDimension: CGFloat) -> UIImage {
+        let size = image.size
+        guard size.width > 0, size.height > 0 else {
+            return image
+        }
+
+        let longestSide = max(size.width, size.height)
+        guard longestSide > maxDimension else {
+            return image
+        }
+
+        let scale = maxDimension / longestSide
+        let targetSize = CGSize(width: size.width * scale, height: size.height * scale)
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
     }
 
     private func makeCloudCandidates(
@@ -2561,6 +2648,16 @@ struct HomeView: View {
 private struct ShareFileURLs {
     let captionURL: URL
     let imageURL: URL
+}
+
+private struct CloudVisionImagePayload {
+    let base64: String
+    let mimeType: String
+}
+
+private struct CloudSceneEnhancementResult {
+    let sceneJson: String
+    let captionRequestID: UUID
 }
 
 private struct CaptionShareDraft: Identifiable {

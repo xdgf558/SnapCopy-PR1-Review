@@ -1,6 +1,6 @@
 import { hasD1, type D1Env } from "./d1Store";
 import type { CaptionProviderName } from "../providers/captionProviders";
-import type { CloudCaptionRequest, Plan } from "../types/api";
+import type { CloudCaptionRequest, CloudVisionRequest, Plan } from "../types/api";
 
 type SecurityEnv = D1Env & {
   RATE_LIMIT_USER_PER_MINUTE?: string;
@@ -10,10 +10,10 @@ type SecurityEnv = D1Env & {
   SECURITY_HASH_SALT?: string;
 };
 
-export type SecurityDecision =
+export type SecurityDecision<ProviderName extends string = CaptionProviderName> =
   | {
       allowed: true;
-      provider: CaptionProviderName;
+      provider: ProviderName;
       notes: string[];
     }
   | {
@@ -22,6 +22,11 @@ export type SecurityDecision =
       message: string;
       statusCode: number;
     };
+
+type CloudSecurityRequest = Pick<
+  CloudCaptionRequest | CloudVisionRequest,
+  "appUserId" | "requestId" | "featureType"
+>;
 
 type RequestSecurityContext = {
   ipHash: string;
@@ -47,6 +52,27 @@ export async function enforceCloudCaptionSecurity(
   plan: Plan,
   provider: CaptionProviderName
 ): Promise<SecurityDecision> {
+  return enforceCloudSecurity(request, env, input, plan, provider, "caption");
+}
+
+export async function enforceCloudVisionSecurity(
+  request: Request,
+  env: SecurityEnv,
+  input: CloudVisionRequest,
+  plan: Plan,
+  provider: string
+): Promise<SecurityDecision<string>> {
+  return enforceCloudSecurity(request, env, input, plan, provider, "vision");
+}
+
+async function enforceCloudSecurity<ProviderName extends string>(
+  request: Request,
+  env: SecurityEnv,
+  input: CloudSecurityRequest,
+  plan: Plan,
+  provider: ProviderName,
+  featureScope: "caption" | "vision"
+): Promise<SecurityDecision<ProviderName>> {
   const userLimitConfig = env.RATE_LIMIT_USER_PER_MINUTE;
   const ipLimitConfig = env.RATE_LIMIT_IP_PER_MINUTE;
   const newUsersLimitConfig = env.MAX_NEW_USERS_PER_IP_PER_DAY;
@@ -65,7 +91,7 @@ export async function enforceCloudCaptionSecurity(
   await observeAppUser(env.DB, input, context, now);
 
   const userLimit = parsePositiveInt(userLimitConfig, 6);
-  const userRate = await incrementRateLimit(env.DB, `caption:user:${input.appUserId}`, userLimit, now);
+  const userRate = await incrementRateLimit(env.DB, `${featureScope}:user:${input.appUserId}`, userLimit, now);
   if (!userRate.allowed) {
     await recordAbuseEvent(env.DB, input, context, "user_rate_limited", "medium", {
       limit: userLimit,
@@ -80,7 +106,7 @@ export async function enforceCloudCaptionSecurity(
   }
 
   const ipLimit = parsePositiveInt(ipLimitConfig, 30);
-  const ipRate = await incrementRateLimit(env.DB, `caption:ip:${context.ipHash}`, ipLimit, now);
+  const ipRate = await incrementRateLimit(env.DB, `${featureScope}:ip:${context.ipHash}`, ipLimit, now);
   if (!ipRate.allowed) {
     await recordAbuseEvent(env.DB, input, context, "ip_rate_limited", "high", {
       limit: ipLimit,
@@ -117,11 +143,12 @@ export async function enforceCloudCaptionSecurity(
       await recordAbuseEvent(env.DB, input, context, "daily_provider_budget_exhausted", "high", {
         limit: maxRealProviderRequests,
         count: realProviderCount,
-        provider
+        provider,
+        featureScope
       });
       return {
         allowed: true,
-        provider: "mock",
+        provider: "mock" as ProviderName,
         notes: ["Daily real-provider safety cap reached; request will use mock fallback."]
       };
     }
@@ -152,7 +179,7 @@ async function buildRequestSecurityContext(
 
 async function observeAppUser(
   db: D1Database,
-  input: CloudCaptionRequest,
+  input: CloudSecurityRequest,
   context: RequestSecurityContext,
   now: Date
 ): Promise<void> {
@@ -258,7 +285,7 @@ async function countRealProviderRequestsToday(db: D1Database, now: Date): Promis
 
 async function recordAbuseEvent(
   db: D1Database,
-  input: CloudCaptionRequest,
+  input: CloudSecurityRequest,
   context: RequestSecurityContext,
   eventType: string,
   severity: string,

@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 分享卡片样式说明优化，表达更清晰自然。
-            2. 云端文案增强等待时间延长，提升生成成功率。
-            3. TestFlight 用户固定为测试额度，云端增强每个版本 3 次。
+            1. 云端增强新增图片理解流程，先理解照片再增强文案。
+            2. 后端图片理解模型改为可替换 provider，当前预留 GLM-4.6V。
+            3. 图片理解额度不足或失败时，会自动继续做文字增强。
             """
         case .english:
             return """
-            1. Share card style descriptions now feel clearer and more polished.
-            2. Cloud caption enhancement waits longer to improve completion reliability.
-            3. TestFlight users use a fixed beta quota: 3 cloud enhancements per app version.
+            1. Cloud enhancement now adds image understanding before caption refinement.
+            2. The cloud vision model is behind a replaceable provider, currently prepared for GLM-4.6V.
+            3. If image understanding is unavailable or out of quota, text enhancement still continues.
             """
         case .japanese:
             return """
-            1. 共有カードスタイルの説明を、より自然でわかりやすい表現に調整しました。
-            2. クラウド文案強化の待機時間を延長し、生成の安定性を高めました。
-            3. TestFlight ユーザーは固定のテスト枠になり、クラウド強化は各バージョン 3 回です。
+            1. クラウド強化に画像理解ステップを追加し、写真を理解してから文案を整えます。
+            2. クラウド画像理解モデルは差し替え可能な provider 構成にし、現在は GLM-4.6V を準備しています。
+            3. 画像理解が使えない場合や回数不足でも、テキスト強化は続行します。
             """
         case .traditionalChinese:
             return """
-            1. 分享卡片樣式說明優化，表達更清晰自然。
-            2. 雲端文案增強等待時間延長，提升生成成功率。
-            3. TestFlight 用戶固定為測試額度，雲端增強每個版本 3 次。
+            1. 雲端增強新增圖片理解流程，先理解照片再增強文案。
+            2. 後端圖片理解模型改為可替換 provider，目前預留 GLM-4.6V。
+            3. 圖片理解額度不足或失敗時，會自動繼續做文字增強。
             """
         }
     }

@@ -1,8 +1,77 @@
-import { jsonResponse } from "../lib/response";
+import { jsonResponse, errorResponse } from "../lib/response";
+import { consumeCloudVisionQuota, refundCloudVisionQuota } from "../lib/d1Store";
+import { enforceCloudVisionSecurity } from "../lib/securityGuards";
+import { parseJsonBody, resolveEffectivePlan, validateVisionRequest, ValidationError } from "../lib/validators";
+import {
+  generateVisionUnderstanding,
+  modelForVisionProvider,
+  resolveVisionProvider,
+  VisionProviderError,
+  type VisionProviderName
+} from "../providers/visionProviders";
+import type { CloudVisionRequest, Plan } from "../types/api";
 
-export async function handleCloudEnhanceVision(): Promise<Response> {
-  return jsonResponse({
-    enabled: false,
-    message: "Cloud image understanding is not enabled yet."
-  });
+type Env = {
+  DEFAULT_PLAN?: Plan;
+  VISION_PROVIDER?: string;
+  GLM_API_KEY?: string;
+  GLM_MODEL?: string;
+  GLM_BASE_URL?: string;
+  RATE_LIMIT_USER_PER_MINUTE?: string;
+  RATE_LIMIT_IP_PER_MINUTE?: string;
+  MAX_NEW_USERS_PER_IP_PER_DAY?: string;
+  MAX_REAL_PROVIDER_REQUESTS_PER_DAY?: string;
+  SECURITY_HASH_SALT?: string;
+  ALLOW_CLIENT_PLAN_OVERRIDE?: string;
+  DB?: D1Database;
+};
+
+export async function handleCloudEnhanceVision(request: Request, env: Env): Promise<Response> {
+  let quotaInput: CloudVisionRequest | undefined;
+  let quotaRefundable = false;
+
+  try {
+    const body = await parseJsonBody<CloudVisionRequest>(request, 2_000_000);
+    const input = validateVisionRequest(body);
+    quotaInput = input;
+
+    const plan = resolveEffectivePlan(
+      env.ALLOW_CLIENT_PLAN_OVERRIDE === "true" ? input.plan : undefined,
+      env.DEFAULT_PLAN ?? "beta"
+    );
+    input.plan = plan;
+
+    const resolvedProvider = resolveVisionProvider(env);
+    const security = await enforceCloudVisionSecurity(request, env, input, plan, resolvedProvider);
+    if (!security.allowed) {
+      return errorResponse(security.code, security.message, security.statusCode);
+    }
+
+    const provider = security.provider as VisionProviderName;
+    const model = modelForVisionProvider(provider, env);
+    const quota = await consumeCloudVisionQuota(env, input, plan, provider, model);
+    if (!quota.allowed) {
+      return errorResponse("quota_exceeded", "Daily cloud image understanding quota has been used.", 429);
+    }
+    quotaRefundable = provider !== "mock" && !quota.duplicateRequest;
+
+    const response = await generateVisionUnderstanding(input, provider, env);
+    return jsonResponse({
+      ...response,
+      remainingQuota: quota.remainingQuota
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return errorResponse(error.code, error.message, 400);
+    }
+
+    if (error instanceof VisionProviderError) {
+      if (quotaInput && quotaRefundable) {
+        await refundCloudVisionQuota(env, quotaInput);
+      }
+      return errorResponse("provider_error", error.message, error.statusCode);
+    }
+
+    return errorResponse("internal_error", "Cloud image understanding failed.", 500);
+  }
 }

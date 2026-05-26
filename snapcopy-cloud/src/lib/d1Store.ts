@@ -2,6 +2,7 @@ import { canConsumeQuota, consumeQuota, dailyLimitForPlan, getUsage } from "./qu
 import type {
   ActiveCaptionStrategy,
   CloudCaptionRequest,
+  CloudVisionRequest,
   ContributionStorageMode,
   Plan,
   TrainingContributionConsentRequest,
@@ -35,14 +36,30 @@ type StrategyRow = {
 };
 
 const cloudCaptionFeature = "captionDeepUnderstanding";
+const cloudVisionFeature = "imageUnderstanding";
 
-function normalizeCloudCaptionFeature(
+type CloudMeteredRequest = Pick<
+  CloudCaptionRequest | CloudVisionRequest,
+  | "appUserId"
+  | "requestId"
+  | "featureType"
+  | "clientAppVersion"
+  | "clientBuild"
+  | "sceneJson"
+  | "userPreferenceJson"
+  | "imageUploadEnabled"
+  | "locale"
+  | "targetPlatform"
+>;
+
+function normalizeCloudFeature(
   featureType?: string,
   plan?: Plan,
   clientAppVersion?: string,
-  clientBuild?: string
+  clientBuild?: string,
+  defaultFeature = cloudCaptionFeature
 ): string {
-  const baseFeature = !featureType || featureType === "cloudCaption" ? cloudCaptionFeature : featureType;
+  const baseFeature = !featureType || featureType === "cloudCaption" ? defaultFeature : featureType;
   const buildKey = normalizedBuildKey(clientAppVersion, clientBuild);
 
   if (plan === "beta" && buildKey) {
@@ -78,7 +95,7 @@ export async function getUsageStatusFromStore(
   clientBuild?: string
 ): Promise<UsageStatusResponse> {
   const dailyLimit = dailyLimitForPlan(plan);
-  const featureType = normalizeCloudCaptionFeature(cloudCaptionFeature, plan, clientAppVersion, clientBuild);
+  const featureType = normalizeCloudFeature(cloudCaptionFeature, plan, clientAppVersion, clientBuild);
 
   if (!hasD1(env)) {
     const usage = getUsage(appUserId);
@@ -117,6 +134,27 @@ export async function consumeCloudCaptionQuota(
   provider: string,
   model: string
 ): Promise<CloudQuotaResult> {
+  return consumeCloudQuota(env, input, plan, provider, model, cloudCaptionFeature);
+}
+
+export async function consumeCloudVisionQuota(
+  env: D1Env,
+  input: CloudVisionRequest,
+  plan: Plan,
+  provider: string,
+  model: string
+): Promise<CloudQuotaResult> {
+  return consumeCloudQuota(env, input, plan, provider, model, cloudVisionFeature);
+}
+
+async function consumeCloudQuota(
+  env: D1Env,
+  input: CloudMeteredRequest,
+  plan: Plan,
+  provider: string,
+  model: string,
+  defaultFeature: string
+): Promise<CloudQuotaResult> {
   if (!hasD1(env)) {
     if (!canConsumeQuota(input.appUserId, input.requestId, plan)) {
       return {
@@ -135,7 +173,13 @@ export async function consumeCloudCaptionQuota(
 
   const now = new Date();
   const usageDate = usageDateString(now);
-  const featureType = normalizeCloudCaptionFeature(input.featureType, plan, input.clientAppVersion, input.clientBuild);
+  const featureType = normalizeCloudFeature(
+    input.featureType,
+    plan,
+    input.clientAppVersion,
+    input.clientBuild,
+    defaultFeature
+  );
   const dailyLimit = dailyLimitForPlan(plan);
   await upsertAppUser(env.DB, input.appUserId, plan, now);
 
@@ -169,7 +213,8 @@ export async function consumeCloudCaptionQuota(
       model,
       status: "quota_exceeded",
       remainingQuota: 0,
-      now
+      now,
+      featureType
     });
     return {
       allowed: false,
@@ -198,7 +243,8 @@ export async function consumeCloudCaptionQuota(
       model,
       status: "accepted",
       remainingQuota,
-      now
+      now,
+      featureType
     })
   ]);
 
@@ -213,6 +259,17 @@ export async function refundCloudCaptionQuota(
   env: D1Env,
   input: CloudCaptionRequest
 ): Promise<void> {
+  await refundCloudQuota(env, input);
+}
+
+export async function refundCloudVisionQuota(
+  env: D1Env,
+  input: CloudVisionRequest
+): Promise<void> {
+  await refundCloudQuota(env, input);
+}
+
+async function refundCloudQuota(env: D1Env, input: CloudMeteredRequest): Promise<void> {
   if (!hasD1(env)) {
     return;
   }
@@ -394,7 +451,7 @@ async function upsertAppUser(
 
 async function insertCloudRequestLog(
   db: D1Database,
-  input: CloudCaptionRequest,
+  input: CloudMeteredRequest,
   meta: CloudRequestLogMeta
 ): Promise<void> {
   await cloudRequestLogStatement(db, input, meta).run();
@@ -402,7 +459,7 @@ async function insertCloudRequestLog(
 
 function cloudRequestLogStatement(
   db: D1Database,
-  input: CloudCaptionRequest,
+  input: CloudMeteredRequest,
   meta: CloudRequestLogMeta
 ): D1PreparedStatement {
   return db
@@ -420,13 +477,13 @@ function cloudRequestLogStatement(
       input.requestId,
       input.appUserId,
       meta.usageDate,
-      normalizeCloudCaptionFeature(input.featureType),
+      meta.featureType,
       meta.plan,
       meta.provider,
       meta.model,
       meta.status,
       meta.remainingQuota,
-      byteLength(input.sceneJson),
+      byteLength(input.sceneJson ?? ""),
       byteLength(input.userPreferenceJson ?? ""),
       input.imageUploadEnabled ? 1 : 0,
       input.locale,
@@ -478,4 +535,5 @@ type CloudRequestLogMeta = {
   status: "accepted" | "quota_exceeded" | "provider_error";
   remainingQuota: number;
   now: Date;
+  featureType: string;
 };

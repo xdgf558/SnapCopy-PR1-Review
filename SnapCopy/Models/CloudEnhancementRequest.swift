@@ -5,12 +5,14 @@ enum CloudProvider: String, Codable, CaseIterable, Identifiable {
     case mock
     case gemini
     case qwen
+    case glm
 
     var id: String { rawValue }
 }
 
 enum CloudEnhancementFeatureType: String, Codable, CaseIterable, Identifiable {
     case captionDeepUnderstanding
+    case imageUnderstanding
     case creativeShareImage
     case coverImage
     case stickerImage
@@ -40,7 +42,7 @@ struct CloudEnhancementConfig: Codable, Equatable {
         provider: .mock,
         endpoint: URL(string: "https://snapcopy-cloud-api.yehao1105.workers.dev"),
         timeoutSeconds: 35,
-        maxImageUploadBytes: 0,
+        maxImageUploadBytes: 1_500_000,
         privacyNoticeRequired: true
     )
 }
@@ -50,7 +52,7 @@ enum CloudFeatureFlags {
     // move this behind remote config or StoreKit entitlement checks.
     static let cloudEnhancedCaptions = true
 
-    static let cloudImageUnderstanding = false
+    static let cloudImageUnderstanding = true
     static let cloudEnhancedDebugMode = false
 
     static let betaCloudTestUser = true
@@ -72,6 +74,57 @@ struct CloudEnhancementRequest: Codable, Equatable {
 
 struct CloudEnhancementResponse: Codable, Equatable {
     let captions: [String]
+    let provider: String
+    let model: String
+    let inputTokens: Int?
+    let outputTokens: Int?
+    let estimatedCost: Double?
+    let remainingQuota: Int?
+}
+
+struct CloudImageUnderstandingRequest: Codable, Equatable {
+    let appUserId: UUID
+    let requestId: UUID
+    let plan: EntitlementLevel
+    let clientAppVersion: String
+    let clientBuild: String
+    let featureType: CloudEnhancementFeatureType
+    let sceneJson: String?
+    let userPreferenceJson: String?
+    let imageUploadEnabled: Bool
+    let imageBase64: String
+    let imageMimeType: String
+    let locale: String
+    let targetPlatform: SocialPlatform
+}
+
+struct CloudSceneCandidate: Codable, Equatable {
+    let scene: String
+    let confidence: Double
+    let reason: String?
+}
+
+struct CloudVisionUnderstanding: Codable, Equatable {
+    let scene: String
+    let subScene: String?
+    let confidence: Double
+    let top3Scenes: [CloudSceneCandidate]
+    let sceneTags: [String]
+    let captionFocus: String?
+    let semanticSummary: String?
+    let subjectCues: [String]
+    let objectCues: [String]
+    let actionCues: [String]
+    let relationshipCues: [String]
+    let atmosphereCues: [String]
+    let ocrTexts: [String]
+    let mustMentionCues: [String]
+    let avoidUnsupportedClaims: [String]
+}
+
+struct CloudImageUnderstandingResponse: Codable, Equatable {
+    let understanding: CloudVisionUnderstanding
+    let sceneJson: String
     let provider: String
     let model: String
     let inputTokens: Int?
@@ -146,6 +199,36 @@ struct CloudEnhancementRequestBuilder {
             sceneJson: sceneJson,
             userPreferenceJson: userPreferenceJson,
             imageUploadEnabled: imageUploadEnabled,
+            locale: locale,
+            targetPlatform: targetPlatform
+        )
+    }
+
+    func makeImageUnderstandingRequest(
+        appUserId: UUID,
+        requestId: UUID = UUID(),
+        plan: EntitlementLevel,
+        clientAppVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0",
+        clientBuild: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1",
+        sceneJson: String?,
+        userPreferenceJson: String? = nil,
+        imageBase64: String,
+        imageMimeType: String = "image/jpeg",
+        locale: String,
+        targetPlatform: SocialPlatform
+    ) -> CloudImageUnderstandingRequest {
+        CloudImageUnderstandingRequest(
+            appUserId: appUserId,
+            requestId: requestId,
+            plan: plan,
+            clientAppVersion: clientAppVersion,
+            clientBuild: clientBuild,
+            featureType: .imageUnderstanding,
+            sceneJson: sceneJson,
+            userPreferenceJson: userPreferenceJson,
+            imageUploadEnabled: true,
+            imageBase64: imageBase64,
+            imageMimeType: imageMimeType,
             locale: locale,
             targetPlatform: targetPlatform
         )

@@ -1,5 +1,6 @@
 import type {
   CloudCaptionRequest,
+  CloudVisionRequest,
   Plan,
   TrainingContributionConsentRequest,
   TrainingContributionSampleRequest
@@ -10,6 +11,7 @@ const validPlans = new Set(["free", "beta", "plus", "pro"]);
 const validContributionKinds = new Set(["photo", "caption"]);
 const validContributionSources = new Set(["cloudEnhancement", "share", "copy", "manual"]);
 const validConsentDecisions = new Set(["granted", "declined"]);
+const validVisionMimeTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export async function parseJsonBody<T>(request: Request, maxBytes: number): Promise<T> {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
@@ -82,6 +84,39 @@ export function validateCaptionRequest(input: CloudCaptionRequest): CloudCaption
   if (typeof input.locale !== "string" || input.locale.trim().length === 0) {
     throw new ValidationError("missing_locale", "locale is required.");
   }
+
+  return input;
+}
+
+export function validateVisionRequest(input: CloudVisionRequest): CloudVisionRequest {
+  if (!input || typeof input !== "object") {
+    throw new ValidationError("invalid_request", "Request body is required.");
+  }
+
+  validateUUID(input.appUserId, "invalid_app_user_id", "appUserId must be a UUID.");
+  validateUUID(input.requestId, "invalid_request_id", "requestId must be a UUID.");
+
+  if (input.imageUploadEnabled !== true) {
+    throw new ValidationError("image_upload_required", "Image understanding requires an uploaded image payload.");
+  }
+
+  validateNonEmptyString(input.imageBase64, "missing_image", "imageBase64 is required.");
+  validateStringEnum(input.imageMimeType, validVisionMimeTypes, "invalid_image_mime_type", "imageMimeType is invalid.");
+
+  if (new TextEncoder().encode(input.imageBase64).byteLength > 1_500_000) {
+    throw new ValidationError("image_too_large", "imageBase64 must be 1.5MB or smaller.");
+  }
+
+  if (input.sceneJson && new TextEncoder().encode(input.sceneJson).byteLength > 256_000) {
+    throw new ValidationError("scene_json_too_large", "sceneJson must be 256KB or smaller.");
+  }
+
+  if (input.userPreferenceJson && new TextEncoder().encode(input.userPreferenceJson).byteLength > 128_000) {
+    throw new ValidationError("preference_json_too_large", "userPreferenceJson must be 128KB or smaller.");
+  }
+
+  validateNonEmptyString(input.targetPlatform, "missing_target_platform", "targetPlatform is required.");
+  validateNonEmptyString(input.locale, "missing_locale", "locale is required.");
 
   return input;
 }

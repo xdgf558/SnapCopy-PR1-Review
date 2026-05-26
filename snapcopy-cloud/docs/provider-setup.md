@@ -1,6 +1,6 @@
-# Caption Provider Setup
+# Provider Setup
 
-SnapCopy Cloud can route caption enhancement to mock or real text providers.
+SnapCopy Cloud can route caption enhancement and image understanding to replaceable providers.
 
 ## Current Privacy Boundary
 
@@ -12,6 +12,15 @@ Real providers receive:
 - `userPreferenceJson`
 - `targetPlatform`
 - `locale`
+
+The cloud image-understanding endpoint receives:
+
+- A compressed image payload
+- The existing local `sceneJson`
+- `targetPlatform`
+- `locale`
+
+The Worker does not store the original uploaded image. If training samples are contributed, the current storage mode remains metadata-only unless a later version explicitly enables image storage with user consent.
 
 ## Providers
 
@@ -66,6 +75,34 @@ Set one of these secrets:
 wrangler secret put DASHSCOPE_API_KEY
 wrangler secret put QWEN_API_KEY
 ```
+
+## Image Understanding Providers
+
+### Mock Vision
+
+```toml
+VISION_PROVIDER = "mock"
+```
+
+No secret is required. This is useful when testing quota, request flow, and client UI without image-model cost.
+
+### GLM-4.6V
+
+```toml
+VISION_PROVIDER = "glm"
+GLM_MODEL = "glm-4.6v"
+GLM_BASE_URL = "https://open.bigmodel.cn/api/paas/v4"
+```
+
+Set the secret:
+
+```bash
+npx wrangler secret put GLM_API_KEY
+```
+
+The implementation uses an OpenAI-compatible chat-completions shape with an `image_url` data URL. If the provider changes the exact endpoint or message shape, only `src/providers/visionProviders.ts` should need adjustment.
+
+Image understanding is an optional pre-step. If its provider fails, times out, or returns quota errors, the iOS app keeps the local scene JSON and continues with text enhancement.
 
 ## Deploy
 

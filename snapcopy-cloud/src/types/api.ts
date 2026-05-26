@@ -14,8 +14,59 @@ export type CloudCaptionRequest = {
   featureType?: string;
 };
 
+export type CloudVisionRequest = {
+  appUserId: string;
+  requestId: string;
+  clientAppVersion?: string;
+  clientBuild?: string;
+  sceneJson?: string;
+  userPreferenceJson?: string | null;
+  targetPlatform: string;
+  locale: string;
+  plan?: Plan;
+  imageUploadEnabled: boolean;
+  featureType?: string;
+  imageBase64: string;
+  imageMimeType: "image/jpeg" | "image/png" | "image/webp";
+};
+
 export type CloudCaptionResponse = {
   captions: string[];
+  provider: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCost: number | null;
+  remainingQuota: number;
+};
+
+export type CloudVisionSceneCandidate = {
+  scene: string;
+  confidence: number;
+  reason?: string;
+};
+
+export type CloudVisionUnderstanding = {
+  scene: string;
+  subScene?: string | null;
+  confidence: number;
+  top3Scenes: CloudVisionSceneCandidate[];
+  sceneTags: string[];
+  captionFocus?: string | null;
+  semanticSummary?: string | null;
+  subjectCues: string[];
+  objectCues: string[];
+  actionCues: string[];
+  relationshipCues: string[];
+  atmosphereCues: string[];
+  ocrTexts: string[];
+  mustMentionCues: string[];
+  avoidUnsupportedClaims: string[];
+};
+
+export type CloudVisionResponse = {
+  understanding: CloudVisionUnderstanding;
+  sceneJson: string;
   provider: string;
   model: string;
   inputTokens: number;
