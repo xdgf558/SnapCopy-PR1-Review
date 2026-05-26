@@ -6,6 +6,7 @@ enum CloudProvider: String, Codable, CaseIterable, Identifiable {
     case gemini
     case qwen
     case glm
+    case ppq
 
     var id: String { rawValue }
 }

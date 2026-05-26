@@ -24,6 +24,9 @@ type Env = {
   GLM_API_KEY?: string;
   GLM_MODEL?: string;
   GLM_BASE_URL?: string;
+  PPQ_API_KEY?: string;
+  PPQ_MODEL?: string;
+  PPQ_BASE_URL?: string;
   OPTIMIZATION_ADMIN_TOKEN?: string;
   OPTIMIZATION_MIN_CAPTION_SAMPLES?: string;
   OPTIMIZATION_COOLDOWN_HOURS?: string;

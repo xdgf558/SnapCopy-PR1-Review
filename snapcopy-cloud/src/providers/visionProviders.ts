@@ -5,9 +5,12 @@ export type VisionProviderEnv = {
   GLM_API_KEY?: string;
   GLM_MODEL?: string;
   GLM_BASE_URL?: string;
+  PPQ_API_KEY?: string;
+  PPQ_MODEL?: string;
+  PPQ_BASE_URL?: string;
 };
 
-export type VisionProviderName = "mock" | "glm";
+export type VisionProviderName = "mock" | "glm" | "ppq";
 
 type OpenAICompatibleVisionResponse = {
   choices?: Array<{
@@ -54,7 +57,7 @@ export class VisionProviderError extends Error {
 
 export function resolveVisionProvider(env: VisionProviderEnv): VisionProviderName {
   const provider = (env.VISION_PROVIDER ?? "mock").toLowerCase();
-  if (provider === "glm" || provider === "mock") {
+  if (provider === "glm" || provider === "ppq" || provider === "mock") {
     return provider;
   }
 
@@ -65,6 +68,8 @@ export function modelForVisionProvider(provider: VisionProviderName, env: Vision
   switch (provider) {
     case "glm":
       return env.GLM_MODEL ?? "glm-4.6v";
+    case "ppq":
+      return env.PPQ_MODEL ?? "glm-4.6v";
     case "mock":
       return "mock-vision-v1";
   }
@@ -79,28 +84,49 @@ export async function generateVisionUnderstanding(
     return makeMockVisionResponse(input, provider, modelForVisionProvider(provider, env));
   }
 
-  return generateGLMVisionUnderstanding(input, env);
-}
-
-async function generateGLMVisionUnderstanding(
-  input: CloudVisionRequest,
-  env: VisionProviderEnv
-): Promise<CloudVisionResponse> {
-  if (!env.GLM_API_KEY) {
-    throw new VisionProviderError("GLM_API_KEY is not configured.", 500);
+  if (provider === "glm") {
+    return generateOpenAICompatibleVisionUnderstanding(input, {
+      provider: "glm",
+      displayName: "GLM",
+      apiKey: env.GLM_API_KEY,
+      model: modelForVisionProvider("glm", env),
+      baseUrl: env.GLM_BASE_URL ?? "https://open.bigmodel.cn/api/paas/v4"
+    });
   }
 
-  const model = modelForVisionProvider("glm", env);
-  const baseUrl = (env.GLM_BASE_URL ?? "https://open.bigmodel.cn/api/paas/v4").replace(/\/+$/, "");
+  return generateOpenAICompatibleVisionUnderstanding(input, {
+    provider: "ppq",
+    displayName: "PPQ",
+    apiKey: env.PPQ_API_KEY,
+    model: modelForVisionProvider("ppq", env),
+    baseUrl: env.PPQ_BASE_URL ?? "https://api.ppq.ai"
+  });
+}
+
+async function generateOpenAICompatibleVisionUnderstanding(
+  input: CloudVisionRequest,
+  config: {
+    provider: "glm" | "ppq";
+    displayName: string;
+    apiKey?: string;
+    model: string;
+    baseUrl: string;
+  }
+): Promise<CloudVisionResponse> {
+  if (!config.apiKey) {
+    throw new VisionProviderError(`${config.displayName} API key is not configured.`, 500);
+  }
+
+  const baseUrl = config.baseUrl.replace(/\/+$/, "");
   const prompt = buildVisionPrompt(input);
   const response = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${env.GLM_API_KEY}`,
+      Authorization: `Bearer ${config.apiKey}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model,
+      model: config.model,
       messages: [
         {
           role: "system",
@@ -133,7 +159,7 @@ async function generateGLMVisionUnderstanding(
 
   const json = await response.json<OpenAICompatibleVisionResponse>();
   if (!response.ok) {
-    throw new VisionProviderError(providerErrorMessage("GLM", response.status, json.error?.message), 502);
+    throw new VisionProviderError(providerErrorMessage(config.displayName, response.status, json.error?.message), 502);
   }
 
   const text = json.choices?.[0]?.message?.content?.trim() ?? "";
@@ -141,9 +167,9 @@ async function generateGLMVisionUnderstanding(
 
   return {
     understanding,
-    sceneJson: mergeSceneJson(input.sceneJson, understanding, "glm", model),
-    provider: "glm",
-    model,
+    sceneJson: mergeSceneJson(input.sceneJson, understanding, config.provider, config.model),
+    provider: config.provider,
+    model: config.model,
     inputTokens: json.usage?.prompt_tokens ?? 0,
     outputTokens: json.usage?.completion_tokens ?? 0,
     estimatedCost: null,

@@ -102,6 +102,24 @@ npx wrangler secret put GLM_API_KEY
 
 The implementation uses an OpenAI-compatible chat-completions shape with an `image_url` data URL. If the provider changes the exact endpoint or message shape, only `src/providers/visionProviders.ts` should need adjustment.
 
+### PPQ
+
+PPQ can be used as an OpenAI-compatible proxy for vision-capable models.
+
+```toml
+VISION_PROVIDER = "ppq"
+PPQ_MODEL = "glm-4.6v"
+PPQ_BASE_URL = "https://api.ppq.ai"
+```
+
+Set the secret:
+
+```bash
+npx wrangler secret put PPQ_API_KEY
+```
+
+Use the exact model ID shown in the PPQ console if `glm-4.6v` is not accepted. Do not put the PPQ key in `wrangler.toml`, Git, Xcode, or the iOS app.
+
 Image understanding is an optional pre-step. If its provider fails, times out, or returns quota errors, the iOS app keeps the local scene JSON and continues with text enhancement.
 
 ## Deploy

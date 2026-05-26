@@ -17,6 +17,9 @@ type Env = {
   GLM_API_KEY?: string;
   GLM_MODEL?: string;
   GLM_BASE_URL?: string;
+  PPQ_API_KEY?: string;
+  PPQ_MODEL?: string;
+  PPQ_BASE_URL?: string;
   RATE_LIMIT_USER_PER_MINUTE?: string;
   RATE_LIMIT_IP_PER_MINUTE?: string;
   MAX_NEW_USERS_PER_IP_PER_DAY?: string;

@@ -633,26 +633,26 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 云端增强新增图片理解流程，先理解照片再增强文案。
-            2. 后端图片理解模型改为可替换 provider，当前预留 GLM-4.6V。
+            1. 云端图片理解 provider 新增 PPQ，可通过后端配置切换。
+            2. PPQ、GLM 和 mock 图片理解走同一套可替换接口。
             3. 图片理解额度不足或失败时，会自动继续做文字增强。
             """
         case .english:
             return """
-            1. Cloud enhancement now adds image understanding before caption refinement.
-            2. The cloud vision model is behind a replaceable provider, currently prepared for GLM-4.6V.
+            1. Cloud image understanding now supports PPQ as a replaceable backend provider.
+            2. PPQ, GLM, and mock vision share the same provider interface.
             3. If image understanding is unavailable or out of quota, text enhancement still continues.
             """
         case .japanese:
             return """
-            1. クラウド強化に画像理解ステップを追加し、写真を理解してから文案を整えます。
-            2. クラウド画像理解モデルは差し替え可能な provider 構成にし、現在は GLM-4.6V を準備しています。
+            1. クラウド画像理解 provider に PPQ を追加し、後端設定で切り替え可能にしました。
+            2. PPQ、GLM、mock の画像理解は同じ provider インターフェースで動きます。
             3. 画像理解が使えない場合や回数不足でも、テキスト強化は続行します。
             """
         case .traditionalChinese:
             return """
-            1. 雲端增強新增圖片理解流程，先理解照片再增強文案。
-            2. 後端圖片理解模型改為可替換 provider，目前預留 GLM-4.6V。
+            1. 雲端圖片理解 provider 新增 PPQ，可透過後端配置切換。
+            2. PPQ、GLM 和 mock 圖片理解走同一套可替換介面。
             3. 圖片理解額度不足或失敗時，會自動繼續做文字增強。
             """
         }
