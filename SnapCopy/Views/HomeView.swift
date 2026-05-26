@@ -66,6 +66,7 @@ struct HomeView: View {
     private let historyStore = CaptionHistoryStore()
     private let captionSampleStore = CaptionSampleLibraryStore()
     private let trainingContributionStore = TrainingContributionStore()
+    private let shareCardTemplateStore = ShareCardTemplateStore()
     private let preferenceStore = UserPreferenceStore()
     private let recommendationEngine = RecommendationEngine()
     private let feedbackCollector = FeedbackCollector()
@@ -1737,7 +1738,11 @@ struct HomeView: View {
             let imageToShare: UIImage
             switch shareMode {
             case .captionCard:
-                imageToShare = shareCardRenderer.render(image: imageForHistory, caption: trimmedText)
+                imageToShare = shareCardRenderer.render(
+                    image: imageForHistory,
+                    caption: trimmedText,
+                    template: shareCardTemplateStore.load()
+                )
             case .photoWithCaption:
                 imageToShare = imageForHistory
             }

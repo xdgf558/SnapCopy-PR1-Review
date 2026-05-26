@@ -317,7 +317,12 @@ final class LocalCreativeImageRenderer {
 }
 
 final class ShareCardRenderer {
-    func render(image: UIImage, caption: String) -> UIImage {
+    func render(
+        image: UIImage,
+        caption: String,
+        template: ShareCardTemplate = ShareCardTemplateRepository().fallbackTemplate()
+    ) -> UIImage {
+        let palette = palette(for: template)
         let canvasWidth: CGFloat = 1080
         let horizontalPadding: CGFloat = 72
         let topPadding: CGFloat = 82
@@ -362,7 +367,7 @@ final class ShareCardRenderer {
         let renderer = UIGraphicsImageRenderer(size: canvasSize, format: format)
 
         return renderer.image { context in
-            drawBackground(in: context.cgContext, size: canvasSize)
+            drawBackground(in: context.cgContext, size: canvasSize, template: template, palette: palette)
 
             let photoFrame = CGRect(
                 x: horizontalPadding,
@@ -370,7 +375,7 @@ final class ShareCardRenderer {
                 width: contentWidth,
                 height: photoHeight
             )
-            drawPhoto(image, in: photoFrame)
+            drawPhoto(image, in: photoFrame, template: template)
 
             let panelFrame = CGRect(
                 x: horizontalPadding,
@@ -383,10 +388,12 @@ final class ShareCardRenderer {
                 in: panelFrame,
                 captionInset: captionInset,
                 fontSize: fontSize,
-                paragraphStyle: paragraphStyle
+                paragraphStyle: paragraphStyle,
+                template: template,
+                palette: palette
             )
 
-            drawBrand(at: CGPoint(x: canvasWidth / 2, y: panelFrame.maxY + 56))
+            drawBrand(at: CGPoint(x: canvasWidth / 2, y: panelFrame.maxY + 48), palette: palette)
         }
     }
 
@@ -409,12 +416,13 @@ final class ShareCardRenderer {
         return ceil(rect.height)
     }
 
-    private func drawBackground(in context: CGContext, size: CGSize) {
-        let colors = [
-            UIColor(red: 1.00, green: 0.96, blue: 0.97, alpha: 1),
-            UIColor(red: 0.96, green: 0.99, blue: 0.96, alpha: 1),
-            UIColor(red: 1.00, green: 0.94, blue: 0.92, alpha: 1)
-        ]
+    private func drawBackground(
+        in context: CGContext,
+        size: CGSize,
+        template: ShareCardTemplate,
+        palette: ShareCardPalette
+    ) {
+        let colors = palette.backgroundColors
 
         guard let gradient = CGGradient(
             colorsSpace: CGColorSpaceCreateDeviceRGB(),
@@ -426,22 +434,36 @@ final class ShareCardRenderer {
             return
         }
 
-        context.drawLinearGradient(
-            gradient,
-            start: CGPoint(x: 0, y: 0),
-            end: CGPoint(x: size.width, y: size.height),
-            options: []
-        )
+        switch template {
+        case .editorial:
+            context.drawLinearGradient(
+                gradient,
+                start: CGPoint(x: 0, y: 0),
+                end: CGPoint(x: size.width, y: 0),
+                options: []
+            )
+        case .softBlush, .cleanWhite:
+            context.drawLinearGradient(
+                gradient,
+                start: CGPoint(x: 0, y: 0),
+                end: CGPoint(x: size.width, y: size.height),
+                options: []
+            )
+        }
     }
 
-    private func drawPhoto(_ image: UIImage, in frame: CGRect) {
-        let shadowPath = UIBezierPath(roundedRect: frame, cornerRadius: 62)
-        UIColor.black.withAlphaComponent(0.08).setFill()
+    private func drawPhoto(_ image: UIImage, in frame: CGRect, template: ShareCardTemplate) {
+        let outerCorner: CGFloat = template == .editorial ? 36 : 62
+        let innerCorner: CGFloat = template == .editorial ? 30 : 58
+        let imageCorner: CGFloat = template == .editorial ? 24 : 42
+
+        let shadowPath = UIBezierPath(roundedRect: frame, cornerRadius: outerCorner)
+        UIColor.black.withAlphaComponent(template == .editorial ? 0.14 : 0.08).setFill()
         shadowPath.fill()
 
         let container = frame.insetBy(dx: 10, dy: 10)
         UIColor.white.withAlphaComponent(0.92).setFill()
-        UIBezierPath(roundedRect: container, cornerRadius: 58).fill()
+        UIBezierPath(roundedRect: container, cornerRadius: innerCorner).fill()
 
         let imageRect = aspectFitRect(for: image.size, in: container.insetBy(dx: 22, dy: 22))
         guard let context = UIGraphicsGetCurrentContext() else {
@@ -450,7 +472,7 @@ final class ShareCardRenderer {
         }
 
         context.saveGState()
-        UIBezierPath(roundedRect: imageRect, cornerRadius: 42).addClip()
+        UIBezierPath(roundedRect: imageRect, cornerRadius: imageCorner).addClip()
         image.draw(in: imageRect)
         context.restoreGState()
     }
@@ -460,16 +482,19 @@ final class ShareCardRenderer {
         in frame: CGRect,
         captionInset: CGFloat,
         fontSize: CGFloat,
-        paragraphStyle: NSParagraphStyle
+        paragraphStyle: NSParagraphStyle,
+        template: ShareCardTemplate,
+        palette: ShareCardPalette
     ) {
-        UIColor.white.withAlphaComponent(0.82).setFill()
-        UIBezierPath(roundedRect: frame, cornerRadius: 54).fill()
-        UIColor(red: 0.72, green: 0.25, blue: 0.38, alpha: 0.16).setStroke()
-        let borderPath = UIBezierPath(roundedRect: frame, cornerRadius: 54)
-        borderPath.lineWidth = 3
+        let corner: CGFloat = template == .editorial ? 38 : 54
+        palette.panelColor.setFill()
+        UIBezierPath(roundedRect: frame, cornerRadius: corner).fill()
+        palette.borderColor.setStroke()
+        let borderPath = UIBezierPath(roundedRect: frame, cornerRadius: corner)
+        borderPath.lineWidth = template == .editorial ? 2 : 3
         borderPath.stroke()
 
-        let markColor = UIColor(red: 0.72, green: 0.25, blue: 0.38, alpha: 0.72)
+        let markColor = palette.accentColor
         markColor.setFill()
         let quoteAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 54, weight: .bold),
@@ -488,7 +513,7 @@ final class ShareCardRenderer {
         )
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: fontSize, weight: .semibold),
-            .foregroundColor: UIColor(red: 0.16, green: 0.13, blue: 0.20, alpha: 1),
+            .foregroundColor: palette.textColor,
             .paragraphStyle: paragraphStyle
         ]
         (caption as NSString).draw(
@@ -499,17 +524,95 @@ final class ShareCardRenderer {
         )
     }
 
-    private func drawBrand(at point: CGPoint) {
+    private func drawBrand(at point: CGPoint, palette: ShareCardPalette) {
         let title = "SnapCopy"
+        let logoSize: CGFloat = 68
+        let spacing: CGFloat = 18
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 30, weight: .semibold),
-            .foregroundColor: UIColor(red: 0.72, green: 0.25, blue: 0.38, alpha: 0.62)
+            .foregroundColor: palette.brandColor
         ]
-        let size = (title as NSString).size(withAttributes: attributes)
+        let textSize = (title as NSString).size(withAttributes: attributes)
+        let totalWidth = logoSize + spacing + textSize.width
+        let logoFrame = CGRect(
+            x: point.x - totalWidth / 2,
+            y: point.y,
+            width: logoSize,
+            height: logoSize
+        )
+        drawLogo(in: logoFrame, borderColor: palette.borderColor)
         (title as NSString).draw(
-            at: CGPoint(x: point.x - size.width / 2, y: point.y),
+            at: CGPoint(
+                x: logoFrame.maxX + spacing,
+                y: point.y + (logoSize - textSize.height) / 2
+            ),
             withAttributes: attributes
         )
+    }
+
+    private func drawLogo(in frame: CGRect, borderColor: UIColor) {
+        let circlePath = UIBezierPath(ovalIn: frame)
+        UIColor.white.withAlphaComponent(0.94).setFill()
+        circlePath.fill()
+        borderColor.setStroke()
+        circlePath.lineWidth = 2
+        circlePath.stroke()
+
+        guard let logo = UIImage(named: "ShareCardLogo"),
+              let context = UIGraphicsGetCurrentContext()
+        else {
+            return
+        }
+
+        let imageRect = aspectFillRect(for: logo.size, in: frame.insetBy(dx: 4, dy: 4))
+        context.saveGState()
+        UIBezierPath(ovalIn: frame.insetBy(dx: 4, dy: 4)).addClip()
+        logo.draw(in: imageRect)
+        context.restoreGState()
+    }
+
+    private func palette(for template: ShareCardTemplate) -> ShareCardPalette {
+        switch template {
+        case .softBlush:
+            return ShareCardPalette(
+                backgroundColors: [
+                    UIColor(red: 1.00, green: 0.96, blue: 0.97, alpha: 1),
+                    UIColor(red: 0.96, green: 0.99, blue: 0.96, alpha: 1),
+                    UIColor(red: 1.00, green: 0.94, blue: 0.92, alpha: 1)
+                ],
+                panelColor: UIColor.white.withAlphaComponent(0.84),
+                borderColor: UIColor(red: 0.72, green: 0.25, blue: 0.38, alpha: 0.16),
+                accentColor: UIColor(red: 0.72, green: 0.25, blue: 0.38, alpha: 0.72),
+                textColor: UIColor(red: 0.16, green: 0.13, blue: 0.20, alpha: 1),
+                brandColor: UIColor(red: 0.72, green: 0.25, blue: 0.38, alpha: 0.72)
+            )
+        case .cleanWhite:
+            return ShareCardPalette(
+                backgroundColors: [
+                    UIColor(red: 0.99, green: 0.99, blue: 0.98, alpha: 1),
+                    UIColor(red: 0.95, green: 0.98, blue: 0.97, alpha: 1),
+                    UIColor(red: 0.98, green: 0.96, blue: 0.98, alpha: 1)
+                ],
+                panelColor: UIColor.white.withAlphaComponent(0.9),
+                borderColor: UIColor(red: 0.44, green: 0.55, blue: 0.50, alpha: 0.18),
+                accentColor: UIColor(red: 0.36, green: 0.50, blue: 0.45, alpha: 0.7),
+                textColor: UIColor(red: 0.13, green: 0.16, blue: 0.18, alpha: 1),
+                brandColor: UIColor(red: 0.36, green: 0.50, blue: 0.45, alpha: 0.72)
+            )
+        case .editorial:
+            return ShareCardPalette(
+                backgroundColors: [
+                    UIColor(red: 0.13, green: 0.11, blue: 0.14, alpha: 1),
+                    UIColor(red: 0.25, green: 0.18, blue: 0.22, alpha: 1),
+                    UIColor(red: 0.96, green: 0.92, blue: 0.87, alpha: 1)
+                ],
+                panelColor: UIColor(red: 0.98, green: 0.94, blue: 0.89, alpha: 0.96),
+                borderColor: UIColor(red: 0.93, green: 0.76, blue: 0.62, alpha: 0.34),
+                accentColor: UIColor(red: 0.68, green: 0.22, blue: 0.35, alpha: 0.74),
+                textColor: UIColor(red: 0.13, green: 0.10, blue: 0.13, alpha: 1),
+                brandColor: UIColor(red: 0.93, green: 0.76, blue: 0.62, alpha: 0.82)
+            )
+        }
     }
 
     private func aspectFitRect(for imageSize: CGSize, in bounds: CGRect) -> CGRect {
@@ -526,6 +629,30 @@ final class ShareCardRenderer {
             height: drawSize.height
         )
     }
+
+    private func aspectFillRect(for imageSize: CGSize, in bounds: CGRect) -> CGRect {
+        guard imageSize.width > 0, imageSize.height > 0 else {
+            return bounds
+        }
+
+        let scale = max(bounds.width / imageSize.width, bounds.height / imageSize.height)
+        let drawSize = CGSize(width: imageSize.width * scale, height: imageSize.height * scale)
+        return CGRect(
+            x: bounds.midX - drawSize.width / 2,
+            y: bounds.midY - drawSize.height / 2,
+            width: drawSize.width,
+            height: drawSize.height
+        )
+    }
+}
+
+private struct ShareCardPalette {
+    let backgroundColors: [UIColor]
+    let panelColor: UIColor
+    let borderColor: UIColor
+    let accentColor: UIColor
+    let textColor: UIColor
+    let brandColor: UIColor
 }
 
 protocol CloudCreativeImageGenerating {

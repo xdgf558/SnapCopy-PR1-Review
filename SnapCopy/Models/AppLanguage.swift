@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 测试阶段云端增强会临时同步 App 内开发者会员等级，Pro 可按后端 Pro 额度验证。
-            2. 后端仍保留分钟频率、每日真实 provider 上限和异常请求保护。
-            3. 后续接入 StoreKit 后，会员状态将改由后端校验并同步到客户端 UI。
+            1. 分享图文卡片已加入 SnapCopy 狗狗 Logo 和模板库。
+            2. TestFlight 用户固定为测试额度，云端增强每个版本 3 次。
+            3. 会员 Mock 仅保留在开发调试包中，测试用户不能自行切换 Plus / Pro。
             """
         case .english:
             return """
-            1. During beta testing, cloud enhancement temporarily mirrors the in-app developer entitlement so Pro can verify backend Pro quota.
-            2. Backend minute limits, daily real-provider caps, and abnormal request guards remain enabled.
-            3. After StoreKit is connected, entitlement state will be validated by the backend and synced back to the app UI.
+            1. Caption share cards now include the SnapCopy dog logo and template library.
+            2. TestFlight users use a fixed beta quota: 3 cloud enhancements per app version.
+            3. Membership mock controls stay in debug builds only, so testers cannot switch Plus / Pro.
             """
         case .japanese:
             return """
-            1. ベータテスト中は、クラウド強化が App 内の開発者向け会員状態を一時的に同期し、Pro のバックエンド回数を検証できます。
-            2. 分単位の制限、実 provider の日次上限、異常リクエスト保護は引き続き有効です。
-            3. StoreKit 接続後は、会員状態をバックエンドで検証し、App UI に同期します。
+            1. 文案共有カードに SnapCopy の犬ロゴとテンプレートライブラリを追加しました。
+            2. TestFlight ユーザーは固定のテスト枠になり、クラウド強化は各バージョン 3 回です。
+            3. 会員 Mock はデバッグビルド専用になり、テスターは Plus / Pro に切り替えられません。
             """
         case .traditionalChinese:
             return """
-            1. 測試階段雲端增強會暫時同步 App 內開發者會員等級，Pro 可按後端 Pro 額度驗證。
-            2. 後端仍保留分鐘頻率、每日真實 provider 上限和異常請求保護。
-            3. 後續接入 StoreKit 後，會員狀態將改由後端驗證並同步到客戶端 UI。
+            1. 分享圖文卡片已加入 SnapCopy 狗狗 Logo 和模板庫。
+            2. TestFlight 用戶固定為測試額度，雲端增強每個版本 3 次。
+            3. 會員 Mock 僅保留在開發調試包中，測試用戶不能自行切換 Plus / Pro。
             """
         }
     }
@@ -741,7 +741,7 @@ private extension AppLanguage {
         .basicEnhancement: [.simplifiedChinese: "基础图片美化", .english: "Basic photo enhancement", .japanese: "基本写真補正", .traditionalChinese: "基礎圖片美化"],
         .unlimited: [.simplifiedChinese: "不限", .english: "Unlimited", .japanese: "無制限", .traditionalChinese: "不限"],
         .resetUsage: [.simplifiedChinese: "重置今日用量", .english: "Reset today’s usage", .japanese: "本日の使用量をリセット", .traditionalChinese: "重置今日用量"],
-        .betaUsageNote: [.simplifiedChinese: "免费版每日 100 次生成；云端增强当前仅预留本地额度和请求结构，暂不接入外部 API。", .english: "Free includes 100 generations per day. Cloud enhancement currently only reserves local quota and request structure, with no external API connected.", .japanese: "Free は1日100回生成できます。クラウド強化はローカル回数とリクエスト構造のみ予約済みで、外部 API は未接続です。", .traditionalChinese: "免費版每日 100 次生成；雲端增強目前僅預留本地額度和請求結構，暫不接入外部 API。"],
+        .betaUsageNote: [.simplifiedChinese: "免费版每日 100 次本机生成；TestFlight 云端增强每个版本 3 次，新版本会重新计算。", .english: "Free includes 100 local generations per day. TestFlight cloud enhancement allows 3 uses per app version and resets on a new build.", .japanese: "Free はローカル生成が1日100回です。TestFlight のクラウド強化は各バージョン3回で、新しいビルドでリセットされます。", .traditionalChinese: "免費版每日 100 次本機生成；TestFlight 雲端增強每個版本 3 次，新版本會重新計算。"],
         .localAI: [.simplifiedChinese: "本机 AI", .english: "On-device AI", .japanese: "オンデバイス AI", .traditionalChinese: "本機 AI"],
         .currentStatus: [.simplifiedChinese: "当前状态", .english: "Status", .japanese: "現在の状態", .traditionalChinese: "目前狀態"],
         .preferenceLearning: [.simplifiedChinese: "偏好学习", .english: "Preference learning", .japanese: "好み学習", .traditionalChinese: "偏好學習"],

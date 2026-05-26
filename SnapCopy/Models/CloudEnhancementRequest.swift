@@ -60,6 +60,8 @@ struct CloudEnhancementRequest: Codable, Equatable {
     let appUserId: UUID
     let requestId: UUID
     let plan: EntitlementLevel
+    let clientAppVersion: String
+    let clientBuild: String
     let featureType: CloudEnhancementFeatureType
     let sceneJson: String
     let userPreferenceJson: String?
@@ -125,6 +127,8 @@ struct CloudEnhancementRequestBuilder {
         appUserId: UUID,
         requestId: UUID = UUID(),
         plan: EntitlementLevel,
+        clientAppVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0",
+        clientBuild: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1",
         featureType: CloudEnhancementFeatureType,
         sceneJson: String,
         userPreferenceJson: String? = nil,
@@ -136,6 +140,8 @@ struct CloudEnhancementRequestBuilder {
             appUserId: appUserId,
             requestId: requestId,
             plan: plan,
+            clientAppVersion: clientAppVersion,
+            clientBuild: clientBuild,
             featureType: featureType,
             sceneJson: sceneJson,
             userPreferenceJson: userPreferenceJson,

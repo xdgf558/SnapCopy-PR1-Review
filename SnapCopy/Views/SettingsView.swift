@@ -13,10 +13,13 @@ struct SettingsView: View {
     @State private var recognitionLogConfirmationMessage: String?
     @State private var recognitionLogSharePayload: SettingsSharePayload?
     @State private var contributionDecision: TrainingContributionDecision?
+    @State private var selectedShareCardTemplate: ShareCardTemplate = ShareCardTemplateRepository().fallbackTemplate()
 
     private let preferenceStore = UserPreferenceStore()
     private let recognitionMetricsLogger = ImageRecognitionMetricsLogger()
     private let trainingContributionStore = TrainingContributionStore()
+    private let shareCardTemplateStore = ShareCardTemplateStore()
+    private let shareCardTemplateRepository = ShareCardTemplateRepository()
     private let feedbackEmail = "yehao1105@gmail.com"
 
     var body: some View {
@@ -66,16 +69,18 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
             }
 
-            Section(uiLanguage.text(.membershipMock)) {
-                Picker(uiLanguage.text(.currentLevel), selection: $entitlementManager.level) {
-                    ForEach(EntitlementLevel.allCases) { level in
-                        Text(level.displayName).tag(level)
+            if entitlementManager.canUseMembershipMockControls {
+                Section(uiLanguage.text(.membershipMock)) {
+                    Picker(uiLanguage.text(.currentLevel), selection: $entitlementManager.level) {
+                        ForEach(EntitlementLevel.allCases) { level in
+                            Text(level.displayName).tag(level)
+                        }
                     }
-                }
 
-                Text(uiLanguage.entitlementDescription(entitlementManager.level))
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    Text(uiLanguage.entitlementDescription(entitlementManager.level))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
 
             Section(uiLanguage.text(.localAI)) {
@@ -92,6 +97,24 @@ struct SettingsView: View {
                 Text(uiLanguage.text(.proCloudFrameworkReady))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+            }
+
+            Section(localizedShareCardTemplateTitle) {
+                Picker(localizedShareCardTemplatePickerTitle, selection: $selectedShareCardTemplate) {
+                    ForEach(shareCardTemplateRepository.templates) { template in
+                        Text(template.displayName(language: uiLanguage)).tag(template)
+                    }
+                }
+
+                Text(selectedShareCardTemplate.description(language: uiLanguage))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(localizedShareCardTemplateNote)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Section(uiLanguage.text(.betaTestGuide)) {
@@ -196,6 +219,7 @@ struct SettingsView: View {
             selectedCaptionLanguage = preferenceStore.load().preferredCaptionLanguage
             selectedInterfaceLanguage = appLanguageManager.language
             contributionDecision = trainingContributionStore.loadGlobalDecision()
+            selectedShareCardTemplate = shareCardTemplateStore.load()
         }
         .onChange(of: selectedInterfaceLanguage) { language in
             feedbackConfirmationMessage = nil
@@ -203,6 +227,9 @@ struct SettingsView: View {
         }
         .onChange(of: selectedCaptionLanguage) { language in
             preferenceStore.updatePreferredCaptionLanguage(language)
+        }
+        .onChange(of: selectedShareCardTemplate) { template in
+            shareCardTemplateStore.save(template)
         }
     }
 
@@ -277,6 +304,45 @@ struct SettingsView: View {
     private func resetContributionDecision() {
         trainingContributionStore.clearGlobalDecision()
         contributionDecision = nil
+    }
+
+    private var localizedShareCardTemplateTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "分享图模板"
+        case .english:
+            "Share card template"
+        case .japanese:
+            "共有カードテンプレート"
+        case .traditionalChinese:
+            "分享圖模板"
+        }
+    }
+
+    private var localizedShareCardTemplatePickerTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "当前模板"
+        case .english:
+            "Current template"
+        case .japanese:
+            "現在のテンプレート"
+        case .traditionalChinese:
+            "目前模板"
+        }
+    }
+
+    private var localizedShareCardTemplateNote: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "分享为图文卡片时会使用该模板，并自动加入 SnapCopy 狗狗 Logo。后续可作为 Plus 模板库功能开放更多样式。"
+        case .english:
+            "Caption cards use this template and include the SnapCopy dog logo. More templates can later become a Plus template library."
+        case .japanese:
+            "文案カードにはこのテンプレートと SnapCopy の犬ロゴを使用します。今後、Plus 向けテンプレートライブラリとして拡張できます。"
+        case .traditionalChinese:
+            "分享為圖文卡片時會使用該模板，並自動加入 SnapCopy 狗狗 Logo。後續可作為 Plus 模板庫功能開放更多樣式。"
+        }
     }
 
     private var localizedContributionSettingsTitle: String {

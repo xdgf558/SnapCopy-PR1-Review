@@ -17,12 +17,25 @@ final class EntitlementManager: ObservableObject {
         self.defaults = defaults
         self.storageKey = storageKey
 
+        #if DEBUG
         if let rawValue = defaults.string(forKey: storageKey),
            let savedLevel = EntitlementLevel(rawValue: rawValue) {
             level = savedLevel
         } else {
             level = .free
         }
+        #else
+        level = .free
+        defaults.set(EntitlementLevel.free.rawValue, forKey: storageKey)
+        #endif
+    }
+
+    var canUseMembershipMockControls: Bool {
+        #if DEBUG
+        true
+        #else
+        false
+        #endif
     }
 
     var canUseAdvancedStyles: Bool {
@@ -42,6 +55,10 @@ final class EntitlementManager: ObservableObject {
     }
 
     private func saveLevel() {
+        #if DEBUG
         defaults.set(level.rawValue, forKey: storageKey)
+        #else
+        defaults.set(EntitlementLevel.free.rawValue, forKey: storageKey)
+        #endif
     }
 }

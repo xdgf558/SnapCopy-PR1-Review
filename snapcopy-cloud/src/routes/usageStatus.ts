@@ -21,7 +21,13 @@ export async function handleUsageStatus(request: Request, env: Env): Promise<Res
     env.ALLOW_CLIENT_PLAN_OVERRIDE === "true" ? requestedPlan : undefined,
     env.DEFAULT_PLAN ?? "beta"
   );
-  const response: UsageStatusResponse = await getUsageStatusFromStore(env, appUserId, plan);
+  const response: UsageStatusResponse = await getUsageStatusFromStore(
+    env,
+    appUserId,
+    plan,
+    url.searchParams.get("clientAppVersion") ?? undefined,
+    url.searchParams.get("clientBuild") ?? undefined
+  );
 
   return jsonResponse(response);
 }

@@ -36,12 +36,34 @@ type StrategyRow = {
 
 const cloudCaptionFeature = "captionDeepUnderstanding";
 
-function normalizeCloudCaptionFeature(featureType?: string): string {
-  if (!featureType || featureType === "cloudCaption") {
-    return cloudCaptionFeature;
+function normalizeCloudCaptionFeature(
+  featureType?: string,
+  plan?: Plan,
+  clientAppVersion?: string,
+  clientBuild?: string
+): string {
+  const baseFeature = !featureType || featureType === "cloudCaption" ? cloudCaptionFeature : featureType;
+  const buildKey = normalizedBuildKey(clientAppVersion, clientBuild);
+
+  if (plan === "beta" && buildKey) {
+    return `${baseFeature}:testBuild:${buildKey}`;
   }
 
-  return featureType;
+  return baseFeature;
+}
+
+function normalizedBuildKey(clientAppVersion?: string, clientBuild?: string): string | undefined {
+  if (!clientBuild) {
+    return undefined;
+  }
+
+  const version = (clientAppVersion ?? "unknown").replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 24);
+  const build = clientBuild.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 24);
+  if (!build) {
+    return undefined;
+  }
+
+  return `${version}_${build}`;
 }
 
 export function hasD1(env: D1Env): env is { DB: D1Database } {
@@ -51,9 +73,12 @@ export function hasD1(env: D1Env): env is { DB: D1Database } {
 export async function getUsageStatusFromStore(
   env: D1Env,
   appUserId: string,
-  plan: Plan
+  plan: Plan,
+  clientAppVersion?: string,
+  clientBuild?: string
 ): Promise<UsageStatusResponse> {
   const dailyLimit = dailyLimitForPlan(plan);
+  const featureType = normalizeCloudCaptionFeature(cloudCaptionFeature, plan, clientAppVersion, clientBuild);
 
   if (!hasD1(env)) {
     const usage = getUsage(appUserId);
@@ -73,7 +98,7 @@ export async function getUsageStatusFromStore(
     `SELECT used_count FROM daily_usage
      WHERE app_user_id = ? AND usage_date = ? AND feature_type = ?`
   )
-    .bind(appUserId, usageDate, cloudCaptionFeature)
+    .bind(appUserId, usageDate, featureType)
     .first<UsageRow>();
 
   const usedToday = row?.used_count ?? 0;
@@ -110,7 +135,7 @@ export async function consumeCloudCaptionQuota(
 
   const now = new Date();
   const usageDate = usageDateString(now);
-  const featureType = normalizeCloudCaptionFeature(input.featureType);
+  const featureType = normalizeCloudCaptionFeature(input.featureType, plan, input.clientAppVersion, input.clientBuild);
   const dailyLimit = dailyLimitForPlan(plan);
   await upsertAppUser(env.DB, input.appUserId, plan, now);
 

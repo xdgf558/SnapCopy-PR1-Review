@@ -3,6 +3,8 @@ export type Plan = "free" | "beta" | "plus" | "pro";
 export type CloudCaptionRequest = {
   appUserId: string;
   requestId: string;
+  clientAppVersion?: string;
+  clientBuild?: string;
   sceneJson: string;
   userPreferenceJson?: string | null;
   targetPlatform: string;
