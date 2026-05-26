@@ -17,6 +17,7 @@ struct HomeView: View {
     @State private var isGeneratingCaptions = false
     @State private var captionGenerationError: String?
     @State private var isCloudEnhancingCaptions = false
+    @State private var cloudEnhancementPhase: CloudEnhancementPhase = .idle
     @State private var cloudEnhancementError: String?
     @State private var cloudEnhancementStatusMessage: String?
     @State private var cloudBackendRemainingQuota: Int?
@@ -911,9 +912,11 @@ struct HomeView: View {
         if canShowCloudEnhancementEntry {
             VStack(alignment: .leading, spacing: 8) {
                 if isCloudEnhancingCaptions {
-                    ProgressView(localizedCloudEnhancingText)
-                        .font(.footnote)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    CloudEnhancementWaitingView(
+                        phase: cloudEnhancementPhase,
+                        language: uiLanguage
+                    )
+                    .transition(.opacity.combined(with: .scale(scale: 0.98)))
                 }
 
                 if let cloudEnhancementStatusMessage {
@@ -1558,6 +1561,17 @@ struct HomeView: View {
             return
         }
 
+        isCloudEnhancingCaptions = true
+        cloudEnhancementError = nil
+        cloudEnhancementStatusMessage = nil
+        updateCloudEnhancementPhase(.preparing)
+        defer {
+            withAnimation(.easeInOut(duration: 0.22)) {
+                isCloudEnhancingCaptions = false
+                cloudEnhancementPhase = .idle
+            }
+        }
+
         let generationContext = captionContext
         let preference = currentGenerationPreference
         let sceneJson = CaptionGenerationPromptBuilder()
@@ -1568,6 +1582,7 @@ struct HomeView: View {
             encoding: .utf8
         )
         let cloudRequestID = UUID()
+        updateCloudEnhancementPhase(.understandingPhoto)
         let cloudSceneEnhancement = await cloudEnhancedSceneJson(
             baseSceneJson: sceneJson,
             preferenceJson: preferenceJson,
@@ -1586,11 +1601,8 @@ struct HomeView: View {
             targetPlatform: selectedPlatform
         )
 
-        isCloudEnhancingCaptions = true
-        cloudEnhancementError = nil
-        cloudEnhancementStatusMessage = nil
-
         do {
+            updateCloudEnhancementPhase(.writingCaptions)
             let response = try await cloudEnhancementService.enhanceCaptions(request: request)
             let cloudCandidates = makeCloudCandidates(from: response, context: generationContext)
 
@@ -1598,6 +1610,7 @@ struct HomeView: View {
                 throw CloudEnhancementError.invalidResponse
             }
 
+            updateCloudEnhancementPhase(.arrangingResults)
             let recommendationResult = recommendationEngine.recommend(
                 candidates: cloudCandidates,
                 context: generationContext,
@@ -1635,8 +1648,12 @@ struct HomeView: View {
             cloudEnhancementError = localizedCloudEnhanceFailedText
             #endif
         }
+    }
 
-        isCloudEnhancingCaptions = false
+    private func updateCloudEnhancementPhase(_ phase: CloudEnhancementPhase) {
+        withAnimation(.easeInOut(duration: 0.24)) {
+            cloudEnhancementPhase = phase
+        }
     }
 
     @MainActor
@@ -2658,6 +2675,210 @@ private struct CloudVisionImagePayload {
 private struct CloudSceneEnhancementResult {
     let sceneJson: String
     let captionRequestID: UUID
+}
+
+private enum CloudEnhancementPhase: CaseIterable {
+    case idle
+    case preparing
+    case understandingPhoto
+    case writingCaptions
+    case arrangingResults
+
+    static var activeSteps: [CloudEnhancementPhase] {
+        [.preparing, .understandingPhoto, .writingCaptions, .arrangingResults]
+    }
+
+    var stepIndex: Int {
+        Self.activeSteps.firstIndex(of: self) ?? 0
+    }
+
+    func title(for language: AppLanguage) -> String {
+        switch (language, self) {
+        case (_, .idle):
+            return ""
+        case (.simplifiedChinese, .preparing):
+            return "准备云端增强"
+        case (.english, .preparing):
+            return "Preparing cloud enhancement"
+        case (.japanese, .preparing):
+            return "クラウド強化を準備中"
+        case (.traditionalChinese, .preparing):
+            return "準備雲端增強"
+        case (.simplifiedChinese, .understandingPhoto):
+            return "正在理解照片"
+        case (.english, .understandingPhoto):
+            return "Understanding the photo"
+        case (.japanese, .understandingPhoto):
+            return "写真を理解しています"
+        case (.traditionalChinese, .understandingPhoto):
+            return "正在理解照片"
+        case (.simplifiedChinese, .writingCaptions):
+            return "正在润色文案"
+        case (.english, .writingCaptions):
+            return "Polishing captions"
+        case (.japanese, .writingCaptions):
+            return "文案を磨いています"
+        case (.traditionalChinese, .writingCaptions):
+            return "正在潤色文案"
+        case (.simplifiedChinese, .arrangingResults):
+            return "正在整理结果"
+        case (.english, .arrangingResults):
+            return "Arranging the results"
+        case (.japanese, .arrangingResults):
+            return "結果を整えています"
+        case (.traditionalChinese, .arrangingResults):
+            return "正在整理結果"
+        }
+    }
+
+    func detail(for language: AppLanguage) -> String {
+        switch (language, self) {
+        case (_, .idle):
+            return ""
+        case (.simplifiedChinese, .preparing):
+            return "把照片线索和你的偏好先整理好。"
+        case (.english, .preparing):
+            return "Gathering photo cues and your preferences first."
+        case (.japanese, .preparing):
+            return "写真の手がかりと好みを整理しています。"
+        case (.traditionalChinese, .preparing):
+            return "先整理照片線索和你的偏好。"
+        case (.simplifiedChinese, .understandingPhoto):
+            return "看清主体、光线和氛围，不急着下结论。"
+        case (.english, .understandingPhoto):
+            return "Reading the subject, light, and mood before writing."
+        case (.japanese, .understandingPhoto):
+            return "被写体、光、雰囲気を丁寧に読み取っています。"
+        case (.traditionalChinese, .understandingPhoto):
+            return "看清主體、光線和氛圍，不急著下結論。"
+        case (.simplifiedChinese, .writingCaptions):
+            return "把画面细节写进更自然的表达里。"
+        case (.english, .writingCaptions):
+            return "Turning the image details into natural wording."
+        case (.japanese, .writingCaptions):
+            return "画面の細部を自然な言葉にしています。"
+        case (.traditionalChinese, .writingCaptions):
+            return "把畫面細節寫進更自然的表達裡。"
+        case (.simplifiedChinese, .arrangingResults):
+            return "把更贴图的选项排在前面，马上就好。"
+        case (.english, .arrangingResults):
+            return "Putting the most fitting options first."
+        case (.japanese, .arrangingResults):
+            return "写真に合う候補を前に並べています。"
+        case (.traditionalChinese, .arrangingResults):
+            return "把更貼圖的選項排在前面，馬上就好。"
+        }
+    }
+
+    static func comfortText(for language: AppLanguage) -> String {
+        switch language {
+        case .simplifiedChinese:
+            return "通常需要 10–30 秒，可以先放松一下。"
+        case .english:
+            return "This usually takes 10-30 seconds. You can relax for a moment."
+        case .japanese:
+            return "通常 10〜30 秒ほどかかります。少しだけお待ちください。"
+        case .traditionalChinese:
+            return "通常需要 10–30 秒，可以先放鬆一下。"
+        }
+    }
+}
+
+private struct CloudEnhancementWaitingView: View {
+    let phase: CloudEnhancementPhase
+    let language: AppLanguage
+
+    @State private var isBreathing = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(SnapCopyTheme.rose.opacity(0.12))
+
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 21, weight: .bold))
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(SnapCopyTheme.rose)
+                        .scaleEffect(isBreathing ? 1.08 : 0.94)
+                        .opacity(isBreathing ? 1 : 0.72)
+                }
+                .frame(width: 44, height: 44)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(.white.opacity(0.74), lineWidth: 1)
+                }
+                .shadow(color: SnapCopyTheme.rose.opacity(isBreathing ? 0.20 : 0.08), radius: isBreathing ? 14 : 6, y: 6)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(phase.title(for: language))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(SnapCopyTheme.primaryText)
+
+                    Text(phase.detail(for: language))
+                        .font(.caption)
+                        .foregroundStyle(SnapCopyTheme.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            HStack(spacing: 6) {
+                ForEach(Array(CloudEnhancementPhase.activeSteps.enumerated()), id: \.element) { index, step in
+                    Capsule()
+                        .fill(progressColor(for: index))
+                        .frame(height: 7)
+                        .overlay(alignment: .leading) {
+                            if step == phase {
+                                Capsule()
+                                    .fill(.white.opacity(0.52))
+                                    .frame(width: isBreathing ? 42 : 16, height: 3)
+                                    .padding(.horizontal, 3)
+                            }
+                        }
+                        .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: isBreathing)
+                }
+            }
+            .accessibilityHidden(true)
+
+            Text(CloudEnhancementPhase.comfortText(for: language))
+                .font(.caption2.weight(.medium))
+                .foregroundStyle(SnapCopyTheme.secondaryText)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(.white.opacity(0.48), in: Capsule())
+        }
+        .padding(12)
+        .background {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(.ultraThinMaterial)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .fill(SnapCopyTheme.glassHighlight.opacity(0.45))
+                }
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(.white.opacity(0.68), lineWidth: 1)
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 1.05).repeatForever(autoreverses: true)) {
+                isBreathing = true
+            }
+        }
+    }
+
+    private func progressColor(for index: Int) -> Color {
+        if index < phase.stepIndex {
+            return SnapCopyTheme.rose.opacity(0.72)
+        }
+
+        if index == phase.stepIndex {
+            return SnapCopyTheme.rose.opacity(0.48)
+        }
+
+        return SnapCopyTheme.hairline.opacity(0.86)
+    }
 }
 
 private struct CaptionShareDraft: Identifiable {

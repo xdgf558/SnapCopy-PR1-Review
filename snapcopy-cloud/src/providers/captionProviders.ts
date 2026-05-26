@@ -51,6 +51,8 @@ type QwenResponse = {
 
 type DeepSeekResponse = QwenResponse;
 
+const CAPTION_PROVIDER_TIMEOUT_MS = 32_000;
+
 export class CaptionProviderError extends Error {
   constructor(
     message: string,
@@ -123,28 +125,30 @@ async function generateGeminiCaptions(
 ): Promise<CloudCaptionResponse> {
   const model = modelForProvider("gemini", env).replace(/^models\//, "");
   const prompt = buildCaptionProviderPrompt(input, activeStrategy);
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-goog-api-key": env.GEMINI_API_KEY ?? ""
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [{ text: prompt }]
+  const { response, json } = await fetchCaptionProviderJson<GeminiResponse>(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": env.GEMINI_API_KEY ?? ""
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.85,
+          topP: 0.9,
+          maxOutputTokens: 1200,
+          responseMimeType: "application/json"
         }
-      ],
-      generationConfig: {
-        temperature: 0.85,
-        topP: 0.9,
-        maxOutputTokens: 1200,
-        responseMimeType: "application/json"
-      }
-    })
-  });
-
-  const json = await response.json<GeminiResponse>();
+      })
+    },
+    "Gemini"
+  );
   if (!response.ok) {
     throw new CaptionProviderError(providerErrorMessage("Gemini", response.status, json.error?.message), 502);
   }
@@ -171,33 +175,35 @@ async function generateDeepSeekCaptions(
   const model = modelForProvider("deepseek", env);
   const baseUrl = (env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com").replace(/\/+$/, "");
   const prompt = buildCaptionProviderPrompt(input, activeStrategy);
-  const response = await fetch(`${baseUrl}/v1/chat/completions`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.DEEPSEEK_API_KEY ?? ""}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        {
-          role: "system",
-          content: "You write polished, specific, adult social captions. Return strict JSON only."
-        },
-        {
-          role: "user",
-          content: prompt
+  const { response, json } = await fetchCaptionProviderJson<DeepSeekResponse>(
+    `${baseUrl}/v1/chat/completions`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.DEEPSEEK_API_KEY ?? ""}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content: "You write polished, specific, adult social captions. Return strict JSON only."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.8,
+        max_tokens: 1200,
+        response_format: {
+          type: "json_object"
         }
-      ],
-      temperature: 0.8,
-      max_tokens: 1200,
-      response_format: {
-        type: "json_object"
-      }
-    })
-  });
-
-  const json = await response.json<DeepSeekResponse>();
+      })
+    },
+    "DeepSeek"
+  );
   if (!response.ok) {
     throw new CaptionProviderError(providerErrorMessage("DeepSeek", response.status, json.error?.message), 502);
   }
@@ -224,30 +230,32 @@ async function generateQwenCaptions(
   const model = modelForProvider("qwen", env);
   const baseUrl = (env.QWEN_BASE_URL ?? "https://dashscope-intl.aliyuncs.com/compatible-mode/v1").replace(/\/+$/, "");
   const prompt = buildCaptionProviderPrompt(input, activeStrategy);
-  const response = await fetch(`${baseUrl}/chat/completions`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.DASHSCOPE_API_KEY ?? env.QWEN_API_KEY ?? ""}`,
-      "Content-Type": "application/json"
+  const { response, json } = await fetchCaptionProviderJson<QwenResponse>(
+    `${baseUrl}/chat/completions`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.DASHSCOPE_API_KEY ?? env.QWEN_API_KEY ?? ""}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content: "You write polished, specific, adult social captions. Return strict JSON only."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.85,
+        max_tokens: 1200
+      })
     },
-    body: JSON.stringify({
-      model,
-      messages: [
-        {
-          role: "system",
-          content: "You write polished, specific, adult social captions. Return strict JSON only."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.85,
-      max_tokens: 1200
-    })
-  });
-
-  const json = await response.json<QwenResponse>();
+    "Qwen"
+  );
   if (!response.ok) {
     throw new CaptionProviderError(providerErrorMessage("Qwen", response.status, json.error?.message), 502);
   }
@@ -264,6 +272,36 @@ async function generateQwenCaptions(
     estimatedCost: null,
     remainingQuota: 0
   };
+}
+
+async function fetchCaptionProviderJson<T extends { error?: { message?: string } }>(
+  url: string,
+  init: RequestInit,
+  displayName: string
+): Promise<{ response: Response; json: T }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), CAPTION_PROVIDER_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      ...init,
+      signal: controller.signal
+    });
+    const json = (await response.json().catch(() => ({}))) as T;
+    return { response, json };
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new CaptionProviderError(
+        `${displayName} caption enhancement timed out after ${Math.round(CAPTION_PROVIDER_TIMEOUT_MS / 1000)} seconds.`,
+        504
+      );
+    }
+
+    const message = error instanceof Error ? error.message : "unknown network error";
+    throw new CaptionProviderError(`${displayName} caption enhancement request failed: ${message}`, 502);
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function parseCaptionsOrThrow(text: string, providerLabel: string): string[] {

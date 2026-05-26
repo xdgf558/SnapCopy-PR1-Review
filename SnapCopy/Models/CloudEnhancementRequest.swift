@@ -42,7 +42,7 @@ struct CloudEnhancementConfig: Codable, Equatable {
         enabled: true,
         provider: .mock,
         endpoint: URL(string: "https://snapcopy-cloud-api.yehao1105.workers.dev"),
-        timeoutSeconds: 35,
+        timeoutSeconds: 55,
         maxImageUploadBytes: 1_500_000,
         privacyNoticeRequired: true
     )

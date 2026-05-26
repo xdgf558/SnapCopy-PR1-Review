@@ -633,26 +633,26 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 云端图片理解 provider 新增 PPQ，可通过后端配置切换。
-            2. PPQ、GLM 和 mock 图片理解走同一套可替换接口。
+            1. 云端增强新增分阶段等待动画，显示理解照片、润色文案和整理结果。
+            2. 后端为图片理解和文案增强增加超时保护，异常时会退还额度。
             3. 图片理解额度不足或失败时，会自动继续做文字增强。
             """
         case .english:
             return """
-            1. Cloud image understanding now supports PPQ as a replaceable backend provider.
-            2. PPQ, GLM, and mock vision share the same provider interface.
+            1. Cloud enhancement now shows a staged waiting animation for photo understanding, caption polishing, and result ranking.
+            2. Backend provider timeouts now protect image understanding and caption enhancement, with quota refunds on failure.
             3. If image understanding is unavailable or out of quota, text enhancement still continues.
             """
         case .japanese:
             return """
-            1. クラウド画像理解 provider に PPQ を追加し、後端設定で切り替え可能にしました。
-            2. PPQ、GLM、mock の画像理解は同じ provider インターフェースで動きます。
+            1. クラウド強化に段階表示の待機アニメーションを追加しました。
+            2. 画像理解と文案強化に後端タイムアウト保護を追加し、失敗時は回数を戻します。
             3. 画像理解が使えない場合や回数不足でも、テキスト強化は続行します。
             """
         case .traditionalChinese:
             return """
-            1. 雲端圖片理解 provider 新增 PPQ，可透過後端配置切換。
-            2. PPQ、GLM 和 mock 圖片理解走同一套可替換介面。
+            1. 雲端增強新增分階段等待動畫，顯示理解照片、潤色文案和整理結果。
+            2. 後端為圖片理解和文案增強增加超時保護，異常時會退還額度。
             3. 圖片理解額度不足或失敗時，會自動繼續做文字增強。
             """
         }

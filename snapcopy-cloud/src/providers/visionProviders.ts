@@ -29,6 +29,8 @@ type OpenAICompatibleVisionResponse = {
 
 type RawVisionUnderstanding = Partial<CloudVisionUnderstanding>;
 
+const VISION_PROVIDER_TIMEOUT_MS = 28_000;
+
 const allowedScenes = new Set([
   "breakfast",
   "cafe",
@@ -119,45 +121,48 @@ async function generateOpenAICompatibleVisionUnderstanding(
 
   const baseUrl = config.baseUrl.replace(/\/+$/, "");
   const prompt = buildVisionPrompt(input);
-  const response = await fetch(`${baseUrl}/chat/completions`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${config.apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: config.model,
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are SnapCopy's cloud image-understanding engine. Return strict JSON only. Do not write captions."
-        },
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: prompt
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: `data:${input.imageMimeType};base64,${input.imageBase64}`
+  const { response, json } = await fetchOpenAICompatibleVisionJson(
+    `${baseUrl}/chat/completions`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: config.model,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are SnapCopy's cloud image-understanding engine. Return strict JSON only. Do not write captions."
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: prompt
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:${input.imageMimeType};base64,${input.imageBase64}`
+                }
               }
-            }
-          ]
+            ]
+          }
+        ],
+        temperature: 0.2,
+        max_tokens: 900,
+        response_format: {
+          type: "json_object"
         }
-      ],
-      temperature: 0.2,
-      max_tokens: 900,
-      response_format: {
-        type: "json_object"
-      }
-    })
-  });
+      })
+    },
+    config.displayName
+  );
 
-  const json = await response.json<OpenAICompatibleVisionResponse>();
   if (!response.ok) {
     throw new VisionProviderError(providerErrorMessage(config.displayName, response.status, json.error?.message), 502);
   }
@@ -175,6 +180,36 @@ async function generateOpenAICompatibleVisionUnderstanding(
     estimatedCost: null,
     remainingQuota: 0
   };
+}
+
+async function fetchOpenAICompatibleVisionJson(
+  url: string,
+  init: RequestInit,
+  displayName: string
+): Promise<{ response: Response; json: OpenAICompatibleVisionResponse }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), VISION_PROVIDER_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      ...init,
+      signal: controller.signal
+    });
+    const json = (await response.json().catch(() => ({}))) as OpenAICompatibleVisionResponse;
+    return { response, json };
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new VisionProviderError(
+        `${displayName} image understanding timed out after ${Math.round(VISION_PROVIDER_TIMEOUT_MS / 1000)} seconds.`,
+        504
+      );
+    }
+
+    const message = error instanceof Error ? error.message : "unknown network error";
+    throw new VisionProviderError(`${displayName} image understanding request failed: ${message}`, 502);
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function makeMockVisionResponse(
