@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 分享图文卡片已加入 SnapCopy 狗狗 Logo 和模板库。
+            1. 云端文案增强等待时间延长，减少真实模型响应较慢时的误超时。
             2. TestFlight 用户固定为测试额度，云端增强每个版本 3 次。
-            3. 会员 Mock 仅保留在开发调试包中，测试用户不能自行切换 Plus / Pro。
+            3. 分享图文卡片已加入 SnapCopy 狗狗 Logo 和模板库。
             """
         case .english:
             return """
-            1. Caption share cards now include the SnapCopy dog logo and template library.
+            1. Cloud caption enhancement now waits longer to avoid false timeouts from slower real-model responses.
             2. TestFlight users use a fixed beta quota: 3 cloud enhancements per app version.
-            3. Membership mock controls stay in debug builds only, so testers cannot switch Plus / Pro.
+            3. Caption share cards now include the SnapCopy dog logo and template library.
             """
         case .japanese:
             return """
-            1. 文案共有カードに SnapCopy の犬ロゴとテンプレートライブラリを追加しました。
+            1. 実モデルの応答が遅い場合の誤タイムアウトを減らすため、クラウド文案強化の待機時間を延長しました。
             2. TestFlight ユーザーは固定のテスト枠になり、クラウド強化は各バージョン 3 回です。
-            3. 会員 Mock はデバッグビルド専用になり、テスターは Plus / Pro に切り替えられません。
+            3. 文案共有カードに SnapCopy の犬ロゴとテンプレートライブラリを追加しました。
             """
         case .traditionalChinese:
             return """
-            1. 分享圖文卡片已加入 SnapCopy 狗狗 Logo 和模板庫。
+            1. 雲端文案增強等待時間延長，減少真實模型回應較慢時的誤超時。
             2. TestFlight 用戶固定為測試額度，雲端增強每個版本 3 次。
-            3. 會員 Mock 僅保留在開發調試包中，測試用戶不能自行切換 Plus / Pro。
+            3. 分享圖文卡片已加入 SnapCopy 狗狗 Logo 和模板庫。
             """
         }
     }
