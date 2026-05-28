@@ -942,7 +942,7 @@ struct HomeView: View {
 
                 Button {
                     Task {
-                        await enhanceCaptionsWithCloud()
+                        await handleCloudEnhancementButtonTap()
                     }
                 } label: {
                     Label(localizedCloudEnhanceButtonText, systemImage: "sparkles.rectangle.stack")
@@ -991,6 +991,23 @@ struct HomeView: View {
 
     private var canShowCloudEnhancementEntry: Bool {
         CloudFeatureFlags.cloudEnhancedCaptions && cloudEnhancementService.isEnabled
+    }
+
+    private var isCloudEnhancementEnabled: Bool {
+        CloudFeatureFlags.cloudEnhancementEnabled
+    }
+
+    private var localizedCloudEnhancementBusyText: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return "云端增强暂时繁忙"
+        case .english:
+            return "Cloud enhancement is temporarily busy"
+        case .japanese:
+            return "クラウド強化は一時的に混み合っています"
+        case .traditionalChinese:
+            return "雲端增強暫時繁忙"
+        }
     }
 
     private var localizedCloudEnhanceQuotaText: String {
@@ -1546,8 +1563,25 @@ struct HomeView: View {
     }
 
     @MainActor
+    private func handleCloudEnhancementButtonTap() async {
+        guard isCloudEnhancementEnabled else {
+            cloudEnhancementStatusMessage = nil
+            cloudEnhancementError = localizedCloudEnhancementBusyText
+            return
+        }
+
+        await enhanceCaptionsWithCloud()
+    }
+
+    @MainActor
     private func enhanceCaptionsWithCloud() async {
         guard !isCloudEnhancingCaptions else {
+            return
+        }
+
+        guard isCloudEnhancementEnabled else {
+            cloudEnhancementStatusMessage = nil
+            cloudEnhancementError = localizedCloudEnhancementBusyText
             return
         }
 
