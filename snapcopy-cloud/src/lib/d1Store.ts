@@ -5,10 +5,13 @@ import type {
   CloudVisionRequest,
   ContributionStorageMode,
   Plan,
+  SceneRecognitionRecordRequest,
   TrainingContributionConsentRequest,
   TrainingContributionSampleRequest,
+  UserFeedbackRecordRequest,
   UsageStatusResponse
 } from "../types/api";
+import type { TrainingImageStorageResult } from "./r2Store";
 
 export type D1Env = {
   DB?: D1Database;
@@ -345,22 +348,35 @@ export async function recordContributionConsent(
 
 export async function recordContributionSample(
   env: D1Env,
-  input: TrainingContributionSampleRequest
+  input: TrainingContributionSampleRequest,
+  imageStorage?: TrainingImageStorageResult
 ): Promise<ContributionStorageMode> {
   if (!hasD1(env)) {
     return "metadata-only-mock";
   }
 
   const receivedAt = new Date();
+  const storage = imageStorage ?? {
+    storageMode: "d1-metadata-only" as const,
+    objectKey: null,
+    mimeType: null,
+    width: input.imageWidth ?? null,
+    height: input.imageHeight ?? null,
+    byteSize: null,
+    sha256: input.imageSha256 ?? null,
+    privacyRedactionStatus: "metadata_only"
+  };
   await upsertAppUser(env.DB, input.appUserId, "beta", receivedAt);
   await env.DB.prepare(
     `INSERT INTO training_contribution_samples (
        sample_id, app_user_id, consent_id, kind, source, privacy_policy_version,
        locale, target_platform, scene, scene_confidence, scene_tags_json,
        scene_json, caption_text, caption_was_edited, image_upload_enabled,
-       original_photo_retention, notes, created_at, received_at
+       original_photo_retention, notes, created_at, received_at, review_status,
+       r2_object_key, image_mime_type, image_width, image_height, image_byte_size,
+       image_sha256, privacy_redaction_status
      )
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(sample_id)
      DO NOTHING`
   )
@@ -383,11 +399,96 @@ export async function recordContributionSample(
       input.originalPhotoRetention,
       input.notes ?? null,
       input.createdAt,
-      receivedAt.toISOString()
+      receivedAt.toISOString(),
+      "pending",
+      storage.objectKey,
+      storage.mimeType,
+      storage.width,
+      storage.height,
+      storage.byteSize,
+      storage.sha256,
+      storage.privacyRedactionStatus
     )
     .run();
 
-  return "d1-metadata-only";
+  return storage.storageMode;
+}
+
+export async function recordSceneRecognition(
+  env: D1Env,
+  input: SceneRecognitionRecordRequest
+): Promise<"d1" | "disabled"> {
+  if (!hasD1(env)) {
+    return "disabled";
+  }
+
+  await upsertAppUser(env.DB, input.appUserId, "beta", new Date());
+  await env.DB.prepare(
+    `INSERT INTO scene_recognition_records (
+       record_id, app_user_id, sample_id, request_id, source, predicted_scene,
+       top3_scenes_json, user_selected_scene, was_user_correction_needed,
+       confidence, scene_json, latency_ms, image_width, image_height, created_at
+     )
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(record_id)
+     DO NOTHING`
+  )
+    .bind(
+      input.recordId,
+      input.appUserId,
+      input.sampleId ?? null,
+      input.requestId ?? null,
+      input.source,
+      input.predictedScene ?? null,
+      JSON.stringify(input.top3Scenes ?? []),
+      input.userSelectedScene ?? null,
+      input.wasUserCorrectionNeeded ? 1 : 0,
+      input.confidence ?? null,
+      input.sceneJson ?? null,
+      input.latencyMs ?? null,
+      input.imageWidth ?? null,
+      input.imageHeight ?? null,
+      input.createdAt
+    )
+    .run();
+
+  return "d1";
+}
+
+export async function recordUserFeedback(
+  env: D1Env,
+  input: UserFeedbackRecordRequest
+): Promise<"d1" | "disabled"> {
+  if (!hasD1(env)) {
+    return "disabled";
+  }
+
+  await upsertAppUser(env.DB, input.appUserId, "beta", new Date());
+  await env.DB.prepare(
+    `INSERT INTO user_feedback_records (
+       feedback_id, app_user_id, sample_id, caption_text_hash, action,
+       reward_score, scene, locale, target_platform, metadata_json, created_at
+     )
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(feedback_id)
+     DO NOTHING`
+  )
+    .bind(
+      input.feedbackId,
+      input.appUserId,
+      input.sampleId ?? null,
+      input.captionTextHash ?? null,
+      input.action,
+      input.rewardScore ?? rewardScoreForFeedback(input),
+      input.scene ?? null,
+      input.locale ?? null,
+      input.targetPlatform ?? null,
+      JSON.stringify(input.metadata ?? {}),
+      input.createdAt
+    )
+    .run();
+
+  return "d1";
 }
 
 export async function loadActiveCaptionStrategy(
@@ -525,6 +626,31 @@ function extractSceneFromSceneJson(sceneJson: string): string {
   }
 
   return "unknown";
+}
+
+function rewardScoreForFeedback(input: UserFeedbackRecordRequest): number | null {
+  if (input.action === "rating" && input.rating) {
+    const ratingReward: Record<number, number> = {
+      1: -1,
+      2: -0.4,
+      3: 0.1,
+      4: 0.6,
+      5: 1
+    };
+    return ratingReward[input.rating] ?? null;
+  }
+
+  const actionReward: Record<UserFeedbackRecordRequest["action"], number | null> = {
+    rating: null,
+    copyCaption: 0.7,
+    shareCaption: 0.9,
+    saveCaption: 0.6,
+    regenerate: -0.4,
+    deleteCaption: -0.6,
+    markExternalGoodFeedback: 1.2
+  };
+
+  return actionReward[input.action] ?? null;
 }
 
 type CloudRequestLogMeta = {

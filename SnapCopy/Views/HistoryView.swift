@@ -9,6 +9,7 @@ struct HistoryView: View {
     @State private var sharePayload: HistorySharePayload?
     @State private var confirmationMessage: String?
     @State private var confirmationID = UUID()
+    @State private var isClearHistoryConfirmationPresented = false
 
     private let historyStore = CaptionHistoryStore()
 
@@ -53,8 +54,33 @@ struct HistoryView: View {
         .navigationTitle(uiLanguage.text(.historyAndFavorites))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if hasClearableHistory {
+                    Button(role: .destructive) {
+                        isClearHistoryConfirmationPresented = true
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .accessibilityLabel(localizedClearHistoryTitle)
+                }
+            }
+        }
         .sheet(item: $sharePayload) { payload in
             ShareSheet(activityItems: payload.activityItems, onComplete: nil)
+        }
+        .confirmationDialog(
+            localizedClearHistoryTitle,
+            isPresented: $isClearHistoryConfirmationPresented,
+            titleVisibility: .visible
+        ) {
+            Button(localizedClearHistoryConfirmTitle, role: .destructive) {
+                clearUnfavoritedHistory()
+            }
+
+            Button(uiLanguage.text(.cancel), role: .cancel) {}
+        } message: {
+            Text(localizedClearHistoryConfirmationMessage)
         }
         .overlay(alignment: .bottom) {
             if let confirmationMessage {
@@ -75,6 +101,10 @@ struct HistoryView: View {
 
     private var uiLanguage: AppLanguage {
         appLanguageManager.language
+    }
+
+    private var hasClearableHistory: Bool {
+        items.contains { !$0.isFavorite }
     }
 
     private var filteredItems: [CaptionHistoryItem] {
@@ -122,6 +152,14 @@ struct HistoryView: View {
         }
     }
 
+    private func clearUnfavoritedHistory() {
+        withAnimation(.easeInOut(duration: 0.18)) {
+            let deletedCount = historyStore.deleteHistoryItems(keepFavorites: true)
+            reload()
+            showTransientMessage(localizedHistoryClearedMessage(deletedCount: deletedCount))
+        }
+    }
+
     private func title(for filter: HistoryFilter) -> String {
         switch filter {
         case .all:
@@ -141,6 +179,58 @@ struct HistoryView: View {
             if confirmationID == id {
                 confirmationMessage = nil
             }
+        }
+    }
+
+    private var localizedClearHistoryTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "清空未收藏历史"
+        case .english:
+            "Clear unfavorited history"
+        case .japanese:
+            "未收藏の履歴を消去"
+        case .traditionalChinese:
+            "清空未收藏歷史"
+        }
+    }
+
+    private var localizedClearHistoryConfirmTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "确认清空"
+        case .english:
+            "Clear"
+        case .japanese:
+            "消去"
+        case .traditionalChinese:
+            "確認清空"
+        }
+    }
+
+    private var localizedClearHistoryConfirmationMessage: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "这会删除所有未收藏的历史记录，收藏内容会保留。"
+        case .english:
+            "This removes all unfavorited history. Favorites will be kept."
+        case .japanese:
+            "お気に入り以外の履歴をすべて削除します。お気に入りは残ります。"
+        case .traditionalChinese:
+            "這會刪除所有未收藏的歷史記錄，收藏內容會保留。"
+        }
+    }
+
+    private func localizedHistoryClearedMessage(deletedCount: Int) -> String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            deletedCount > 0 ? "已删除 \(deletedCount) 条未收藏历史。" : "没有可删除的未收藏历史。"
+        case .english:
+            deletedCount > 0 ? "Deleted \(deletedCount) unfavorited history items." : "No unfavorited history to delete."
+        case .japanese:
+            deletedCount > 0 ? "未收藏の履歴を \(deletedCount) 件削除しました。" : "削除できる未收藏の履歴はありません。"
+        case .traditionalChinese:
+            deletedCount > 0 ? "已刪除 \(deletedCount) 條未收藏歷史。" : "沒有可刪除的未收藏歷史。"
         }
     }
 }

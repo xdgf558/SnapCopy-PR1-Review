@@ -23,10 +23,17 @@ struct CaptionTextSanitizer {
         "travel",
         "pet",
         "work",
-        "unknown"
+        "unknown",
+        "caption",
+        "captions"
     ]
 
     private static let metadataPrefixes = [
+        "caption",
+        "captions",
+        "content",
+        "body",
+        "text",
         "style",
         "platform",
         "length",
@@ -64,6 +71,10 @@ struct CaptionTextSanitizer {
     }
 
     private func isMetadataLine(_ line: String) -> Bool {
+        if isJSONStructuralLine(line) {
+            return true
+        }
+
         let normalized = normalizedMetadataToken(line)
         guard !normalized.isEmpty else {
             return true
@@ -80,6 +91,31 @@ struct CaptionTextSanitizer {
                     .trimmingCharacters(in: .whitespacesAndNewlines)
                 return Self.metadataTokens.contains(String(value))
             }
+        }
+
+        return false
+    }
+
+    private func isJSONStructuralLine(_ line: String) -> Bool {
+        let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
+        let lowercased = trimmed.lowercased()
+        let structuralTokens: Set<String> = ["{", "}", "[", "]", "},", "],", "{,", "[,"]
+
+        if structuralTokens.contains(lowercased) {
+            return true
+        }
+
+        if lowercased.hasPrefix("\"captions\"") ||
+            lowercased.hasPrefix("'captions'") ||
+            lowercased.hasPrefix("captions:") {
+            return true
+        }
+
+        if lowercased.range(
+            of: #"^["']?[a-z_][a-z0-9_-]*["']?\s*:\s*[\[\{]?,?$"#,
+            options: .regularExpression
+        ) != nil {
+            return true
         }
 
         return false

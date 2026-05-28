@@ -14,12 +14,16 @@ struct SettingsView: View {
     @State private var recognitionLogSharePayload: SettingsSharePayload?
     @State private var contributionDecision: TrainingContributionDecision?
     @State private var selectedShareCardTemplate: ShareCardTemplate = ShareCardTemplateRepository().fallbackTemplate()
+    @State private var selectedHistoryAutoDeleteDays = 3
+    @State private var isClearHistoryConfirmationPresented = false
+    @State private var historyCleanupConfirmationMessage: String?
 
     private let preferenceStore = UserPreferenceStore()
     private let recognitionMetricsLogger = ImageRecognitionMetricsLogger()
     private let trainingContributionStore = TrainingContributionStore()
     private let shareCardTemplateStore = ShareCardTemplateStore()
     private let shareCardTemplateRepository = ShareCardTemplateRepository()
+    private let historyStore = CaptionHistoryStore()
     private let feedbackEmail = "yehao1105@gmail.com"
 
     var body: some View {
@@ -115,6 +119,32 @@ struct SettingsView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(localizedHistorySettingsTitle) {
+                Picker(localizedHistoryAutoDeleteTitle, selection: $selectedHistoryAutoDeleteDays) {
+                    ForEach(CaptionHistoryStore.validAutoDeleteDays, id: \.self) { days in
+                        Text(localizedHistoryAutoDeleteOption(days: days)).tag(days)
+                    }
+                }
+                .pickerStyle(.segmented)
+
+                Text(localizedHistoryAutoDeleteNote)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Button(role: .destructive) {
+                    isClearHistoryConfirmationPresented = true
+                } label: {
+                    Label(localizedClearHistoryTitle, systemImage: "trash")
+                }
+
+                if let historyCleanupConfirmationMessage {
+                    Text(historyCleanupConfirmationMessage)
+                        .font(.footnote)
+                        .foregroundStyle(SnapCopyTheme.sage)
+                }
             }
 
             Section(uiLanguage.text(.betaTestGuide)) {
@@ -213,6 +243,19 @@ struct SettingsView: View {
         .sheet(item: $recognitionLogSharePayload) { payload in
             ShareSheet(activityItems: payload.activityItems, onComplete: nil)
         }
+        .confirmationDialog(
+            localizedClearHistoryTitle,
+            isPresented: $isClearHistoryConfirmationPresented,
+            titleVisibility: .visible
+        ) {
+            Button(localizedClearHistoryConfirmTitle, role: .destructive) {
+                clearHistoryItems()
+            }
+
+            Button(uiLanguage.text(.cancel), role: .cancel) {}
+        } message: {
+            Text(localizedClearHistoryConfirmationMessage)
+        }
         .onAppear {
             usageLimiter.refreshIfNeeded()
             localAIStatus = LocalAIAvailabilityDetector.currentStatus()
@@ -220,6 +263,8 @@ struct SettingsView: View {
             selectedInterfaceLanguage = appLanguageManager.language
             contributionDecision = trainingContributionStore.loadGlobalDecision()
             selectedShareCardTemplate = shareCardTemplateStore.load()
+            selectedHistoryAutoDeleteDays = historyStore.autoDeleteDays()
+            _ = historyStore.pruneExpiredHistory()
         }
         .onChange(of: selectedInterfaceLanguage) { language in
             feedbackConfirmationMessage = nil
@@ -230,6 +275,10 @@ struct SettingsView: View {
         }
         .onChange(of: selectedShareCardTemplate) { template in
             shareCardTemplateStore.save(template)
+        }
+        .onChange(of: selectedHistoryAutoDeleteDays) { days in
+            historyStore.updateAutoDeleteDays(days)
+            historyCleanupConfirmationMessage = localizedHistoryAutoDeleteUpdatedMessage(days: days)
         }
     }
 
@@ -304,6 +353,11 @@ struct SettingsView: View {
     private func resetContributionDecision() {
         trainingContributionStore.clearGlobalDecision()
         contributionDecision = nil
+    }
+
+    private func clearHistoryItems() {
+        let deletedCount = historyStore.deleteHistoryItems(keepFavorites: true)
+        historyCleanupConfirmationMessage = localizedHistoryClearedMessage(deletedCount: deletedCount)
     }
 
     private var localizedShareCardTemplateTitle: String {
@@ -426,6 +480,123 @@ struct SettingsView: View {
             "選択をリセット"
         case .traditionalChinese:
             "重置選擇"
+        }
+    }
+
+    private var localizedHistorySettingsTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "历史记录"
+        case .english:
+            "History"
+        case .japanese:
+            "履歴"
+        case .traditionalChinese:
+            "歷史記錄"
+        }
+    }
+
+    private var localizedHistoryAutoDeleteTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "自动删除"
+        case .english:
+            "Auto delete"
+        case .japanese:
+            "自動削除"
+        case .traditionalChinese:
+            "自動刪除"
+        }
+    }
+
+    private func localizedHistoryAutoDeleteOption(days: Int) -> String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "\(days)天"
+        case .english:
+            "\(days)d"
+        case .japanese:
+            "\(days)日"
+        case .traditionalChinese:
+            "\(days)天"
+        }
+    }
+
+    private var localizedHistoryAutoDeleteNote: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "未收藏的历史记录会在超过所选天数后自动删除；收藏内容会保留。"
+        case .english:
+            "Unfavorited history is removed after the selected number of days. Favorites are kept."
+        case .japanese:
+            "お気に入り以外の履歴は選択した日数を過ぎると自動削除されます。お気に入りは残ります。"
+        case .traditionalChinese:
+            "未收藏的歷史記錄會在超過所選天數後自動刪除；收藏內容會保留。"
+        }
+    }
+
+    private var localizedClearHistoryTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "清空未收藏历史"
+        case .english:
+            "Clear unfavorited history"
+        case .japanese:
+            "未收藏の履歴を消去"
+        case .traditionalChinese:
+            "清空未收藏歷史"
+        }
+    }
+
+    private var localizedClearHistoryConfirmTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "确认清空"
+        case .english:
+            "Clear"
+        case .japanese:
+            "消去"
+        case .traditionalChinese:
+            "確認清空"
+        }
+    }
+
+    private var localizedClearHistoryConfirmationMessage: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            "这会删除所有未收藏的历史记录，收藏内容会保留。"
+        case .english:
+            "This removes all unfavorited history. Favorites will be kept."
+        case .japanese:
+            "お気に入り以外の履歴をすべて削除します。お気に入りは残ります。"
+        case .traditionalChinese:
+            "這會刪除所有未收藏的歷史記錄，收藏內容會保留。"
+        }
+    }
+
+    private func localizedHistoryClearedMessage(deletedCount: Int) -> String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return deletedCount > 0 ? "已删除 \(deletedCount) 条未收藏历史。" : "没有可删除的未收藏历史。"
+        case .english:
+            return deletedCount > 0 ? "Deleted \(deletedCount) unfavorited history items." : "No unfavorited history to delete."
+        case .japanese:
+            return deletedCount > 0 ? "未收藏の履歴を \(deletedCount) 件削除しました。" : "削除できる未收藏の履歴はありません。"
+        case .traditionalChinese:
+            return deletedCount > 0 ? "已刪除 \(deletedCount) 條未收藏歷史。" : "沒有可刪除的未收藏歷史。"
+        }
+    }
+
+    private func localizedHistoryAutoDeleteUpdatedMessage(days: Int) -> String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return "历史记录会保留最近 \(days) 天，收藏内容不受影响。"
+        case .english:
+            return "History keeps the latest \(days) days. Favorites are not affected."
+        case .japanese:
+            return "履歴は直近 \(days) 日分を保持します。お気に入りは影響を受けません。"
+        case .traditionalChinese:
+            return "歷史記錄會保留最近 \(days) 天，收藏內容不受影響。"
         }
     }
 }

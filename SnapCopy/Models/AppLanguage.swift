@@ -633,27 +633,27 @@ extension AppLanguage {
         switch self {
         case .simplifiedChinese:
             return """
-            1. 云端增强新增分阶段等待动画，显示理解照片、润色文案和整理结果。
-            2. 后端为图片理解和文案增强增加超时保护，异常时会退还额度。
-            3. 图片理解额度不足或失败时，会自动继续做文字增强。
+            1. 修复云端增强偶发显示 JSON 片段的问题。
+            2. 增强云端文案清洗，避免结构字段混入正文。
+            3. 管理后台新增导出和批量审核样本功能。
             """
         case .english:
             return """
-            1. Cloud enhancement now shows a staged waiting animation for photo understanding, caption polishing, and result ranking.
-            2. Backend provider timeouts now protect image understanding and caption enhancement, with quota refunds on failure.
-            3. If image understanding is unavailable or out of quota, text enhancement still continues.
+            1. Fixed occasional JSON fragments appearing in cloud-enhanced captions.
+            2. Improved cloud caption cleanup to keep metadata out of caption text.
+            3. Added export and bulk review tools to the admin dashboard.
             """
         case .japanese:
             return """
-            1. クラウド強化に段階表示の待機アニメーションを追加しました。
-            2. 画像理解と文案強化に後端タイムアウト保護を追加し、失敗時は回数を戻します。
-            3. 画像理解が使えない場合や回数不足でも、テキスト強化は続行します。
+            1. クラウド強化文案に JSON 断片が表示されることがある問題を修正しました。
+            2. クラウド文案のクリーンアップを強化し、メタ情報が本文に混ざらないようにしました。
+            3. 管理画面にエクスポートと一括レビュー機能を追加しました。
             """
         case .traditionalChinese:
             return """
-            1. 雲端增強新增分階段等待動畫，顯示理解照片、潤色文案和整理結果。
-            2. 後端為圖片理解和文案增強增加超時保護，異常時會退還額度。
-            3. 圖片理解額度不足或失敗時，會自動繼續做文字增強。
+            1. 修復雲端增強偶發顯示 JSON 片段的問題。
+            2. 強化雲端文案清理，避免結構欄位混入正文。
+            3. 管理後台新增匯出和批量審核樣本功能。
             """
         }
     }

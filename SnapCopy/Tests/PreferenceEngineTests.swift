@@ -426,6 +426,72 @@ final class PreferenceEngineTests: XCTestCase {
         defaults.removePersistentDomain(forName: suiteName)
     }
 
+    func testCaptionHistoryStorePrunesExpiredUnfavoritedHistoryOnly() throws {
+        let suiteName = "CaptionHistoryStoreTests-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        defaults.set(1, forKey: "snapcopy.captionHistoryAutoDeleteDays")
+        let store = CaptionHistoryStore(userDefaults: defaults)
+        let oldDate = Date().addingTimeInterval(-3 * 24 * 60 * 60)
+        let recentDate = Date().addingTimeInterval(-2 * 60 * 60)
+        let oldUnfavorited = CaptionHistoryItem(
+            caption: CaptionCandidate(text: "旧文案", style: .daily, lengthLevel: .medium, emojiLevel: .none),
+            createdAt: oldDate,
+            lastUpdatedAt: oldDate,
+            isFavorite: false
+        )
+        let oldFavorite = CaptionHistoryItem(
+            caption: CaptionCandidate(text: "收藏文案", style: .healing, lengthLevel: .medium, emojiLevel: .light),
+            createdAt: oldDate,
+            lastUpdatedAt: oldDate,
+            isFavorite: true
+        )
+        let recentUnfavorited = CaptionHistoryItem(
+            caption: CaptionCandidate(text: "最近文案", style: .premium, lengthLevel: .short, emojiLevel: .none),
+            createdAt: recentDate,
+            lastUpdatedAt: recentDate,
+            isFavorite: false
+        )
+
+        let data = try JSONEncoder().encode([oldUnfavorited, oldFavorite, recentUnfavorited])
+        defaults.set(data, forKey: "snapcopy.captionHistoryItems")
+
+        let items = store.loadItems()
+        XCTAssertEqual(items.count, 2)
+        XCTAssertFalse(items.contains { $0.caption.text == oldUnfavorited.caption.text })
+        XCTAssertTrue(items.contains { $0.caption.text == oldFavorite.caption.text })
+        XCTAssertTrue(items.contains { $0.caption.text == recentUnfavorited.caption.text })
+
+        defaults.removePersistentDomain(forName: suiteName)
+    }
+
+    func testCaptionHistoryStoreDeleteHistoryKeepsFavorites() throws {
+        let suiteName = "CaptionHistoryStoreTests-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        let store = CaptionHistoryStore(userDefaults: defaults)
+        let favorite = CaptionHistoryItem(
+            caption: CaptionCandidate(text: "留下来的收藏", style: .healing, lengthLevel: .medium, emojiLevel: .light),
+            isFavorite: true
+        )
+        let unfavorited = CaptionHistoryItem(
+            caption: CaptionCandidate(text: "要清理的历史", style: .daily, lengthLevel: .medium, emojiLevel: .none),
+            isFavorite: false
+        )
+
+        let data = try JSONEncoder().encode([favorite, unfavorited])
+        defaults.set(data, forKey: "snapcopy.captionHistoryItems")
+
+        let deletedCount = store.deleteHistoryItems(keepFavorites: true)
+        let items = store.loadItems()
+        XCTAssertEqual(deletedCount, 1)
+        XCTAssertEqual(items.count, 1)
+        XCTAssertEqual(items.first?.caption.text, favorite.caption.text)
+        XCTAssertTrue(items.first?.isFavorite ?? false)
+
+        defaults.removePersistentDomain(forName: suiteName)
+    }
+
     func testCreativeImageStylePromptUsesPhotoContext() {
         let context = CaptionGenerationContext(
             sceneTags: ["pet", "daily"],

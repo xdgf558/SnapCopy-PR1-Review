@@ -5,20 +5,38 @@ This beta API reserves the privacy-safe training contribution flow for later mod
 Current behavior:
 
 - Users must explicitly choose "contribute" in the app before any sample request is sent.
-- Original photos are not uploaded in this build.
-- Photo contributions send scene metadata only, such as scene JSON, scene tags, confidence, locale, and target platform.
+- Original photos are never uploaded or retained.
+- Photo contributions send scene metadata and can optionally send a compressed training copy after consent.
 - Caption contributions send the final shared/edited caption plus metadata.
-- The Worker currently returns a metadata-only mock acceptance response. It does not persist samples to a database yet.
+- The Worker persists accepted samples to D1 when the `DB` binding is available.
+- Compressed image copies are stored in R2 only when the `TRAINING_IMAGES` binding is configured.
+- Every contribution sample starts with `review_status = pending`.
 
 Endpoints:
 
 - `POST /api/contributions/consent`
 - `POST /api/contributions/sample`
+- `POST /api/contributions/scene-recognition`
+- `POST /api/contributions/feedback`
 
-Future storage stages:
+Sample image rules:
 
-1. Add an explicit privacy notice and user-facing consent history.
-2. Store consent and metadata in a backend table.
-3. Add a short retention window for uploaded images only after image upload is enabled.
-4. Strip EXIF and obvious private data before any training review.
-5. Delete raw uploads after feature extraction or manual review, keeping only anonymous labels and derived metrics where possible.
+1. The app must ask the user for contribution consent first.
+2. The app must recompress the image from decoded pixels before upload.
+3. Do not upload original files.
+4. Do not include filename, location, or EXIF metadata.
+5. If R2 is not configured, the Worker records metadata only and returns `d1-r2-not-configured`.
+
+Admin review flow:
+
+1. Contribution sample is stored as `pending`.
+2. Developer reviews it and changes it to `approved` or `rejected`.
+3. When exported into a dataset, the sample can be marked `used_in_training`.
+4. Training readiness alerts are created only from `approved` samples.
+
+Storage modes:
+
+- `d1-metadata-only`
+- `d1-r2-compressed-image`
+- `d1-r2-not-configured`
+- `metadata-only-mock`

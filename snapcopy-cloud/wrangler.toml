@@ -27,6 +27,8 @@ PRO_MONTHLY_COST_ALERT_USD = "4.00"
 OPTIMIZATION_MIN_CAPTION_SAMPLES = "200"
 OPTIMIZATION_COOLDOWN_HOURS = "72"
 OPTIMIZATION_MAX_BUCKETS_PER_RUN = "8"
+TRAINING_READY_SCENE_THRESHOLD = "300"
+TRAINING_EXPORT_MAX_ROWS = "5000"
 ALLOW_CLIENT_PLAN_OVERRIDE = "true"
 
 [triggers]
@@ -37,3 +39,10 @@ binding = "DB"
 database_name = "snapcopy-cloud-db"
 database_id = "f40872c4-3d90-40f5-9c5e-fc337a76d7a2"
 migrations_dir = "migrations"
+
+# R2 is reserved for explicitly contributed compressed training copies only.
+# Create the bucket first, then uncomment this binding:
+#
+# [[r2_buckets]]
+# binding = "TRAINING_IMAGES"
+# bucket_name = "snapcopy-training-images"

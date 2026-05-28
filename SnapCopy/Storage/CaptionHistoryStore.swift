@@ -3,7 +3,9 @@ import UIKit
 
 final class CaptionHistoryStore {
     private let storageKey = "snapcopy.captionHistoryItems"
+    private let autoDeleteDaysKey = "snapcopy.captionHistoryAutoDeleteDays"
     private let maxNonFavoriteItems = 120
+    private let defaultAutoDeleteDays = 3
     private let userDefaults: UserDefaults
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
@@ -13,12 +15,22 @@ final class CaptionHistoryStore {
     }
 
     func loadItems() -> [CaptionHistoryItem] {
+        let items = loadStoredItems()
+        let prunedItems = pruneExpiredHistoryItems(items)
+        if prunedItems.count != items.count {
+            save(prunedItems)
+        }
+
+        return sorted(prunedItems)
+    }
+
+    private func loadStoredItems() -> [CaptionHistoryItem] {
         guard let data = userDefaults.data(forKey: storageKey),
               let items = try? decoder.decode([CaptionHistoryItem].self, from: data) else {
             return []
         }
 
-        return sorted(items)
+        return items
     }
 
     func saveGeneratedCandidates(_ candidates: [CaptionCandidate], image: UIImage?) {
@@ -117,9 +129,43 @@ final class CaptionHistoryStore {
         save(items)
     }
 
+    @discardableResult
+    func deleteHistoryItems(keepFavorites: Bool = true) -> Int {
+        let items = loadItems()
+        let remainingItems = keepFavorites ? items.filter(\.isFavorite) : []
+        let deletedCount = items.count - remainingItems.count
+        save(remainingItems)
+        return deletedCount
+    }
+
+    @discardableResult
+    func pruneExpiredHistory(now: Date = Date()) -> Int {
+        let items = loadStoredItems()
+        let prunedItems = pruneExpiredHistoryItems(items, now: now)
+        let deletedCount = items.count - prunedItems.count
+        if deletedCount > 0 {
+            save(prunedItems)
+        }
+
+        return deletedCount
+    }
+
+    func autoDeleteDays() -> Int {
+        let value = userDefaults.integer(forKey: autoDeleteDaysKey)
+        return Self.validAutoDeleteDays.contains(value) ? value : defaultAutoDeleteDays
+    }
+
+    func updateAutoDeleteDays(_ days: Int) {
+        let normalizedDays = Self.validAutoDeleteDays.contains(days) ? days : defaultAutoDeleteDays
+        userDefaults.set(normalizedDays, forKey: autoDeleteDaysKey)
+        _ = pruneExpiredHistory()
+    }
+
     func favoriteCaptionKeys() -> Set<String> {
         Set(loadItems().filter(\.isFavorite).map { Self.key(for: $0.caption.text) })
     }
+
+    static let validAutoDeleteDays = [1, 2, 3]
 
     static func key(for text: String) -> String {
         text
@@ -184,6 +230,18 @@ final class CaptionHistoryStore {
             }
 
             return $0.lastUpdatedAt > $1.lastUpdatedAt
+        }
+    }
+
+    private func pruneExpiredHistoryItems(
+        _ items: [CaptionHistoryItem],
+        now: Date = Date()
+    ) -> [CaptionHistoryItem] {
+        let retentionInterval = TimeInterval(autoDeleteDays() * 24 * 60 * 60)
+        let cutoff = now.addingTimeInterval(-retentionInterval)
+
+        return items.filter { item in
+            item.isFavorite || item.lastUpdatedAt >= cutoff
         }
     }
 

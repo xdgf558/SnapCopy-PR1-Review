@@ -104,6 +104,17 @@ export type ApiErrorResponse = {
 export type ContributionKind = "photo" | "caption";
 export type ContributionSource = "cloudEnhancement" | "share" | "copy" | "manual";
 export type ConsentDecision = "granted" | "declined";
+export type ContributionImageMimeType = "image/jpeg" | "image/png" | "image/webp";
+export type ContributionReviewStatus = "pending" | "approved" | "rejected" | "used_in_training";
+export type PredictionSource = "vision" | "ocr" | "customModel" | "userCorrection" | "ruleBased" | "cloudVision";
+export type FeedbackAction =
+  | "rating"
+  | "copyCaption"
+  | "shareCaption"
+  | "saveCaption"
+  | "regenerate"
+  | "deleteCaption"
+  | "markExternalGoodFeedback";
 
 export type TrainingContributionConsentRequest = {
   appUserId: string;
@@ -133,12 +144,65 @@ export type TrainingContributionSampleRequest = {
   captionText?: string | null;
   captionWasEdited?: boolean;
   imageUploadEnabled: boolean;
+  imageBase64?: string | null;
+  imageMimeType?: ContributionImageMimeType | null;
+  imageWidth?: number | null;
+  imageHeight?: number | null;
+  imageSha256?: string | null;
   originalPhotoRetention: string;
   createdAt: string;
   notes?: string | null;
 };
 
-export type ContributionStorageMode = "metadata-only-mock" | "d1-metadata-only";
+export type SceneRecognitionRecordRequest = {
+  appUserId: string;
+  recordId: string;
+  sampleId?: string | null;
+  requestId?: string | null;
+  source: PredictionSource;
+  predictedScene?: string | null;
+  top3Scenes?: CloudVisionSceneCandidate[];
+  userSelectedScene?: string | null;
+  wasUserCorrectionNeeded?: boolean;
+  confidence?: number | null;
+  sceneJson?: string | null;
+  latencyMs?: number | null;
+  imageWidth?: number | null;
+  imageHeight?: number | null;
+  createdAt: string;
+};
+
+export type UserFeedbackRecordRequest = {
+  appUserId: string;
+  feedbackId: string;
+  sampleId?: string | null;
+  captionTextHash?: string | null;
+  action: FeedbackAction;
+  rating?: number | null;
+  rewardScore?: number | null;
+  scene?: string | null;
+  locale?: string | null;
+  targetPlatform?: string | null;
+  metadata?: Record<string, unknown> | null;
+  createdAt: string;
+};
+
+export type TrainingDatasetVersionRequest = {
+  datasetVersion: string;
+  datasetType: "image_scene_classifier" | "caption_strategy" | "caption_model" | "other";
+  status?: "draft" | "exported" | "training" | "trained" | "archived";
+  sourceFilter?: Record<string, unknown>;
+  sampleCount?: number;
+  sceneCounts?: Record<string, number>;
+  notes?: string | null;
+  exportedAt?: string | null;
+};
+
+export type ContributionStorageMode =
+  | "metadata-only-mock"
+  | "d1-metadata-only"
+  | "d1-r2-compressed-image"
+  | "d1-r2-not-configured";
 
 export type TrainingContributionResponse = {
   accepted: boolean;

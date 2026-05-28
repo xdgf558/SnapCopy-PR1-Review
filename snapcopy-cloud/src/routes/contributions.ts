@@ -1,21 +1,33 @@
 import { errorResponse, jsonResponse } from "../lib/response";
 import {
   parseJsonBody,
+  validateSceneRecognitionRecordRequest,
   validateContributionConsentRequest,
   validateContributionSampleRequest,
+  validateUserFeedbackRecordRequest,
   ValidationError
 } from "../lib/validators";
 import type {
+  SceneRecognitionRecordRequest,
   TrainingContributionConsentRequest,
   TrainingContributionResponse,
-  TrainingContributionSampleRequest
+  TrainingContributionSampleRequest,
+  UserFeedbackRecordRequest
 } from "../types/api";
-import { recordContributionConsent, recordContributionSample } from "../lib/d1Store";
+import {
+  recordContributionConsent,
+  recordContributionSample,
+  recordSceneRecognition,
+  recordUserFeedback
+} from "../lib/d1Store";
+import { storeTrainingImageIfPresent } from "../lib/r2Store";
 
-const retentionPolicy = "This beta build accepts consent and metadata only. Original photos are not uploaded.";
+const retentionPolicy =
+  "Only explicitly contributed samples are stored. Original photos are never retained; optional image storage uses compressed training copies without location metadata.";
 
 type Env = {
   DB?: D1Database;
+  TRAINING_IMAGES?: R2Bucket;
 };
 
 export async function handleContributionConsent(request: Request, env: Env): Promise<Response> {
@@ -44,9 +56,10 @@ export async function handleContributionConsent(request: Request, env: Env): Pro
 
 export async function handleContributionSample(request: Request, env: Env): Promise<Response> {
   try {
-    const body = await parseJsonBody<TrainingContributionSampleRequest>(request, 320_000);
+    const body = await parseJsonBody<TrainingContributionSampleRequest>(request, 2_000_000);
     const input = validateContributionSampleRequest(body);
-    const storageMode = await recordContributionSample(env, input);
+    const imageStorage = await storeTrainingImageIfPresent(env, input);
+    const storageMode = await recordContributionSample(env, input, imageStorage);
 
     const response: TrainingContributionResponse = {
       accepted: true,
@@ -54,7 +67,10 @@ export async function handleContributionSample(request: Request, env: Env): Prom
       sampleId: input.sampleId,
       storageMode,
       retentionPolicy,
-      message: "Contribution sample accepted for metadata-only beta review."
+      message:
+        storageMode === "d1-r2-compressed-image"
+          ? "Contribution sample accepted with compressed image copy for review."
+          : "Contribution sample accepted for review."
     };
 
     return jsonResponse(response);
@@ -64,5 +80,47 @@ export async function handleContributionSample(request: Request, env: Env): Prom
     }
 
     return errorResponse("internal_error", "Contribution sample request failed.", 500);
+  }
+}
+
+export async function handleSceneRecognitionRecord(request: Request, env: Env): Promise<Response> {
+  try {
+    const body = await parseJsonBody<SceneRecognitionRecordRequest>(request, 320_000);
+    const input = validateSceneRecognitionRecordRequest(body);
+    const storageMode = await recordSceneRecognition(env, input);
+
+    return jsonResponse({
+      accepted: true,
+      recordId: input.recordId,
+      storageMode,
+      message: "Scene recognition record accepted."
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return errorResponse(error.code, error.message, 400);
+    }
+
+    return errorResponse("internal_error", "Scene recognition record request failed.", 500);
+  }
+}
+
+export async function handleUserFeedbackRecord(request: Request, env: Env): Promise<Response> {
+  try {
+    const body = await parseJsonBody<UserFeedbackRecordRequest>(request, 128_000);
+    const input = validateUserFeedbackRecordRequest(body);
+    const storageMode = await recordUserFeedback(env, input);
+
+    return jsonResponse({
+      accepted: true,
+      feedbackId: input.feedbackId,
+      storageMode,
+      message: "User feedback record accepted."
+    });
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return errorResponse(error.code, error.message, 400);
+    }
+
+    return errorResponse("internal_error", "User feedback record request failed.", 500);
   }
 }

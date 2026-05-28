@@ -46,6 +46,8 @@ struct HomeView: View {
     @State private var imageUnderstandingRequestID = UUID()
     @State private var imageSelectionID = UUID()
     @State private var captionGenerationRequestID = UUID()
+    @State private var cloudEnhancementRequestID = UUID()
+    @State private var isResultPagePresented = false
     @State private var favoriteCaptionKeys: Set<String> = []
     @State private var selectedCreativeImageStyle: CreativeImageStyle = .cuteHandDrawn
     @State private var creativeImage: UIImage?
@@ -117,7 +119,6 @@ struct HomeView: View {
                         ScrollView {
                             VStack(spacing: 18) {
                                 scrollableCaptionOptions
-                                captionList
                                 navigationButtonRow
                             }
                             .frame(width: contentWidth)
@@ -153,6 +154,9 @@ struct HomeView: View {
                         .accessibilityLabel(uiLanguage.text(.settings))
                     }
                 }
+            }
+            .navigationDestination(isPresented: $isResultPagePresented) {
+                captionResultPage
             }
             .onChange(of: selectedPhotoItem) { newItem in
                 Task {
@@ -398,18 +402,46 @@ struct HomeView: View {
             }
 
             Button {
-                Task {
-                    await generateCaptions()
-                }
+                openResultPageAndGenerate()
             } label: {
-                Label(captions.isEmpty ? uiLanguage.text(.generateCaption) : uiLanguage.text(.regenerate), systemImage: "sparkles")
-                    .font(.headline)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.82)
-                    .frame(maxWidth: .infinity)
+                VStack(spacing: 3) {
+                    Label(captions.isEmpty ? uiLanguage.text(.generateCaption) : uiLanguage.text(.regenerate), systemImage: "sparkles")
+                        .font(.headline)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
+
+                    Text(localizedGenerateCaptionSubtitle)
+                        .font(.caption.weight(.medium))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.78)
+                        .opacity(0.86)
+                }
+                .frame(maxWidth: .infinity)
             }
             .buttonStyle(SnapCopyPrimaryButtonStyle())
             .disabled(selectedImage == nil || isLoadingImage || isUnderstandingImage || isGeneratingCaptions)
+
+            if canShowCloudEnhancementEntry {
+                Button {
+                    openResultPageAndEnhance()
+                } label: {
+                    VStack(spacing: 3) {
+                        Label(uiLanguage.text(.cloudEnhance), systemImage: "icloud.and.arrow.up")
+                            .font(.headline)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.82)
+
+                        Text(localizedCloudEnhanceEntrySubtitle)
+                            .font(.caption.weight(.medium))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.78)
+                            .opacity(0.86)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(SnapCopySecondaryButtonStyle())
+                .disabled(selectedImage == nil || isLoadingImage || isUnderstandingImage || isCloudEnhancingCaptions || cloudBackendRemainingQuota == 0)
+            }
 
             if isCompact {
                 HStack(spacing: 10) {
@@ -506,6 +538,109 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(SnapCopySecondaryButtonStyle())
+        }
+    }
+
+    private var captionResultPage: some View {
+        ZStack {
+            SnapCopyTheme.appBackground
+                .ignoresSafeArea()
+            SnapCopyLiquidBackdrop()
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+
+            GeometryReader { proxy in
+                let contentWidth = min(max(proxy.size.width - 32, 0), 560)
+
+                ScrollView {
+                    VStack(spacing: 22) {
+                        resultPageHeader
+                            .frame(width: contentWidth)
+
+                        CaptionResultPhotoSummaryCard(
+                            image: previewImage,
+                            title: localizedSelectedPhotoTitle,
+                            subtitle: localizedSelectedPhotoSummary
+                        )
+                        .frame(width: contentWidth)
+
+                        if isGeneratingCaptions || isCloudEnhancingCaptions {
+                            CaptionResultLoadingHero(
+                                isCloudEnhancement: isCloudEnhancingCaptions,
+                                phase: cloudEnhancementPhase,
+                                language: uiLanguage
+                            )
+                            .frame(width: contentWidth)
+                            .transition(.opacity.combined(with: .scale(scale: 0.98)))
+                        }
+
+                        VStack(spacing: 14) {
+                            if !isGeneratingCaptions || !captions.isEmpty || captionGenerationError != nil {
+                                captionList
+                            }
+
+                            if captions.isEmpty && !isCloudEnhancingCaptions {
+                                cloudEnhancementState
+                            }
+                        }
+                        .frame(width: contentWidth)
+
+                        Button {
+                            leaveCaptionResultPage()
+                        } label: {
+                            Label(localizedResultBackButtonText, systemImage: "xmark.circle")
+                                .font(.headline)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.82)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(SnapCopySecondaryButtonStyle())
+                        .frame(width: contentWidth)
+                    }
+                    .padding(.top, 18)
+                    .padding(.bottom, 28)
+                    .frame(maxWidth: .infinity)
+                }
+                .scrollIndicators(.hidden)
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
+    }
+
+    private var resultPageHeader: some View {
+        HStack(spacing: 14) {
+            HStack(spacing: 3) {
+                Text("SnapCopy")
+                    .font(.system(size: 32, weight: .bold, design: .serif))
+                    .foregroundStyle(SnapCopyTheme.primaryText)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.68)
+
+                Image(systemName: "sparkles")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(SnapCopyTheme.rose)
+                    .offset(y: -8)
+            }
+
+            Spacer(minLength: 12)
+
+            Button {
+                leaveCaptionResultPage()
+            } label: {
+                Label(uiLanguage.text(.cancel), systemImage: "xmark.circle")
+                    .font(.subheadline.weight(.semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .background(SnapCopyTheme.controlBackground.opacity(0.78), in: Capsule())
+                    .overlay {
+                        Capsule()
+                            .stroke(SnapCopyTheme.hairline, lineWidth: 1)
+                    }
+            }
+            .foregroundStyle(SnapCopyTheme.rose)
         }
     }
 
@@ -836,7 +971,9 @@ struct HomeView: View {
                     )
                 }
 
-                cloudEnhancementState
+                if !isCloudEnhancingCaptions {
+                    cloudEnhancementState
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1035,6 +1172,144 @@ struct HomeView: View {
             return "文案を強化"
         case .traditionalChinese:
             return "增強生成"
+        }
+    }
+
+    private var localizedGenerateCaptionSubtitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return "生成创意文案"
+        case .english:
+            return "Create share-ready captions"
+        case .japanese:
+            return "シェア向け文案を生成"
+        case .traditionalChinese:
+            return "生成創意文案"
+        }
+    }
+
+    private var localizedCloudEnhanceEntrySubtitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return "提升照片理解与文案细节"
+        case .english:
+            return "Improve photo understanding and details"
+        case .japanese:
+            return "写真理解と文案の細部を強化"
+        case .traditionalChinese:
+            return "提升照片理解與文案細節"
+        }
+    }
+
+    private var localizedSelectedPhotoTitle: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return "已选照片"
+        case .english:
+            return "Selected photo"
+        case .japanese:
+            return "選択した写真"
+        case .traditionalChinese:
+            return "已選照片"
+        }
+    }
+
+    private var localizedSelectedPhotoSummary: String {
+        if let scene = imageAnalysisResult?.sceneResolution.scene, scene != .unknown {
+            let sceneName = localizedProductSceneName(scene)
+            switch uiLanguage {
+            case .simplifiedChinese:
+                return "\(sceneName)照片已准备好"
+            case .english:
+                return "\(sceneName) photo ready"
+            case .japanese:
+                return "\(sceneName)の写真を準備しました"
+            case .traditionalChinese:
+                return "\(sceneName)照片已準備好"
+            }
+        }
+
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return "照片已准备好"
+        case .english:
+            return "Your photo is ready"
+        case .japanese:
+            return "写真を準備しました"
+        case .traditionalChinese:
+            return "照片已準備好"
+        }
+    }
+
+    private var localizedResultBackButtonText: String {
+        switch uiLanguage {
+        case .simplifiedChinese:
+            return "取消并返回首页"
+        case .english:
+            return "Cancel and return home"
+        case .japanese:
+            return "キャンセルしてホームへ戻る"
+        case .traditionalChinese:
+            return "取消並返回首頁"
+        }
+    }
+
+    private func localizedProductSceneName(_ scene: ProductScene) -> String {
+        switch (uiLanguage, scene) {
+        case (.english, .breakfast):
+            return "Breakfast"
+        case (.english, .cafe):
+            return "Cafe"
+        case (.english, .walking):
+            return "Walking"
+        case (.english, .street):
+            return "Street"
+        case (.english, .travel):
+            return "Travel"
+        case (.english, .pet):
+            return "Pet"
+        case (.english, .outfit):
+            return "Outfit"
+        case (.english, .fitness):
+            return "Fitness"
+        case (.english, .sunset):
+            return "Sunset"
+        case (.english, .home):
+            return "Home"
+        case (.english, .work):
+            return "Work"
+        case (.english, .food):
+            return "Food"
+        case (.english, .unknown):
+            return "Photo"
+        case (.japanese, .breakfast):
+            return "朝食"
+        case (.japanese, .cafe):
+            return "カフェ"
+        case (.japanese, .walking):
+            return "散歩"
+        case (.japanese, .street):
+            return "街並み"
+        case (.japanese, .travel):
+            return "旅行"
+        case (.japanese, .pet):
+            return "ペット"
+        case (.japanese, .outfit):
+            return "コーデ"
+        case (.japanese, .fitness):
+            return "フィットネス"
+        case (.japanese, .sunset):
+            return "夕日"
+        case (.japanese, .home):
+            return "暮らし"
+        case (.japanese, .work):
+            return "仕事"
+        case (.japanese, .food):
+            return "食事"
+        case (.japanese, .unknown):
+            return "写真"
+        default:
+            return scene.displayName
         }
     }
 
@@ -1445,8 +1720,12 @@ struct HomeView: View {
         imageSelectionID = selectionID
         imageUnderstandingRequestID = understandingRequestID
         captionGenerationRequestID = UUID()
+        cloudEnhancementRequestID = UUID()
+        isResultPagePresented = false
         isLoadingImage = isLoading
         isGeneratingCaptions = false
+        isCloudEnhancingCaptions = false
+        cloudEnhancementPhase = .idle
         imageLoadError = nil
         captionGenerationError = nil
         cloudEnhancementError = nil
@@ -1467,6 +1746,51 @@ struct HomeView: View {
         lastFoundationRawResult = ""
 
         return ImageSelectionRequest(selectionID: selectionID, understandingRequestID: understandingRequestID)
+    }
+
+    @MainActor
+    private func openResultPageAndGenerate() {
+        guard selectedImage != nil else {
+            captionGenerationError = localizedSelectPhotoFirstText
+            return
+        }
+
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.88)) {
+            isResultPagePresented = true
+        }
+
+        Task {
+            await generateCaptions()
+        }
+    }
+
+    @MainActor
+    private func openResultPageAndEnhance() {
+        guard selectedImage != nil else {
+            cloudEnhancementError = localizedSelectPhotoFirstText
+            return
+        }
+
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.88)) {
+            isResultPagePresented = true
+        }
+
+        Task {
+            await enhanceCaptionsWithCloud()
+        }
+    }
+
+    @MainActor
+    private func leaveCaptionResultPage() {
+        captionGenerationRequestID = UUID()
+        cloudEnhancementRequestID = UUID()
+        isGeneratingCaptions = false
+        isCloudEnhancingCaptions = false
+        cloudEnhancementPhase = .idle
+
+        withAnimation(.spring(response: 0.34, dampingFraction: 0.9)) {
+            isResultPagePresented = false
+        }
     }
 
     @MainActor
@@ -1585,8 +1909,13 @@ struct HomeView: View {
             return
         }
 
-        guard !captions.isEmpty else {
-            cloudEnhancementError = localizedCloudNeedLocalCaptionsText
+        guard let selectedImage else {
+            cloudEnhancementError = localizedSelectPhotoFirstText
+            return
+        }
+
+        guard !isUnderstandingImage else {
+            cloudEnhancementError = localizedSceneStillRecognizingText
             return
         }
 
@@ -1595,14 +1924,19 @@ struct HomeView: View {
             return
         }
 
+        let cloudFlowID = UUID()
+        let cloudImageID = imageSelectionID
+        cloudEnhancementRequestID = cloudFlowID
         isCloudEnhancingCaptions = true
         cloudEnhancementError = nil
         cloudEnhancementStatusMessage = nil
         updateCloudEnhancementPhase(.preparing)
         defer {
-            withAnimation(.easeInOut(duration: 0.22)) {
-                isCloudEnhancingCaptions = false
-                cloudEnhancementPhase = .idle
+            if cloudEnhancementRequestID == cloudFlowID {
+                withAnimation(.easeInOut(duration: 0.22)) {
+                    isCloudEnhancingCaptions = false
+                    cloudEnhancementPhase = .idle
+                }
             }
         }
 
@@ -1615,14 +1949,17 @@ struct HomeView: View {
             data: (try? JSONEncoder().encode(preference.cloudPreferenceSnapshot)) ?? Data(),
             encoding: .utf8
         )
-        let cloudRequestID = UUID()
         updateCloudEnhancementPhase(.understandingPhoto)
         let cloudSceneEnhancement = await cloudEnhancedSceneJson(
             baseSceneJson: sceneJson,
             preferenceJson: preferenceJson,
-            requestID: cloudRequestID,
+            requestID: cloudFlowID,
             preference: preference
         )
+        guard cloudEnhancementRequestID == cloudFlowID, imageSelectionID == cloudImageID else {
+            return
+        }
+
         let request = CloudEnhancementRequestBuilder().makeRequest(
             appUserId: userIdentityManager.appUserId,
             requestId: cloudSceneEnhancement.captionRequestID,
@@ -1638,6 +1975,10 @@ struct HomeView: View {
         do {
             updateCloudEnhancementPhase(.writingCaptions)
             let response = try await cloudEnhancementService.enhanceCaptions(request: request)
+            guard cloudEnhancementRequestID == cloudFlowID, imageSelectionID == cloudImageID else {
+                return
+            }
+
             let cloudCandidates = makeCloudCandidates(from: response, context: generationContext)
 
             guard !cloudCandidates.isEmpty else {
@@ -1673,9 +2014,15 @@ struct HomeView: View {
                 source: .cloudEnhancement
             )
         } catch CloudEnhancementError.quotaExceeded {
+            guard cloudEnhancementRequestID == cloudFlowID, imageSelectionID == cloudImageID else {
+                return
+            }
             cloudBackendRemainingQuota = 0
             cloudEnhancementError = localizedCloudQuotaExceededText
         } catch {
+            guard cloudEnhancementRequestID == cloudFlowID, imageSelectionID == cloudImageID else {
+                return
+            }
             #if DEBUG
             cloudEnhancementError = "\(localizedCloudEnhanceFailedText)\n\(error.localizedDescription)"
             #else
@@ -1774,14 +2121,14 @@ struct HomeView: View {
         context: CaptionGenerationContext
     ) -> [CaptionCandidate] {
         let styles: [CaptionStyle] = [.premium, .daily, .healing, .humor, .xiaohongshu]
+        let sanitizer = CaptionTextSanitizer()
         return response.captions.prefix(5).enumerated().compactMap { index, text in
-            let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !trimmedText.isEmpty else {
+            guard let sanitizedText = sanitizer.sanitizedText(from: text) else {
                 return nil
             }
 
             return CaptionCandidate(
-                text: trimmedText,
+                text: sanitizedText,
                 style: styles[index % styles.count],
                 platform: selectedPlatform,
                 lengthLevel: selectedLengthLevel,
@@ -1861,6 +2208,7 @@ struct HomeView: View {
                     preference: sharePreference,
                     source: .share
                 )
+                isResultPagePresented = false
             }
         }
 
@@ -2533,13 +2881,13 @@ struct HomeView: View {
     private var localizedCloudEnhanceFailedText: String {
         switch uiLanguage {
         case .simplifiedChinese:
-            return "云端增强暂时不可用，已保留本地文案。"
+            return "云端增强暂时不可用，你仍可使用本机生成。"
         case .english:
-            return "Cloud enhancement is unavailable. Local captions are kept."
+            return "Cloud enhancement is unavailable. You can still use on-device generation."
         case .japanese:
-            return "クラウド強化は一時的に利用できません。ローカル文案を保持しました。"
+            return "クラウド強化は一時的に利用できません。端末上の生成は引き続き使えます。"
         case .traditionalChinese:
-            return "雲端增強暫時不可用，已保留本地文案。"
+            return "雲端增強暫時不可用，你仍可使用本機生成。"
         }
     }
 
@@ -2912,6 +3260,387 @@ private struct CloudEnhancementWaitingView: View {
         }
 
         return SnapCopyTheme.hairline.opacity(0.86)
+    }
+}
+
+private struct CaptionResultPhotoSummaryCard: View {
+    let image: UIImage?
+    let title: String
+    let subtitle: String
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Group {
+                if let image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(SnapCopyTheme.controlBackground)
+                        .overlay {
+                            Image(systemName: "photo")
+                                .font(.title2.weight(.semibold))
+                                .foregroundStyle(SnapCopyTheme.secondaryText)
+                        }
+                }
+            }
+            .frame(width: 132, height: 92)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+
+            VStack(alignment: .leading, spacing: 8) {
+                Label(title, systemImage: "plus.square")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(SnapCopyTheme.secondaryText)
+
+                Text(subtitle)
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(SnapCopyTheme.primaryText)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.82)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(16)
+        .liquidGlassCard(cornerRadius: 26)
+    }
+}
+
+private struct CaptionResultLoadingHero: View {
+    let isCloudEnhancement: Bool
+    let phase: CloudEnhancementPhase
+    let language: AppLanguage
+
+    @State private var ringRotation = 0.0
+    @State private var pulse = false
+
+    var body: some View {
+        VStack(spacing: 22) {
+            ZStack {
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [
+                                SnapCopyTheme.rose.opacity(0.22),
+                                SnapCopyTheme.rose.opacity(0.05),
+                                Color.clear
+                            ],
+                            center: .center,
+                            startRadius: 12,
+                            endRadius: 96
+                        )
+                    )
+                    .frame(width: 190, height: 190)
+                    .scaleEffect(pulse ? 1.05 : 0.96)
+
+                Circle()
+                    .stroke(SnapCopyTheme.rose.opacity(0.12), lineWidth: 10)
+                    .frame(width: 132, height: 132)
+
+                Circle()
+                    .trim(from: 0.10, to: 0.78)
+                    .stroke(
+                        AngularGradient(
+                            colors: [
+                                SnapCopyTheme.rose.opacity(0.12),
+                                SnapCopyTheme.rose.opacity(0.92),
+                                Color.white.opacity(0.95),
+                                SnapCopyTheme.rose.opacity(0.30)
+                            ],
+                            center: .center
+                        ),
+                        style: StrokeStyle(lineWidth: 11, lineCap: .round)
+                    )
+                    .frame(width: 132, height: 132)
+                    .rotationEffect(.degrees(ringRotation))
+                    .shadow(color: SnapCopyTheme.rose.opacity(0.24), radius: 18, y: 8)
+
+                Text("...")
+                    .font(.title.weight(.bold))
+                    .foregroundStyle(SnapCopyTheme.rose)
+                    .offset(y: -2)
+
+                Image(systemName: "sparkle")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(SnapCopyTheme.rose)
+                    .offset(x: 58, y: 44)
+
+                Image(systemName: "sparkle")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(SnapCopyTheme.rose.opacity(0.82))
+                    .offset(x: -54, y: -38)
+            }
+            .accessibilityHidden(true)
+
+            VStack(spacing: 8) {
+                Text(title)
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(SnapCopyTheme.primaryText)
+                    .multilineTextAlignment(.center)
+
+                Text(detail)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(SnapCopyTheme.secondaryText)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            stepPanel
+
+            skeletonCard
+
+            Label(comfortText, systemImage: "lightbulb")
+                .font(.caption.weight(.medium))
+                .foregroundStyle(SnapCopyTheme.secondaryText)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.vertical, 8)
+        .onAppear {
+            withAnimation(.linear(duration: 1.45).repeatForever(autoreverses: false)) {
+                ringRotation = 360
+            }
+            withAnimation(.easeInOut(duration: 1.15).repeatForever(autoreverses: true)) {
+                pulse = true
+            }
+        }
+    }
+
+    private var stepPanel: some View {
+        let steps = localizedSteps
+
+        return HStack(spacing: 10) {
+            ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                VStack(spacing: 7) {
+                    ZStack {
+                        Circle()
+                            .fill(stepColor(for: index))
+                            .frame(width: 38, height: 38)
+                            .shadow(color: SnapCopyTheme.rose.opacity(index == activeStepIndex ? 0.22 : 0.04), radius: 10, y: 5)
+
+                        Image(systemName: stepIcon(for: index))
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(index > activeStepIndex ? SnapCopyTheme.secondaryText : .white)
+                    }
+
+                    Text(step.title)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(SnapCopyTheme.primaryText)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.68)
+
+                    Text(step.status)
+                        .font(.caption2.weight(.medium))
+                        .foregroundStyle(index < activeStepIndex ? SnapCopyTheme.rose : SnapCopyTheme.secondaryText)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.72)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(14)
+        .liquidGlassCard(cornerRadius: 26)
+    }
+
+    private var skeletonCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Label(localizedPreviewTitle, systemImage: "leaf")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(SnapCopyTheme.secondaryText)
+
+                Spacer()
+
+                Text(localizedPreviewTrailingText)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(SnapCopyTheme.secondaryText)
+            }
+
+            VStack(alignment: .leading, spacing: 9) {
+                Capsule()
+                    .fill(SnapCopyTheme.rose.opacity(0.15))
+                    .frame(height: 10)
+                    .frame(maxWidth: .infinity)
+
+                Capsule()
+                    .fill(SnapCopyTheme.rose.opacity(0.12))
+                    .frame(height: 10)
+                    .frame(maxWidth: .infinity)
+                    .padding(.trailing, 40)
+
+                Capsule()
+                    .fill(SnapCopyTheme.rose.opacity(0.10))
+                    .frame(width: 132, height: 10)
+            }
+            .padding(16)
+            .background(SnapCopyTheme.controlBackground.opacity(0.72), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(SnapCopyTheme.hairline, lineWidth: 1)
+            }
+        }
+        .padding(14)
+        .liquidGlassCard(cornerRadius: 26)
+    }
+
+    private var activeStepIndex: Int {
+        if !isCloudEnhancement {
+            return 2
+        }
+
+        switch phase {
+        case .idle, .preparing, .understandingPhoto:
+            return 0
+        case .writingCaptions:
+            return 1
+        case .arrangingResults:
+            return 2
+        }
+    }
+
+    private func stepColor(for index: Int) -> Color {
+        if index < activeStepIndex {
+            return SnapCopyTheme.rose
+        }
+
+        if index == activeStepIndex {
+            return SnapCopyTheme.rose.opacity(0.88)
+        }
+
+        return SnapCopyTheme.controlBackground
+    }
+
+    private func stepIcon(for index: Int) -> String {
+        if index < activeStepIndex {
+            return "checkmark"
+        }
+
+        switch index {
+        case 0:
+            return "camera.metering.center.weighted"
+        case 1:
+            return "sparkles"
+        default:
+            return "doc.text"
+        }
+    }
+
+    private var title: String {
+        switch (language, isCloudEnhancement) {
+        case (.simplifiedChinese, true):
+            return "正在云端增强"
+        case (.simplifiedChinese, false):
+            return "正在生成文案"
+        case (.english, true):
+            return "Enhancing in the cloud"
+        case (.english, false):
+            return "Writing captions"
+        case (.japanese, true):
+            return "クラウドで強化中"
+        case (.japanese, false):
+            return "文案を生成中"
+        case (.traditionalChinese, true):
+            return "正在雲端增強"
+        case (.traditionalChinese, false):
+            return "正在生成文案"
+        }
+    }
+
+    private var detail: String {
+        switch (language, isCloudEnhancement) {
+        case (.simplifiedChinese, true):
+            return "正在理解照片细节，帮你写得更贴近画面。"
+        case (.simplifiedChinese, false):
+            return "正在识别照片内容与氛围，请稍候片刻。"
+        case (.english, true):
+            return "Reading the photo details and making the captions more grounded."
+        case (.english, false):
+            return "Reading the photo and its mood. This will only take a moment."
+        case (.japanese, true):
+            return "写真の細部を読み取り、より自然な文案に整えています。"
+        case (.japanese, false):
+            return "写真の内容と雰囲気を読み取っています。少しお待ちください。"
+        case (.traditionalChinese, true):
+            return "正在理解照片細節，幫你寫得更貼近畫面。"
+        case (.traditionalChinese, false):
+            return "正在識別照片內容與氛圍，請稍候片刻。"
+        }
+    }
+
+    private var comfortText: String {
+        switch language {
+        case .simplifiedChinese:
+            return isCloudEnhancement ? "云端增强通常需要 10 到 30 秒。" : "通常只需 3 到 8 秒。"
+        case .english:
+            return isCloudEnhancement ? "Cloud enhancement usually takes 10 to 30 seconds." : "This usually takes 3 to 8 seconds."
+        case .japanese:
+            return isCloudEnhancement ? "クラウド強化は通常 10〜30 秒ほどです。" : "通常 3〜8 秒ほどです。"
+        case .traditionalChinese:
+            return isCloudEnhancement ? "雲端增強通常需要 10 到 30 秒。" : "通常只需 3 到 8 秒。"
+        }
+    }
+
+    private var localizedSteps: [(title: String, status: String)] {
+        let completed: String
+        let running: String
+        let waiting: String
+        let titles: [String]
+
+        switch language {
+        case .simplifiedChinese:
+            completed = "已完成"
+            running = "进行中"
+            waiting = "等待中"
+            titles = ["识别照片内容", "提炼场景关键词", "生成分享文案"]
+        case .english:
+            completed = "Done"
+            running = "Working"
+            waiting = "Waiting"
+            titles = ["Read photo", "Refine scene", "Write captions"]
+        case .japanese:
+            completed = "完了"
+            running = "進行中"
+            waiting = "待機中"
+            titles = ["写真を確認", "シーンを整理", "文案を生成"]
+        case .traditionalChinese:
+            completed = "已完成"
+            running = "進行中"
+            waiting = "等待中"
+            titles = ["識別照片內容", "提煉場景關鍵字", "生成分享文案"]
+        }
+
+        return titles.enumerated().map { index, title in
+            let status = index < activeStepIndex ? completed : (index == activeStepIndex ? running : waiting)
+            return (title, status)
+        }
+    }
+
+    private var localizedPreviewTitle: String {
+        switch language {
+        case .simplifiedChinese:
+            return "即将生成的文案"
+        case .english:
+            return "Caption preview"
+        case .japanese:
+            return "生成される文案"
+        case .traditionalChinese:
+            return "即將生成的文案"
+        }
+    }
+
+    private var localizedPreviewTrailingText: String {
+        switch language {
+        case .simplifiedChinese:
+            return "为你量身打造中"
+        case .english:
+            return "Tailoring it for you"
+        case .japanese:
+            return "あなた向けに調整中"
+        case .traditionalChinese:
+            return "為你量身打造中"
+        }
     }
 }
 

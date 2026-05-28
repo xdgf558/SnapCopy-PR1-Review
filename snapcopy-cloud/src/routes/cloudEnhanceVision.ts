@@ -1,5 +1,5 @@
 import { jsonResponse, errorResponse } from "../lib/response";
-import { consumeCloudVisionQuota, refundCloudVisionQuota } from "../lib/d1Store";
+import { consumeCloudVisionQuota, recordSceneRecognition, refundCloudVisionQuota } from "../lib/d1Store";
 import { enforceCloudVisionSecurity } from "../lib/securityGuards";
 import { parseJsonBody, resolveEffectivePlan, validateVisionRequest, ValidationError } from "../lib/validators";
 import {
@@ -58,7 +58,27 @@ export async function handleCloudEnhanceVision(request: Request, env: Env): Prom
     }
     quotaRefundable = provider !== "mock" && !quota.duplicateRequest;
 
+    const startedAt = Date.now();
     const response = await generateVisionUnderstanding(input, provider, env);
+    try {
+      await recordSceneRecognition(env, {
+        appUserId: input.appUserId,
+        recordId: crypto.randomUUID(),
+        requestId: input.requestId,
+        source: "cloudVision",
+        predictedScene: response.understanding.scene,
+        top3Scenes: response.understanding.top3Scenes,
+        userSelectedScene: null,
+        wasUserCorrectionNeeded: false,
+        confidence: response.understanding.confidence,
+        sceneJson: response.sceneJson,
+        latencyMs: Date.now() - startedAt,
+        createdAt: new Date().toISOString()
+      });
+    } catch {
+      // Scene logging is useful for training review, but it should never block
+      // the user's cloud enhancement result.
+    }
     return jsonResponse({
       ...response,
       remainingQuota: quota.remainingQuota

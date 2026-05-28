@@ -110,4 +110,16 @@ final class LocalCaptionResponseParserTests: XCTestCase {
 
         XCTAssertTrue(captions.isEmpty)
     }
+
+    func testSanitizerDropsProviderJSONFragments() {
+        let sanitizer = CaptionTextSanitizer()
+
+        XCTAssertNil(sanitizer.sanitizedText(from: "{"))
+        XCTAssertNil(sanitizer.sanitizedText(from: #""captions": ["#))
+        XCTAssertNil(sanitizer.sanitizedText(from: "premium\ninstagram\nmedium\nnone\npet"))
+        XCTAssertEqual(
+            sanitizer.sanitizedText(from: "窗边的猫把今天晒得很松弛。\npremium\ninstagram\nmedium\nnone\npet"),
+            "窗边的猫把今天晒得很松弛。"
+        )
+    }
 }
