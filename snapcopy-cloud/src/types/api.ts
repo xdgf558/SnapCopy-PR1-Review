@@ -89,9 +89,18 @@ export type ActiveCaptionStrategy = {
 
 export type UsageStatusResponse = {
   plan: Plan;
+  /** @deprecated 阶段 2 移除，使用 monthlyLimit 替代 */
   dailyLimit: number;
+  /** @deprecated 阶段 2 移除，使用 usedThisMonth 替代 */
   usedToday: number;
+  /** @deprecated 阶段 2 移除，使用 remainingMonthlyUnits 替代 */
   remainingQuota: number;
+  /** 月度总次数上限 */
+  monthlyLimit: number;
+  /** 本月已用次数 */
+  usedThisMonth: number;
+  /** 本月剩余次数 */
+  remainingMonthlyUnits: number;
 };
 
 export type ApiErrorResponse = {

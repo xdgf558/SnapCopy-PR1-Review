@@ -1,5 +1,7 @@
 import type { Plan } from "../types/api";
 
+/* @deprecated 阶段 2 将整体替换为 monthlyQuota.ts */
+
 type UsageRecord = {
   usedToday: number;
   requestIds: Set<string>;

@@ -1,9 +1,12 @@
 import { canConsumeQuota, consumeQuota, dailyLimitForPlan, getUsage } from "./quota";
+import { monthlyLimitForPlan, canConsumeMonthlyUnit, currentYearMonth } from "./monthlyQuota";
 import type {
   ActiveCaptionStrategy,
   CloudCaptionRequest,
   CloudVisionRequest,
   ContributionStorageMode,
+  MonthlyQuotaResult,
+  MonthlyUsageStatusResponse,
   Plan,
   SceneRecognitionRecordRequest,
   TrainingContributionConsentRequest,
@@ -90,6 +93,7 @@ export function hasD1(env: D1Env): env is { DB: D1Database } {
   return Boolean(env.DB);
 }
 
+/* @deprecated 阶段 2 切换为 getMonthlyUsageStatus */
 export async function getUsageStatusFromStore(
   env: D1Env,
   appUserId: string,
@@ -106,7 +110,10 @@ export async function getUsageStatusFromStore(
       plan,
       dailyLimit,
       usedToday: usage.usedToday,
-      remainingQuota: Math.max(0, dailyLimit - usage.usedToday)
+      remainingQuota: Math.max(0, dailyLimit - usage.usedToday),
+      monthlyLimit: dailyLimit,
+      usedThisMonth: usage.usedToday,
+      remainingMonthlyUnits: Math.max(0, dailyLimit - usage.usedToday)
     };
   }
 
@@ -126,10 +133,14 @@ export async function getUsageStatusFromStore(
     plan,
     dailyLimit,
     usedToday,
-    remainingQuota: Math.max(0, dailyLimit - usedToday)
+    remainingQuota: Math.max(0, dailyLimit - usedToday),
+    monthlyLimit: dailyLimit,
+    usedThisMonth: usedToday,
+    remainingMonthlyUnits: Math.max(0, dailyLimit - usedToday)
   };
 }
 
+/* @deprecated 阶段 2 切换为 consumeMonthlyCloudUnit */
 export async function consumeCloudCaptionQuota(
   env: D1Env,
   input: CloudCaptionRequest,
@@ -258,6 +269,7 @@ async function consumeCloudQuota(
   };
 }
 
+/* @deprecated 阶段 2 切换为 refundMonthlyCloudUnit */
 export async function refundCloudCaptionQuota(
   env: D1Env,
   input: CloudCaptionRequest
@@ -663,3 +675,159 @@ type CloudRequestLogMeta = {
   now: Date;
   featureType: string;
 };
+
+export async function getMonthlyUsageStatus(
+  env: D1Env,
+  appUserId: string,
+  plan: Plan
+): Promise<MonthlyUsageStatusResponse> {
+  const limit = monthlyLimitForPlan(plan);
+  if (!hasD1(env)) {
+    return { plan, monthlyLimit: limit, usedThisMonth: 0, remainingMonthlyUnits: limit };
+  }
+
+  const yearMonth = currentYearMonth();
+  await upsertAppUser(env.DB, appUserId, plan, new Date());
+  const row = await env.DB.prepare(
+    "SELECT used_units FROM monthly_usage WHERE app_user_id = ? AND year_month = ?"
+  ).bind(appUserId, yearMonth).first<{ used_units: number }>();
+  const used = row?.used_units ?? 0;
+  return {
+    plan,
+    monthlyLimit: limit,
+    usedThisMonth: used,
+    remainingMonthlyUnits: Math.max(0, limit - used)
+  };
+}
+
+export async function consumeMonthlyCloudUnit(
+  env: D1Env,
+  input: {
+    appUserId: string;
+    requestId: string;
+    sceneJson: string;
+    userPreferenceJson?: string | null;
+    targetPlatform: string;
+    locale: string;
+    plan: Plan;
+    provider: string;
+    model: string;
+    imageUploadEnabled: boolean;
+  }
+): Promise<MonthlyQuotaResult> {
+  if (!hasD1(env)) {
+    return {
+      allowed: true,
+      remainingUnits: monthlyLimitForPlan(input.plan) - 1,
+      duplicateRequest: false
+    };
+  }
+
+  const yearMonth = currentYearMonth();
+  const now = new Date();
+  await upsertAppUser(env.DB, input.appUserId, input.plan, now);
+
+  const existing = await env.DB.prepare(
+    "SELECT status, remaining_quota FROM cloud_request_logs WHERE request_id = ?"
+  ).bind(input.requestId).first<{ status: string; remaining_quota: number }>();
+  if (existing) {
+    return {
+      allowed: existing.status !== "quota_exceeded",
+      remainingUnits: existing.remaining_quota,
+      duplicateRequest: true
+    };
+  }
+
+  const row = await env.DB.prepare(
+    "SELECT used_units FROM monthly_usage WHERE app_user_id = ? AND year_month = ?"
+  ).bind(input.appUserId, yearMonth).first<{ used_units: number }>();
+  const used = row?.used_units ?? 0;
+  if (!canConsumeMonthlyUnit(used, input.plan)) {
+    await env.DB.prepare(
+      `INSERT INTO cloud_request_logs
+         (request_id, app_user_id, usage_date, feature_type, plan, provider, model,
+          status, remaining_quota, scene_json_size, preference_json_size,
+          image_upload_enabled, locale, target_platform, created_at,
+          cost_usd, cloud_units_used, unit_type)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(request_id) DO NOTHING`
+    ).bind(
+      input.requestId,
+      input.appUserId,
+      yearMonth + "-01",
+      "cloud_enhancement",
+      input.plan,
+      input.provider,
+      input.model,
+      "quota_exceeded",
+      0,
+      byteLength(input.sceneJson),
+      byteLength(input.userPreferenceJson ?? ""),
+      input.imageUploadEnabled ? 1 : 0,
+      input.locale,
+      input.targetPlatform,
+      now.toISOString(),
+      null,
+      0,
+      "cloud_enhancement"
+    ).run();
+    return { allowed: false, remainingUnits: 0, duplicateRequest: false };
+  }
+
+  const newUsed = used + 1;
+  const remaining = Math.max(0, monthlyLimitForPlan(input.plan) - newUsed);
+  await env.DB.batch([
+    env.DB.prepare(
+      `INSERT INTO monthly_usage (app_user_id, year_month, plan, used_units, updated_at)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(app_user_id, year_month)
+       DO UPDATE SET plan = excluded.plan, used_units = excluded.used_units, updated_at = excluded.updated_at`
+    ).bind(input.appUserId, yearMonth, input.plan, newUsed, now.toISOString()),
+    env.DB.prepare(
+      `INSERT INTO cloud_request_logs
+         (request_id, app_user_id, usage_date, feature_type, plan, provider, model,
+          status, remaining_quota, scene_json_size, preference_json_size,
+          image_upload_enabled, locale, target_platform, created_at,
+          cost_usd, cloud_units_used, unit_type)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(request_id) DO NOTHING`
+    ).bind(
+      input.requestId,
+      input.appUserId,
+      yearMonth + "-01",
+      "cloud_enhancement",
+      input.plan,
+      input.provider,
+      input.model,
+      "accepted",
+      remaining,
+      byteLength(input.sceneJson),
+      byteLength(input.userPreferenceJson ?? ""),
+      input.imageUploadEnabled ? 1 : 0,
+      input.locale,
+      input.targetPlatform,
+      now.toISOString(),
+      null,
+      1,
+      "cloud_enhancement"
+    )
+  ]);
+  return { allowed: true, remainingUnits: remaining, duplicateRequest: false };
+}
+
+export async function refundMonthlyCloudUnit(env: D1Env, requestId: string): Promise<void> {
+  if (!hasD1(env)) return;
+  const existing = await env.DB.prepare(
+    "SELECT status, remaining_quota, app_user_id FROM cloud_request_logs WHERE request_id = ?"
+  ).bind(requestId).first<{ status: string; remaining_quota: number; app_user_id: string }>();
+  if (!existing || existing.status !== "accepted") return;
+  const yearMonth = currentYearMonth();
+  await env.DB.batch([
+    env.DB.prepare(
+      "UPDATE monthly_usage SET used_units = CASE WHEN used_units > 0 THEN used_units - 1 ELSE 0 END, updated_at = ? WHERE app_user_id = ? AND year_month = ?"
+    ).bind(new Date().toISOString(), existing.app_user_id, yearMonth),
+    env.DB.prepare(
+      "UPDATE cloud_request_logs SET status = ?, remaining_quota = ? WHERE request_id = ?"
+    ).bind("provider_error", existing.remaining_quota + 1, requestId)
+  ]);
+}
