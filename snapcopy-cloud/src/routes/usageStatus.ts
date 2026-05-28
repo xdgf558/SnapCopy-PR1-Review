@@ -9,6 +9,7 @@ type Env = {
   DB?: D1Database;
 };
 
+// TODO(Phase 2): Switch response to MonthlyUsageStatusResponse
 export async function handleUsageStatus(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const appUserId = url.searchParams.get("appUserId");
