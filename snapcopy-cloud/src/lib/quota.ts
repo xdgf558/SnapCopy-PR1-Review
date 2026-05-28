@@ -8,6 +8,8 @@ type UsageRecord = {
 const memoryUsage = new Map<string, UsageRecord>();
 
 export function dailyLimitForPlan(plan: Plan): number {
+  // TODO(Phase 1-2): Replace this beta-era daily quota with the monthly
+  // Cloud Enhancement Unit model backed by D1 usage records.
   switch (plan) {
     case "free":
       return 0;

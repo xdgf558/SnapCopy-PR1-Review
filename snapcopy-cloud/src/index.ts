@@ -6,9 +6,11 @@ import { handleContributionConsent, handleContributionSample } from "./routes/co
 import { handleOptimizationRun } from "./routes/optimization";
 import { handleUsageStatus } from "./routes/usageStatus";
 import { runContributionOptimization } from "./lib/contributionOptimizer";
+import { cloudEnhancementUnavailableResponse, isCloudEnhancementEnabled } from "./lib/featureFlags";
 import type { Plan } from "./types/api";
 
 type Env = {
+  CLOUD_ENHANCEMENT_ENABLED?: string;
   DEFAULT_PLAN?: Plan;
   DEFAULT_PROVIDER?: string;
   GEMINI_API_KEY?: string;
@@ -20,6 +22,10 @@ type Env = {
   QWEN_API_KEY?: string;
   QWEN_MODEL?: string;
   QWEN_BASE_URL?: string;
+  DAILY_GLOBAL_COST_LIMIT_USD?: string;
+  MONTHLY_GLOBAL_COST_LIMIT_USD?: string;
+  PLUS_MONTHLY_COST_ALERT_USD?: string;
+  PRO_MONTHLY_COST_ALERT_USD?: string;
   OPTIMIZATION_ADMIN_TOKEN?: string;
   OPTIMIZATION_MIN_CAPTION_SAMPLES?: string;
   OPTIMIZATION_COOLDOWN_HOURS?: string;
@@ -42,6 +48,10 @@ export default {
         status: "ok",
         provider: env.DEFAULT_PROVIDER ?? "mock"
       });
+    }
+
+    if (url.pathname.startsWith("/api/cloud-enhance/") && !isCloudEnhancementEnabled(env)) {
+      return cloudEnhancementUnavailableResponse();
     }
 
     if (url.pathname === "/api/cloud-enhance/caption" && request.method === "POST") {
