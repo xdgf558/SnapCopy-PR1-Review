@@ -212,3 +212,26 @@ export type TrainingContributionResponse = {
   retentionPolicy: string;
   message: string;
 };
+
+export type CloudEnhancementUnit = "cloud_enhancement";
+
+export type MonthlyUsageRecord = {
+  appUserId: string;
+  yearMonth: string;
+  plan: Plan;
+  usedUnits: number;
+  updatedAt: string;
+};
+
+export type MonthlyQuotaResult = {
+  allowed: boolean;
+  remainingUnits: number;
+  duplicateRequest: boolean;
+};
+
+export type MonthlyUsageStatusResponse = {
+  plan: Plan;
+  monthlyLimit: number;
+  usedThisMonth: number;
+  remainingMonthlyUnits: number;
+};
