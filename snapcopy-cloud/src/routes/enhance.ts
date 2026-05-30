@@ -3,17 +3,14 @@ import { AiProviderError, enhanceCaption, type AiProviderEnv } from "../lib/aiPr
 import { applyCostProtectionAfterSuccess, strategyForCloudRequest } from "../lib/costProtection";
 import { logCloudRequest } from "../lib/d1Store";
 import { cloudEnhancementUnavailableResponse, isCloudEnhancementAvailable } from "../lib/featureFlags";
-import { checkQuota, deductUnit } from "../lib/monthlyQuota";
+import { checkQuota, commitReservedUnit, refundReservedUnit, reserveUnit } from "../lib/monthlyQuota";
+import type { CostConfigEnv } from "../config/cost-config";
 import type { CloudEnhancementRequest, CloudEnhancementResponse, Plan } from "../types/api";
 
-type Env = AiProviderEnv & {
+type Env = AiProviderEnv & CostConfigEnv & {
   CLOUD_ENHANCEMENT_ENABLED?: string;
   DEFAULT_PLAN?: Plan;
   DEFAULT_PROVIDER?: string;
-  DAILY_GLOBAL_COST_LIMIT_USD?: string;
-  MONTHLY_GLOBAL_COST_LIMIT_USD?: string;
-  PLUS_MONTHLY_COST_ALERT_USD?: string;
-  PRO_MONTHLY_COST_ALERT_USD?: string;
   DB?: D1Database;
 };
 
@@ -33,6 +30,7 @@ type EnhanceLogContext = {
 
 export async function handleEnhance(request: Request, env: Env): Promise<Response> {
   let logContext: EnhanceLogContext | null = null;
+  let reservedUnitRequestId: string | null = null;
 
   try {
     if (!(await isCloudEnhancementAvailable(env))) {
@@ -83,6 +81,58 @@ export async function handleEnhance(request: Request, env: Env): Promise<Respons
       return errorResponse("quota_exceeded", "Monthly cloud enhancement quota has been used.", 429);
     }
 
+    if (quotaCheck.duplicateRequest) {
+      return jsonResponse(
+        idempotentDuplicateResponse({
+          requestId,
+          scene,
+          provider: logContext.provider,
+          model: logContext.model,
+          remainingMonthlyUnits: quotaCheck.remainingUnits
+        })
+      );
+    }
+
+    const reservation = await reserveUnit(env, {
+      appUserId,
+      requestId,
+      plan,
+      provider: logContext.provider,
+      model: logContext.model,
+      sceneJson,
+      userPreferenceJson,
+      imageUploadEnabled: Boolean(input.imagePayload),
+      locale,
+      targetPlatform
+    });
+    logContext.remainingQuota = reservation.remainingUnits;
+    if (!reservation.allowed) {
+      await safeLogCloudRequest(env, {
+        ...logContext,
+        status: "quota_exceeded",
+        errorCode: "quota_exceeded",
+        cloudUnitsUsed: 0,
+        inputTokens: 0,
+        outputTokens: 0,
+        estimatedCostUsd: null,
+        remainingQuota: reservation.remainingUnits
+      });
+      return errorResponse("quota_exceeded", "Monthly cloud enhancement quota has been used.", 429);
+    }
+
+    if (reservation.duplicateRequest) {
+      return jsonResponse(
+        idempotentDuplicateResponse({
+          requestId,
+          scene,
+          provider: logContext.provider,
+          model: logContext.model,
+          remainingMonthlyUnits: reservation.remainingUnits
+        })
+      );
+    }
+    reservedUnitRequestId = requestId;
+
     const result = await enhanceCaption({
       env,
       imagePayload: input.imagePayload,
@@ -96,38 +146,14 @@ export async function handleEnhance(request: Request, env: Env): Promise<Respons
       ...logContext,
       provider: result.provider,
       model: result.model,
-      remainingQuota: quotaCheck.remainingUnits
+      remainingQuota: reservation.remainingUnits
     };
 
-    const quotaDeduction = await deductUnit(env, {
-      appUserId,
-      requestId,
-      plan,
-      provider: result.provider,
-      model: result.model,
-      sceneJson,
-      userPreferenceJson,
-      imageUploadEnabled: Boolean(input.imagePayload),
-      locale,
-      targetPlatform
-    });
-    if (!quotaDeduction.allowed) {
-      logContext.remainingQuota = quotaDeduction.remainingUnits;
-      await safeLogCloudRequest(env, {
-        ...logContext,
-        status: "quota_exceeded",
-        errorCode: "quota_exceeded",
-        inputTokens: result.inputTokens,
-        outputTokens: result.outputTokens,
-        estimatedCostUsd: result.estimatedCostUsd,
-        cloudUnitsUsed: 0,
-        remainingQuota: quotaDeduction.remainingUnits
-      });
-      return errorResponse("quota_exceeded", "Monthly cloud enhancement quota has been used.", 429);
-    }
+    await commitReservedUnit(env, requestId);
+    reservedUnitRequestId = null;
 
-    const cloudUnitsUsed = quotaDeduction.duplicateRequest ? 0 : Math.max(1, result.cloudUnitsUsed);
-    logContext.remainingQuota = quotaDeduction.remainingUnits;
+    const cloudUnitsUsed = Math.max(1, result.cloudUnitsUsed);
+    logContext.remainingQuota = reservation.remainingUnits;
     await safeLogCloudRequest(env, {
       ...logContext,
       status: "success",
@@ -136,7 +162,7 @@ export async function handleEnhance(request: Request, env: Env): Promise<Respons
       outputTokens: result.outputTokens,
       estimatedCostUsd: result.estimatedCostUsd,
       cloudUnitsUsed,
-      remainingQuota: quotaDeduction.remainingUnits
+      remainingQuota: reservation.remainingUnits
     });
     await safeApplyCostProtection(env, {
       appUserId,
@@ -154,7 +180,7 @@ export async function handleEnhance(request: Request, env: Env): Promise<Respons
       inputTokens: result.inputTokens,
       outputTokens: result.outputTokens,
       estimatedCostUsd: result.estimatedCostUsd,
-      remainingMonthlyUnits: quotaDeduction.remainingUnits,
+      remainingMonthlyUnits: reservation.remainingUnits,
       requestId
     };
 
@@ -165,7 +191,11 @@ export async function handleEnhance(request: Request, env: Env): Promise<Respons
     }
 
     if (error instanceof AiProviderError) {
-      await safeLogEnhanceFailure(env, logContext, error);
+      const refunded = await safeRefundReservedUnit(env, reservedUnitRequestId, error);
+      reservedUnitRequestId = null;
+      if (!refunded) {
+        await safeLogEnhanceFailure(env, logContext, error);
+      }
       if (isTimeoutError(error)) {
         return errorResponse("timeout", "Cloud enhancement request timed out.", 504);
       }
@@ -173,9 +203,34 @@ export async function handleEnhance(request: Request, env: Env): Promise<Respons
       return errorResponse("provider_error", error.message, 502);
     }
 
-    await safeLogEnhanceFailure(env, logContext, error);
+    const refunded = await safeRefundReservedUnit(env, reservedUnitRequestId, error);
+    reservedUnitRequestId = null;
+    if (!refunded) {
+      await safeLogEnhanceFailure(env, logContext, error);
+    }
     return errorResponse("internal_error", "Cloud enhancement failed.", 500);
   }
+}
+
+function idempotentDuplicateResponse(input: {
+  requestId: string;
+  scene: string | null;
+  provider: string;
+  model: string;
+  remainingMonthlyUnits: number;
+}): CloudEnhancementResponse {
+  return {
+    captions: [],
+    scene: input.scene,
+    provider: input.provider,
+    model: input.model,
+    cloudUnitsUsed: 0,
+    inputTokens: 0,
+    outputTokens: 0,
+    estimatedCostUsd: null,
+    remainingMonthlyUnits: input.remainingMonthlyUnits,
+    requestId: input.requestId
+  };
 }
 
 async function safeLogEnhanceFailure(env: Env, context: EnhanceLogContext | null, error: unknown): Promise<void> {
@@ -194,6 +249,26 @@ async function safeLogEnhanceFailure(env: Env, context: EnhanceLogContext | null
     estimatedCostUsd: null,
     cloudUnitsUsed: 0
   });
+}
+
+async function safeRefundReservedUnit(
+  env: Env,
+  requestId: string | null,
+  error: unknown
+): Promise<boolean> {
+  if (!requestId) {
+    return false;
+  }
+
+  const status = error instanceof AiProviderError && isTimeoutError(error) ? "timeout" : "api_error";
+  try {
+    await refundReservedUnit(env, requestId, status, errorCodeForEnhanceFailure(error));
+    return true;
+  } catch (refundError) {
+    const message = refundError instanceof Error ? refundError.message : "unknown";
+    console.warn(`[QUOTA_REFUND_WARN] ${message}`);
+    return false;
+  }
 }
 
 async function safeApplyCostProtection(

@@ -1,12 +1,14 @@
 import type { Plan } from "../types/api";
 import {
   checkRequestIdExists,
+  commitCloudUnitRequest,
   createMonthlyUsage,
   getCloudUnitRequestLog,
   getMonthlyUsage,
   getRemainingUnits,
   incrementCloudUnits,
   recordCloudUnitRequest,
+  refundCloudUnitRequest,
   type QuotaStoreEnv
 } from "./quotaStore";
 import type { MonthlyQuotaResult } from "../types/api";
@@ -114,6 +116,10 @@ export async function checkQuota(env: QuotaStoreEnv, input: CloudQuotaCheckInput
 }
 
 export async function deductUnit(env: QuotaStoreEnv, input: CloudUnitDeductionInput): Promise<MonthlyQuotaResult> {
+  return reserveUnit(env, input);
+}
+
+export async function reserveUnit(env: QuotaStoreEnv, input: CloudUnitDeductionInput): Promise<MonthlyQuotaResult> {
   const limit = monthlyLimitForPlan(input.plan);
   if (!env.DB) {
     return { allowed: true, remainingUnits: Math.max(0, limit - 1), duplicateRequest: false };
@@ -156,11 +162,24 @@ export async function deductUnit(env: QuotaStoreEnv, input: CloudUnitDeductionIn
   await recordCloudUnitRequest(env, {
     ...input,
     billingPeriod,
-    status: "accepted",
+    status: "reserved",
     remainingUnits,
     cloudUnitsUsed: 1
   });
   return { allowed: true, remainingUnits, duplicateRequest: false };
+}
+
+export async function commitReservedUnit(env: QuotaStoreEnv, requestId: string): Promise<void> {
+  await commitCloudUnitRequest(env, requestId);
+}
+
+export async function refundReservedUnit(
+  env: QuotaStoreEnv,
+  requestId: string,
+  status: "api_error" | "timeout" | "provider_error",
+  errorCode: string | null
+): Promise<void> {
+  await refundCloudUnitRequest(env, requestId, status, errorCode);
 }
 
 export async function ensureMonthlyUsage(
@@ -174,6 +193,9 @@ export async function ensureMonthlyUsage(
 }> {
   const existing = await getMonthlyUsage(env, appUserId, billingPeriod);
   if (existing) {
+    if (existing.plan !== plan) {
+      await createMonthlyUsage(env, appUserId, billingPeriod, plan, limit);
+    }
     return { usedUnits: existing.usedUnits };
   }
 
@@ -184,5 +206,5 @@ export async function ensureMonthlyUsage(
 export { checkRequestIdExists };
 
 function isSuccessfulCloudRequestStatus(status: string): boolean {
-  return status === "accepted" || status === "success";
+  return status === "reserved" || status === "accepted" || status === "success";
 }

@@ -47,7 +47,8 @@ export async function disableCloudEnhancementForCost(env: CloudFeatureFlagEnv, r
       upsertAdminSettingStatement(env.DB, "cloud_enhancement_enabled", "false", now),
       upsertAdminSettingStatement(env.DB, "cloud_enhancement_disabled_reason", reason, now)
     ]);
-  } catch {
+  } catch (error) {
+    console.error("[FEATURE_FLAG_ERROR] Failed to persist cloud enhancement disable flag", error);
     // In-memory breaker is enough for the current Worker lifecycle.
   }
 }

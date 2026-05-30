@@ -11,7 +11,7 @@ export type CloudUnitRequestLogInput = {
   plan: Plan;
   provider: string;
   model: string;
-  status: "accepted" | "quota_exceeded";
+  status: "reserved" | "accepted" | "quota_exceeded";
   remainingUnits: number;
   sceneJson?: string | null;
   userPreferenceJson?: string | null;
@@ -25,6 +25,8 @@ export type CloudUnitRequestLogRow = {
   status: string;
   remainingQuota: number;
   cloudUnitsUsed: number;
+  plan: Plan;
+  usageDate: string | null;
 };
 
 type MonthlyUsageRow = {
@@ -39,6 +41,8 @@ type CloudRequestLogRow = {
   status: string;
   remaining_quota: number;
   cloud_units_used: number | null;
+  plan: Plan;
+  usage_date: string | null;
 };
 
 export function hasQuotaD1(env: QuotaStoreEnv): env is { DB: D1Database } {
@@ -79,7 +83,8 @@ export async function createMonthlyUsage(
   await env.DB.prepare(
     `INSERT INTO monthly_usage (app_user_id, year_month, plan, used_units, updated_at)
      VALUES (?, ?, ?, 0, ?)
-     ON CONFLICT(app_user_id, year_month) DO NOTHING`
+     ON CONFLICT(app_user_id, year_month)
+     DO UPDATE SET plan = excluded.plan, updated_at = excluded.updated_at`
   )
     .bind(appUserId, billingPeriod, plan, now.toISOString())
     .run();
@@ -131,7 +136,7 @@ export async function getCloudUnitRequestLog(
   }
 
   const row = await env.DB.prepare(
-    "SELECT status, remaining_quota, cloud_units_used FROM cloud_request_logs WHERE request_id = ?"
+    "SELECT status, remaining_quota, cloud_units_used, plan, usage_date FROM cloud_request_logs WHERE request_id = ?"
   )
     .bind(requestId)
     .first<CloudRequestLogRow>();
@@ -143,7 +148,9 @@ export async function getCloudUnitRequestLog(
   return {
     status: row.status,
     remainingQuota: row.remaining_quota,
-    cloudUnitsUsed: row.cloud_units_used ?? 0
+    cloudUnitsUsed: row.cloud_units_used ?? 0,
+    plan: row.plan,
+    usageDate: row.usage_date
   };
 }
 
@@ -157,6 +164,9 @@ export async function recordCloudUnitRequest(
 
   const now = new Date();
   await upsertAppUser(env.DB, input.appUserId, input.plan, now);
+  // Reservation rows are written here before the provider call. d1Store.logCloudRequest
+  // later updates the same request_id with success/error details, so this write order
+  // is intentional for idempotency and refund safety.
   await env.DB.prepare(
     `INSERT INTO cloud_request_logs
        (request_id, app_user_id, usage_date, feature_type, plan, provider, model,
@@ -187,6 +197,60 @@ export async function recordCloudUnitRequest(
       "cloud_enhancement"
     )
     .run();
+}
+
+export async function commitCloudUnitRequest(env: QuotaStoreEnv, requestId: string): Promise<void> {
+  if (!hasQuotaD1(env)) {
+    return;
+  }
+
+  await env.DB.prepare(
+    "UPDATE cloud_request_logs SET status = ? WHERE request_id = ? AND status = ?"
+  )
+    .bind("accepted", requestId, "reserved")
+    .run();
+}
+
+export async function refundCloudUnitRequest(
+  env: QuotaStoreEnv,
+  requestId: string,
+  status: "api_error" | "timeout" | "provider_error",
+  errorCode: string | null
+): Promise<void> {
+  if (!hasQuotaD1(env)) {
+    return;
+  }
+
+  const existing = await getCloudUnitRequestLog(env, requestId);
+  if (!existing || existing.status !== "reserved" || existing.cloudUnitsUsed <= 0) {
+    return;
+  }
+
+  const billingPeriod = billingPeriodFromLog(existing.plan, existing.usageDate);
+  const refundedRemainingUnits = existing.remainingQuota + existing.cloudUnitsUsed;
+  await env.DB.batch([
+    env.DB.prepare(
+      `UPDATE monthly_usage
+       SET
+         used_units = CASE WHEN used_units >= ? THEN used_units - ? ELSE 0 END,
+         updated_at = ?
+       WHERE app_user_id = (
+         SELECT app_user_id FROM cloud_request_logs WHERE request_id = ?
+       )
+       AND year_month = ?`
+    ).bind(
+      existing.cloudUnitsUsed,
+      existing.cloudUnitsUsed,
+      new Date().toISOString(),
+      requestId,
+      billingPeriod
+    ),
+    env.DB.prepare(
+      `UPDATE cloud_request_logs
+       SET status = ?, remaining_quota = ?, cloud_units_used = 0, error_code = ?
+       WHERE request_id = ?`
+    ).bind(status, refundedRemainingUnits, errorCode, requestId)
+  ]);
 }
 
 function mapMonthlyUsageRow(row: MonthlyUsageRow): MonthlyUsageRecord {
@@ -222,6 +286,18 @@ function usageDateForLog(billingPeriod: string): string {
   }
 
   return billingPeriod;
+}
+
+function billingPeriodFromLog(plan: Plan, usageDate: string | null): string {
+  if (plan === "free" || usageDate === "1970-01-01") {
+    return "LIFETIME";
+  }
+
+  if (plan === "beta") {
+    return usageDate ?? new Date().toISOString().slice(0, 10);
+  }
+
+  return (usageDate ?? new Date().toISOString()).slice(0, 7);
 }
 
 function byteLength(value: string): number {
