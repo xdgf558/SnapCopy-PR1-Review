@@ -235,7 +235,9 @@ export async function refundCloudUnitRequest(
          used_units = CASE WHEN used_units >= ? THEN used_units - ? ELSE 0 END,
          updated_at = ?
        WHERE app_user_id = (
-         SELECT app_user_id FROM cloud_request_logs WHERE request_id = ?
+         SELECT app_user_id
+         FROM cloud_request_logs
+         WHERE request_id = ? AND status = 'reserved'
        )
        AND year_month = ?`
     ).bind(
@@ -248,7 +250,7 @@ export async function refundCloudUnitRequest(
     env.DB.prepare(
       `UPDATE cloud_request_logs
        SET status = ?, remaining_quota = ?, cloud_units_used = 0, error_code = ?
-       WHERE request_id = ?`
+       WHERE request_id = ? AND status = 'reserved'`
     ).bind(status, refundedRemainingUnits, errorCode, requestId)
   ]);
 }
