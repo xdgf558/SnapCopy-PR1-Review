@@ -26,6 +26,50 @@ type CloudQuotaResult = {
   duplicateRequest: boolean;
 };
 
+type CloudRequestLogStatus = "success" | "api_error" | "timeout" | "quota_exceeded";
+
+type MonthlyCostSummaryRow = {
+  total_cost: number | null;
+  request_count: number;
+};
+
+type GlobalCostSummaryRow = {
+  daily_cost: number | null;
+  monthly_cost: number | null;
+};
+
+export type MonthlyCostSummary = {
+  totalCost: number;
+  requestCount: number;
+  avgCost: number;
+};
+
+export type GlobalCostSummary = {
+  dailyCost: number;
+  monthlyCost: number;
+};
+
+export type CloudRequestLogParams = {
+  appUserId: string;
+  requestId: string;
+  plan: Plan;
+  provider: string;
+  model: string;
+  status: CloudRequestLogStatus;
+  errorCode?: string | null;
+  inputTokens?: number | null;
+  outputTokens?: number | null;
+  estimatedCostUsd?: number | null;
+  cloudUnitsUsed?: number;
+  remainingQuota?: number;
+  sceneJson?: string | null;
+  userPreferenceJson?: string | null;
+  imageUploadEnabled?: boolean;
+  locale?: string;
+  targetPlatform?: string;
+  createdAt?: Date;
+};
+
 type ExistingRequestRow = {
   status: string;
   remaining_quota: number;
@@ -830,4 +874,119 @@ export async function refundMonthlyCloudUnit(env: D1Env, requestId: string): Pro
       "UPDATE cloud_request_logs SET status = ?, remaining_quota = ? WHERE request_id = ?"
     ).bind("provider_error", existing.remaining_quota + 1, requestId)
   ]);
+}
+
+export async function logCloudRequest(env: D1Env, params: CloudRequestLogParams): Promise<void> {
+  if (!hasD1(env)) {
+    return;
+  }
+
+  const now = params.createdAt ?? new Date();
+  await upsertAppUser(env.DB, params.appUserId, params.plan, now);
+  await env.DB.prepare(
+    `INSERT INTO cloud_request_logs (
+       request_id, app_user_id, usage_date, feature_type, plan, provider, model,
+       status, remaining_quota, scene_json_size, preference_json_size,
+       image_upload_enabled, locale, target_platform, created_at,
+       cost_usd, cloud_units_used, unit_type, input_tokens, output_tokens, error_code
+     )
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(request_id)
+     DO UPDATE SET
+       plan = excluded.plan,
+       provider = excluded.provider,
+       model = excluded.model,
+       status = excluded.status,
+       remaining_quota = excluded.remaining_quota,
+       scene_json_size = excluded.scene_json_size,
+       preference_json_size = excluded.preference_json_size,
+       image_upload_enabled = excluded.image_upload_enabled,
+       locale = excluded.locale,
+       target_platform = excluded.target_platform,
+       cost_usd = excluded.cost_usd,
+       cloud_units_used = excluded.cloud_units_used,
+       unit_type = excluded.unit_type,
+       input_tokens = excluded.input_tokens,
+       output_tokens = excluded.output_tokens,
+       error_code = excluded.error_code`
+  )
+    .bind(
+      params.requestId,
+      params.appUserId,
+      currentUsageDateForCostLog(now),
+      "cloud_enhancement",
+      params.plan,
+      params.provider,
+      params.model,
+      params.status,
+      params.remainingQuota ?? 0,
+      byteLength(params.sceneJson ?? ""),
+      byteLength(params.userPreferenceJson ?? ""),
+      params.imageUploadEnabled ? 1 : 0,
+      params.locale ?? "unknown",
+      params.targetPlatform ?? "general",
+      now.toISOString(),
+      params.estimatedCostUsd ?? null,
+      params.cloudUnitsUsed ?? (params.status === "success" ? 1 : 0),
+      "cloud_enhancement",
+      params.inputTokens ?? 0,
+      params.outputTokens ?? 0,
+      params.errorCode ?? null
+    )
+    .run();
+}
+
+export async function getMonthlyCostSummary(
+  env: D1Env,
+  appUserId: string,
+  billingMonth: string
+): Promise<MonthlyCostSummary> {
+  if (!hasD1(env)) {
+    return { totalCost: 0, requestCount: 0, avgCost: 0 };
+  }
+
+  const row = await env.DB.prepare(
+    `SELECT SUM(cost_usd) AS total_cost, COUNT(*) AS request_count
+     FROM cloud_request_logs
+     WHERE app_user_id = ?
+       AND strftime('%Y-%m', created_at) = ?
+       AND status = 'success'`
+  )
+    .bind(appUserId, billingMonth)
+    .first<MonthlyCostSummaryRow>();
+
+  const totalCost = Number(row?.total_cost ?? 0);
+  const requestCount = Number(row?.request_count ?? 0);
+  return {
+    totalCost,
+    requestCount,
+    avgCost: requestCount > 0 ? totalCost / requestCount : 0
+  };
+}
+
+export async function getGlobalCostSummary(env: D1Env, now = new Date()): Promise<GlobalCostSummary> {
+  if (!hasD1(env)) {
+    return { dailyCost: 0, monthlyCost: 0 };
+  }
+
+  const today = now.toISOString().slice(0, 10);
+  const month = now.toISOString().slice(0, 7);
+  const row = await env.DB.prepare(
+    `SELECT
+       SUM(CASE WHEN date(created_at) = ? THEN COALESCE(cost_usd, 0) ELSE 0 END) AS daily_cost,
+       SUM(CASE WHEN strftime('%Y-%m', created_at) = ? THEN COALESCE(cost_usd, 0) ELSE 0 END) AS monthly_cost
+     FROM cloud_request_logs
+     WHERE status = 'success'`
+  )
+    .bind(today, month)
+    .first<GlobalCostSummaryRow>();
+
+  return {
+    dailyCost: Number(row?.daily_cost ?? 0),
+    monthlyCost: Number(row?.monthly_cost ?? 0)
+  };
+}
+
+function currentUsageDateForCostLog(date: Date): string {
+  return date.toISOString().slice(0, 10);
 }

@@ -1,3 +1,4 @@
+// @deprecated — 将在阶段 3 移除，请使用 /api/enhance
 import { jsonResponse, errorResponse } from "../lib/response";
 import { makeMockCaptions } from "../lib/mockCaptions";
 import { parseJsonBody, resolveEffectivePlan, validateCaptionRequest, ValidationError } from "../lib/validators";

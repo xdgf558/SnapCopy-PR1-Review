@@ -3,6 +3,7 @@ import { errorResponse, jsonResponse } from "./lib/response";
 import { handleAdminPage } from "./routes/adminPage";
 import { handleCloudEnhanceCaption } from "./routes/cloudEnhanceCaption";
 import { handleCloudEnhanceVision } from "./routes/cloudEnhanceVision";
+import { handleEnhance } from "./routes/enhance";
 import {
   handleContributionConsent,
   handleContributionSample,
@@ -24,7 +25,7 @@ import {
 } from "./routes/training";
 import { handleUsageStatus } from "./routes/usageStatus";
 import { runContributionOptimization } from "./lib/contributionOptimizer";
-import { cloudEnhancementUnavailableResponse, isCloudEnhancementEnabled } from "./lib/featureFlags";
+import { cloudEnhancementUnavailableResponse, isCloudEnhancementAvailable } from "./lib/featureFlags";
 import { runTrainingReadinessCheck } from "./lib/trainingPipeline";
 import type { Plan } from "./types/api";
 
@@ -83,8 +84,15 @@ export default {
       return handleAdminPage();
     }
 
-    if (url.pathname.startsWith("/api/cloud-enhance/") && !isCloudEnhancementEnabled(env)) {
+    if (
+      (url.pathname === "/api/enhance" || url.pathname.startsWith("/api/cloud-enhance/")) &&
+      !(await isCloudEnhancementAvailable(env))
+    ) {
       return cloudEnhancementUnavailableResponse();
+    }
+
+    if (url.pathname === "/api/enhance" && request.method === "POST") {
+      return handleEnhance(request, env);
     }
 
     if (url.pathname === "/api/cloud-enhance/caption" && request.method === "POST") {

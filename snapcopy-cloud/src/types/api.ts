@@ -75,6 +75,36 @@ export type CloudVisionResponse = {
   remainingQuota: number;
 };
 
+export type CloudEnhancementImagePayload = {
+  imageBase64?: string;
+  imageUrl?: string;
+  imageMimeType?: "image/jpeg" | "image/png" | "image/webp";
+};
+
+export type CloudEnhancementRequest = {
+  appUserId?: string;
+  requestId?: string;
+  plan?: Plan;
+  imagePayload?: CloudEnhancementImagePayload | null;
+  sceneJson?: string | null;
+  userPreference?: Record<string, unknown> | string | null;
+  targetPlatform?: string;
+  locale?: string;
+};
+
+export type CloudEnhancementResponse = {
+  captions: string[];
+  scene: string | null;
+  provider: string;
+  model: string;
+  cloudUnitsUsed: number;
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCostUsd: number | null;
+  remainingMonthlyUnits: number;
+  requestId: string;
+};
+
 export type ActiveCaptionStrategy = {
   version: string;
   scope?: {
